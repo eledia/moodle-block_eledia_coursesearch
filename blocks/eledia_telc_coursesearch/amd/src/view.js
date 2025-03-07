@@ -703,7 +703,6 @@ const searchFunctionalityCurry = () => {
             limit,
             inputValue
         ).then(coursesData => {
-            // NOTE: Here it goes.
             pageBuilder(coursesData, currentPage, pageData, actions);
             return renderCourses(root, loadedPages[currentPage]);
         }).catch(Notification.exception);
@@ -719,14 +718,14 @@ const searchFunctionalityCurry = () => {
  */
 const catSearchFunctionalityCurry = () => {
     resetGlobals();
-    return (filters, currentPage, pageData, actions, root, promises, limit, inputValue) => {
+    return (actions, root, promises, inputValue) => {
         const searchingPromise = getSearchCategories(
-            filters,
-            limit,
-            inputValue
+            key,
+            inputValue,
+            true
         ).then(coursesData => {
             // NOTE: Here it goes.
-            pageBuilder(coursesData, currentPage, pageData, actions);
+            pageBuilder(coursesData, actions);
             return renderCourses(root, loadedPages[currentPage]);
         }).catch(Notification.exception);
 

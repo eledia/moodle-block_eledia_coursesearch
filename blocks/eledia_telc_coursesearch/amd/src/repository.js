@@ -46,18 +46,11 @@ export const getEnrolledCoursesByTimeline = args => {
 };
 
 /**
- * TODO: Modify to work with category search webservice function.
  * Retrieve a list of categories.
  *
- * Valid args are:
- * string classification    future, inprogress, past
- * int limit                number of records to retreive
- * int Offset               offset for pagination
- * int sort                 sort by lastaccess or name
- *
- * @method getEnrolledCoursesByTimeline
+ * @method getCategories
  * @param {object} args The request arguments
- * @return {promise} Resolved with an array of courses
+ * @return {promise} Resolved with an array of categories
  */
 export const getCategories = args => {
     const request = {
