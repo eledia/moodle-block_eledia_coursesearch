@@ -855,7 +855,6 @@ const initializePagedContent = (root, promiseFunction, inputValue = null) => {
         }).catch(Notification.exception);
 };
 
-// TODO: Make own function to populate the category search.
 /**
  * Initialise the list of categories in the search dropdown.
  *
@@ -919,7 +918,6 @@ const registerEventListeners = (root, page) => {
         const input = page.querySelector(SELECTORS.region.searchInput);
         const clearIcon = page.querySelector(SELECTORS.region.clearIcon);
         const catinput = page.querySelector(SELECTORS.cat.input);
-        const catDropdown = page.querySelector(SELECTORS.cat.dropdown);
         const clearCatIcon = page.querySelector(SELECTORS.cat.clearIcon);
 
         clearIcon.addEventListener('click', () => {
@@ -929,8 +927,8 @@ const registerEventListeners = (root, page) => {
         });
 
         clearCatIcon.addEventListener('click', () => {
-                input.value = '';
-                input.focus();
+                catinput.value = '';
+                catinput.focus();
                 clearCatSearch(clearCatIcon);
         });
 
@@ -947,6 +945,12 @@ const registerEventListeners = (root, page) => {
         catinput.addEventListener('input', debounce(() => {
                 if (catinput.value === '') {
                         clearCatSearch(clearCatIcon);
+                        initializeCategorySearchContent(
+                                SELECTORS.cat.dropdownDiv,
+                                SELECTORS.cat.dropdown,
+                                catSearchFunctionality(),
+                                page,
+                                '');
                 } else {
                         activeSearch(clearCatIcon);
                         initializeCategorySearchContent(
@@ -958,12 +962,7 @@ const registerEventListeners = (root, page) => {
                 }
         }, 1000));
 
-        catinput.addEventListener('click', () => {
-                catDropdown.style.display = 'block';
-
-        });
-
-        document.body.addEventListener('click', preventCategorydropdownCollapse);
+        document.body.addEventListener('click', manageCategorydropdownCollapse);
 };
 
 /**
@@ -998,16 +997,19 @@ const activeSearch = (clearIcon) => {
 };
 
 /**
- * Make category dropdown invisible if clicked outside category search.
+ * Hide category dropdown if clicked outside category search.
  *
  * @param {PointerEvent} e a click.
  */
-const preventCategorydropdownCollapse = (e) => {
+const manageCategorydropdownCollapse = (e) => {
         const page = document.querySelector(SELECTORS.region.selectBlock);
         const catDropdown = page.querySelector(SELECTORS.cat.dropdown);
-        if (!e.target.classList.contains('catprevent')) {
+        if (!e.target.classList.contains('catprevent') && !e.target.classList.contains('fa-xmark')) {
                 catDropdown.style.display = 'none';
+        } else {
+                catDropdown.style.display = 'block';
         }
+
 };
 
 /**
