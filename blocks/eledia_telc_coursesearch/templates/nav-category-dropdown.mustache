@@ -33,22 +33,41 @@
     <li class="dropdown-divider" role="presentation">
         <span class="filler">&nbsp;</span>
     </li>
+    {{^catselections}}
     <li>
-        <a class="dropdown-item catprevent" href="#" data-filter="grouping" data-value="all" data-pref="all" aria-label="{{#str}} aria:allcourses, block_eledia_telc_coursesearch {{/str}}" aria-controls="courses-view-{{uniqid}}" role="menuitem" {{#all}}aria-current="true"{{/all}}>
-            {{#str}} all, block_eledia_telc_coursesearch {{/str}}
+        <a class="dropdown-item catprevent category-no" href="#" data-cat-id="{{id}}"
+           role="menuitem" >
+            {{#str}} nocatselected, block_eledia_telc_coursesearch {{/str}}
         </a>
     </li>
+    {{/catselections}}
+    {{#catselections}}
+    <li>
+        <a class="dropdown-item catprevent category-selected" href="#" data-cat-id="{{id}}"
+           role="menuitem" >
+            {{name}}
+        </a>
+    </li>
+    {{/catselections}}
     {{! Customfield start }}
         <li class="dropdown-divider" role="presentation">
             <span class="filler">&nbsp;</span>
         </li>
+        {{^categories}}
+        <li>
+            <a class="dropdown-item catprevent category-no" href="#" data-cat-id="{{id}}"
+               role="menuitem" >
+                {{#str}} nocatavailable, block_eledia_telc_coursesearch {{/str}}
+            </a>
+        </li>
+        {{/categories}}
         {{#categories}}
-            <li>
-                <a class="dropdown-item catprevent" href="#" data-cat-id="{{id}}"
-                   role="menuitem" >
-                    {{name}}
-                </a>
-            </li>
+        <li>
+            <a class="dropdown-item catprevent category-selectable" href="#" data-cat-id="{{id}}"
+               role="menuitem" >
+                {{name}}
+            </a>
+        </li>
         {{/categories}}
     {{! Customfield end }}
 </ul>
