@@ -921,6 +921,8 @@ const registerEventListeners = (root, page) => {
         const clearIcon = page.querySelector(SELECTORS.region.clearIcon);
         const catinput = page.querySelector(SELECTORS.cat.input);
         const clearCatIcon = page.querySelector(SELECTORS.cat.clearIcon);
+        const catSelectable = SELECTORS.cat.selectableItem;
+        const catSelected = SELECTORS.cat.selectedItem;
 
         clearIcon.addEventListener('click', () => {
                 input.value = '';
@@ -977,6 +979,18 @@ const registerEventListeners = (root, page) => {
         }, 1000));
 
         document.body.addEventListener('click', manageCategorydropdownCollapse);
+        document.body.addEventListener('click', (e) => {
+                if (e.target.classList.contains(catSelected) || e.target.classList.contains(catSelectable)) {
+                        manageCategorydropdownItems(
+                                e,
+                                catSelected,
+                                catSelectable,
+                                SELECTORS.cat.dropdownDiv,
+                                SELECTORS.cat.dropdown,
+                                catSearchFunctionality(),
+                                page);
+                }
+        });
 };
 
 /**
@@ -1025,6 +1039,16 @@ const manageCategorydropdownCollapse = (e) => {
         }
 
 };
+
+/**
+ * TODO: complete
+ *  * Hide category dropdown if clicked outside category search.
+ *   *
+ *    * @param {PointerEvent} e a click.
+ *     */
+const manageCategorydropdownItems = (e, selected, selectable, dropdownDiv, dropdown, promiseFunction, page) => {
+        renderCategories(dropdownContainer, dropdown, categoriesData, page);
+}
 
 /**
  * Intialise the courses list and cards views on page load.

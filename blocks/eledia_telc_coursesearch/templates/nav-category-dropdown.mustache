@@ -27,6 +27,14 @@
                 "name": "categoryname"
             }
         ]
+    },
+    "catselections" : {
+        [
+            {
+                "id": 1,
+                "name": "categoryname"
+            }
+        ]
     }
 }}
 <ul class="dropdown-menu dropdown-categories catprevent" role="menu" data-show-active-item data-skip-active-class="true" data-active-item-text aria-labelledby="groupingdropdown">
@@ -49,25 +57,23 @@
         </a>
     </li>
     {{/catselections}}
-    {{! Customfield start }}
-        <li class="dropdown-divider" role="presentation">
-            <span class="filler">&nbsp;</span>
-        </li>
-        {{^categories}}
-        <li>
-            <a class="dropdown-item catprevent category-no" href="#" data-cat-id="{{id}}"
-               role="menuitem" >
-                {{#str}} nocatavailable, block_eledia_telc_coursesearch {{/str}}
-            </a>
-        </li>
-        {{/categories}}
-        {{#categories}}
-        <li>
-            <a class="dropdown-item catprevent category-selectable" href="#" data-cat-id="{{id}}"
-               role="menuitem" >
-                {{name}}
-            </a>
-        </li>
-        {{/categories}}
-    {{! Customfield end }}
+    <li class="dropdown-divider" role="presentation">
+        <span class="filler">&nbsp;</span>
+    </li>
+    {{^categories}}
+    <li>
+        <a class="dropdown-item catprevent category-no" href="#" data-cat-id="{{id}}"
+           role="menuitem" >
+            {{#str}} nocatavailable, block_eledia_telc_coursesearch {{/str}}
+        </a>
+    </li>
+    {{/categories}}
+    {{#categories}}
+    <li>
+        <a class="dropdown-item catprevent category-selectable" href="#" data-cat-id="{{id}}"
+           role="menuitem" >
+            {{name}}
+        </a>
+    </li>
+    {{/categories}}
 </ul>
