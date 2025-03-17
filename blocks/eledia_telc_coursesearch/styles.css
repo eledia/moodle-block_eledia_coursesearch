@@ -50,3 +50,7 @@ input::after {
     font-weight: 900;
     box-sizing: border-box;
 }
+
+.customfield-count {
+    float: right;
+}
