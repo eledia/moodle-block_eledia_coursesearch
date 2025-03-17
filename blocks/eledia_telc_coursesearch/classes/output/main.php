@@ -395,7 +395,9 @@ class main implements renderable, templatable {
         if (!$field->supports_course_grouping() || !$isvisible) {
             return []; // The field shouldn't have been selectable in the global settings, but just skip it now.
         }
-        define('BLOCK_MYOVERVIEW_CUSTOMFIELD_EMPTY', -1);
+        if (!defined('BLOCK_MYOVERVIEW_CUSTOMFIELD_EMPTY')) {
+            define('BLOCK_MYOVERVIEW_CUSTOMFIELD_EMPTY', -1);
+        }
         $values = $field->course_grouping_format_values($values);
         $customfieldactive = ($this->grouping === BLOCK_ETCOURSESEARCH_GROUPING_CUSTOMFIELD);
         $ret = [];
