@@ -442,13 +442,18 @@ class externallib extends external_api {
 			return [];
 
 
-		$sql = "SELECT DISTINCT cat.* FROM {course_categories}
+		$sql = "SELECT DISTINCT cat.id FROM {course_categories}
 			LEFT JOIN {course} c
 			ON c.category = cat.id
 			$whereclause
 			LIMIT 6
 			";
-		$categories = $DB->get_records_sql($sql, $params);
+		$catids = [];
+		foreach ($categories = $DB->get_records_sql($sql, $params) as $category) {
+			$catids[] = $category->id;
+		}
+
+		$categories = \core_course_external::get_courses(['ids' => $catids, 'limit' => 6]);
 		return $categories;
 	}
 
