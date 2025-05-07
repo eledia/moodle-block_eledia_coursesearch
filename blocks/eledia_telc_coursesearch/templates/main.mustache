@@ -28,13 +28,13 @@
 
     <div role="search" data-region="filter" class="d-flex align-items-center my-2" aria-label="{{#str}} aria:controls, block_eledia_telc_coursesearch {{/str}}">
         <div class="row g-0">
-            {{> block_eledia_telc_coursesearch/nav-grouping-selector }}
-
             {{> block_eledia_telc_coursesearch/nav-search-widget }}
+
+            {{> block_eledia_telc_coursesearch/nav-grouping-selector }}
 
             {{> block_eledia_telc_coursesearch/nav-category-selector }}
 
-            {{> block_eledia_telc_coursesearch/nav-sort-selector }}
+            {{!> block_eledia_telc_coursesearch/nav-sort-selector }}
 
             {{#displaydropdown}}
                 {{> block_eledia_telc_coursesearch/nav-display-selector }}
