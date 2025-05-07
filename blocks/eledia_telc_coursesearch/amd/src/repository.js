@@ -55,7 +55,8 @@ export const getEnrolledCoursesByTimeline = args => {
 export const getCategories = args => {
     // Some comment.
     const request = {
-        methodname: 'block_eledia_telc_coursesearch_get_categories',
+        //methodname: 'block_eledia_telc_coursesearch_get_categories',
+        methodname: 'block_eledia_telc_coursesearch_get_available_categories',
         args: args
     };
 
