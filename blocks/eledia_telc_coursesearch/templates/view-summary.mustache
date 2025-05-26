@@ -85,7 +85,10 @@
                         <span class="badge bg-info text-white">{{#str}} hiddenfromstudents {{/str}}</span>
                     </div>
                 {{/visible}}
-                <div class="summary">
+				{{#summary}}
+				<a href="#" class="eledia-telc-expandsummary">Expand summary</a>
+				{{/summary}}
+                <div class="summary summary-fadeout d-none">
                     <span class="sr-only">{{#str}}aria:coursesummary, block_eledia_telc_coursesearch{{/str}}</span>
                     {{{summary}}}
                 </div>

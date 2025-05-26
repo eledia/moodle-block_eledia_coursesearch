@@ -38,7 +38,7 @@
 input::after {
     /*content: "";*/
     /*TODO: Make visible.*/
-    content: "aft";
+    /*content: "aft";*/
     margin-right: 0;
     margin-left: 4px;
     font-size: 9px;

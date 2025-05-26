@@ -27,21 +27,23 @@
     }
 }}
 <div class="dropdown mb-1">
-    <button id="displaydropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-    aria-label="{{#str}} aria:displaydropdown, block_eledia_telc_coursesearch {{/str}}">
-        <span data-active-item-text>
-            {{#card}}{{#str}} card, block_eledia_telc_coursesearch {{/str}}{{/card}}
-            {{#list}}{{#str}} list, block_eledia_telc_coursesearch {{/str}}{{/list}}
-            {{#summary}}{{#str}} summary, block_eledia_telc_coursesearch {{/str}}{{/summary}}
-        </span>
-    </button>
-    <ul class="dropdown-menu" role="menu" data-show-active-item data-skip-active-class="true" aria-labelledby="displaydropdown">
+    <!--<button id="displaydropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"-->
+    <!--aria-label="{{#str}} aria:displaydropdown, block_eledia_telc_coursesearch {{/str}}">-->
+        <!--<span data-active-item-text>-->
+            <!--{{#card}}{{#str}} card, block_eledia_telc_coursesearch {{/str}}{{/card}}-->
+            <!--{{#list}}{{#str}} list, block_eledia_telc_coursesearch {{/str}}{{/list}}-->
+            <!--{{#summary}}{{#str}} summary, block_eledia_telc_coursesearch {{/str}}{{/summary}}-->
+        <!--</span>-->
+    <!--</button>-->
+    {{! <ul class="dropdown-menu" role="menu" data-show-active-item data-skip-active-class="true" aria-labelledby="displaydropdown"> }}
     {{#layouts}}
-            <li>
-                <a class="dropdown-item" href="#" data-display-option="display" data-value="{{id}}" data-pref="{{id}}" aria-label="{{arialabel}}" aria-controls="courses-view-{{uniqid}}" role="menuitem" {{#active}}aria-current="true"{{/active}}>
+	{{! <li> }}
+				<button class="btn btn-primary eledia-telc-courseseach-viewbtn {{#active}}d-none{{/active}}" data-display-option="display" data-value="{{id}}" data-pref="{{id}}" aria-label="{{arialabel}}" aria-controls="courses-view-{{uniqid}}" role="menuitem" {{#active}}aria-current="false"{{/active}}>
+                <!--<a class="dropdown-item" href="#" data-display-option="display" data-value="{{id}}" data-pref="{{id}}" aria-label="{{arialabel}}" aria-controls="courses-view-{{uniqid}}" role="menuitem" {{#active}}aria-current="false"{{/active}}>-->
                     {{name}}
-                </a>
-            </li>
+                <!--</a>-->
+		</button>
+		{{! </li> }}
     {{/layouts}}
-    </ul>
+	{{! </ul> }}
 </div>
