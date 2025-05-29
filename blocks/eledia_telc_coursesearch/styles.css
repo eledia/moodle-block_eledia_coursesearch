@@ -54,3 +54,35 @@ input::after {
 .customfield-count {
     float: right;
 }
+
+/*  TODO: Make animation smooth. */
+
+.summary {
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  position: relative;
+}
+
+.summary-fadeout {
+  /*position: relative;*/
+  /*overflow: hidden;*/
+  /*line-height: 1.5em;*/
+  max-height: 4.5em; /* 3 lines */
+}
+
+.summary-fadeout::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1.5em; /* fade area: 1 line tall */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), white); /* adjust final color to match background */
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  opacity: 1;
+}
+
+.summary:not(.summary-fadeout)::after {
+  opacity: 0;
+}

@@ -215,6 +215,7 @@ const getSearchCategories = (key,
     selectedCustomfields) => {
     window.console.log(key);
     window.console.log(searchValue);
+    window.console.log(selectedCategories);
     categories = [];
     selectedCategories = [];
     const params = {
@@ -1086,6 +1087,7 @@ const registerEventListeners = (root, page) => {
     }, 1000));
 
     document.body.addEventListener('click', manageCategorydropdownCollapse);
+
     document.body.addEventListener('click', (e) => {
         if (e.target.classList.contains(catSelected) || e.target.classList.contains(catSelectable)) {
             e.preventDefault();
@@ -1099,15 +1101,25 @@ const registerEventListeners = (root, page) => {
                 page);
         }
     });
-    // TODO: eventListener dies. second eventListener needs to be function and removed on click or to be global.
+
     document.body.addEventListener('click', (e) => {
         const expandLink = e.target;
         if (expandLink.classList.contains('eledia-telc-expandsummary')) {
             e.preventDefault();
-            const summary = e.target.nextElementSibling;
+            const summary = e.target.previousElementSibling;
             expandLink.classList.add('d-none');
-            summary.classList.remove('d-none');
-            summary.addEventListener('click', hideSummary);
+            summary.classList.remove('summary-fadeout');
+        }
+    });
+
+    document.body.addEventListener('click', (e) => {
+        const collapseLink = e.target;
+        if (collapseLink.classList.contains('eledia-telc-collapsesummary')) {
+            e.preventDefault();
+            const summary = e.target.parentElement;
+            const expandLink = summary.nextElementSibling;
+            expandLink.classList.remove('d-none');
+            summary.classList.add('summary-fadeout');
         }
     });
 
@@ -1142,16 +1154,6 @@ export const clearCatSearch = (clearCatIcon) => {
  */
 const activeSearch = (clearIcon) => {
     clearIcon.classList.remove('d-none');
-};
-
-/**
- * Hide the course summary.
- * @param {Object} e event.
- */
-const hideSummary = (e) => {
-    e.currentTarget.classList.add('d-none');
-    e.currentTarget.removeEventListener('click', hideSummary);
-    e.currentTarget.previousElementSibling.classList.remove('d-none');
 };
 
 /**
