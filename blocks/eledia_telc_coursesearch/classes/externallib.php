@@ -352,7 +352,7 @@ class externallib extends external_api {
 		$searchdata = [];
 		foreach ($data as $key => $value) {
 			[$name, $filterdata] = match ($value['key']) {
-				'selectedCategories' => ['categories', $value['customfields']],
+				'selectedCategories' => ['categories', $value['categories']],
 				'selectedCustomfields' => ['customfields', $value['customfields']],
 				// 'searchterm' => ['searchterm', $value['searchterm']],
 				'name' => ['searchterm', $value['value']],
@@ -435,16 +435,13 @@ class externallib extends external_api {
 		\tool_eledia_scripts\util::debug_out( "params1:\n", 'catdebg.txt');
 		\tool_eledia_scripts\util::debug_out($allparams . "\n", 'catdebg.txt');
 		// Builder for category filter.
-		$catids = [];
-		foreach ($categories as $category) {
-			if ($excludetype === 'categories')
-					break;
-			$catids = $category['id'];
-		}
+		if ($excludetype === 'categories')
+			$categories = [];
 
+		// TODO: Fix
 		// Expand query for categories.
-		if (sizeof($catids)) {
-			[$insql, $params] = $DB->get_in_or_equal($catids);
+		if (sizeof($categories)) {
+			[$insql, $params] = $DB->get_in_or_equal($categories);
 			$allparams = array_merge($allparams, $params);
 			$query = " AND c.category $insql ";
 			$insqls .= $query;
@@ -567,25 +564,36 @@ class externallib extends external_api {
                 'criteria' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'key' => new external_value(PARAM_ALPHA,
-                                         'The category column to search, expected keys (value format) are:'.
-                                         '"id" (int) the category id,'.
-                                         '"ids" (string) category ids separated by commas,'.
-                                         '"name" (string) the category name,'.
-                                         '"parent" (int) the parent category id,'.
-                                         '"idnumber" (string) category idnumber'.
-                                         ' - user must have \'moodle/category:manage\' to search on idnumber,'.
-                                         '"visible" (int) whether the returned categories must be visible or hidden. If the key is not passed,
-                                             then the function return all categories that the user can see.'.
-                                         ' - user must have \'moodle/category:manage\' or \'moodle/category:viewhiddencategories\' to search on visible,'.
-                                         '"theme" (string) only return the categories having this theme'.
-                                         ' - user must have \'moodle/category:manage\' to search on theme'),
+                            'key' => new external_value(PARAM_ALPHA, 'The type of what is sent.'),
                             'value' => new external_value(PARAM_RAW, 'the value to match', VALUE_OPTIONAL),
 							'customfields' => new external_multiple_structure(
 								new external_single_structure(
-									// TODO: Define structure.
 									array(
 										new external_value(PARAM_RAW, 'the value to match', VALUE_OPTIONAL),
+									),
+									'custom field objects',
+									VALUE_OPTIONAL
+								),
+								'custom fields',
+								VALUE_OPTIONAL
+							),
+							'categories' => new external_multiple_structure(
+								new external_single_structure(
+									array(
+										'coursecount' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'depth' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'description' => new external_value(PARAM_RAW, 'the value to match', VALUE_OPTIONAL),
+										'descriptionformat' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'id' => new external_value(PARAM_INT, 'the value to match', VALUE_REQUIRED),
+										'idnumber' => new external_value(PARAM_RAW, 'the value to match', VALUE_OPTIONAL),
+										'name' => new external_value(PARAM_TEXT, 'the value to match', VALUE_OPTIONAL),
+										'parent' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'path' => new external_value(PARAM_RAW, 'the value to match', VALUE_OPTIONAL),
+										'sortorder' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'theme' => new external_value(PARAM_TEXT, 'the value to match', VALUE_OPTIONAL),
+										'timemodified' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'visible' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'visibleold' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
 									),
 									'custom field objects',
 									VALUE_OPTIONAL
