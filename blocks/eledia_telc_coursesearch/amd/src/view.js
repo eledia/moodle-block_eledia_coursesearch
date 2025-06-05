@@ -65,7 +65,7 @@ let lastLimit = 0;
 
 let namespace = null;
 
-let catInit = false;
+// let catInit = false;
 
 let selectedCategories = [];
 let selectableCategories = [];
@@ -85,6 +85,7 @@ let selectableCategories = [];
 let customfields = [];
 let selectedCustomfields = [];
 let searchTerm = '';
+let catSearchTerm = '';
 
 /**
  * Whether the summary display has been loaded.
@@ -201,56 +202,10 @@ const getSearchMyCourses = (filters, limit, searchValue) => {
 /**
  * Search for categories from backend.
  *
- * @param {string} key filters The filters for this view.
- * @param {string} searchValue What does the user want to search within the categoies names.
- * @param {boolean} subCategories search for sub categories
- * @param {object} categories
- * @param {object} selectedCategories
- * @param {object} customfields
- * @param {object} selectedCustomfields
  * @return {promise} Resolved with an array of categories.
  */
-const getSearchCategories = (key,
-    searchValue,
-    subCategories,
-    categories,
-    selectedCategories,
-    customfields,
-    selectedCustomfields) => {
-    window.console.log(key);
-    window.console.log(searchValue);
-    window.console.log(selectedCategories);
-    categories = [];
-    selectedCategories = [];
-    const params = {
-        // NOTE: It might be beneficial to allow multiple criteria of the core supported ones.
-        criteria: [
-            {
-                key: key,
-                value: searchValue,
-            },
-            {
-                key: 'categories',
-                customfields: categories,
-            },
-            {
-                key: 'selectedCategories',
-                customfields: selectedCategories,
-            },
-            {
-                key: 'customfields',
-                customfields: customfields,
-            },
-            {
-                key: 'selectedCustomfields',
-                customfields: selectedCustomfields,
-            },
-        ],
-        //addsubcategories: subCategories,
-        //criteria: [
-        //],
-        addsubcategories: subCategories,
-    };
+const getSearchCategories = () => {
+    const params = getParams();
     return Repository.getCategories(params);
 };
 
@@ -265,21 +220,17 @@ const getParams = (limit = 0) => {
     const params = {
         criteria: [
             {
+                key: "categoryName",
+                value: catSearchTerm,
+            },
+            {
                 key: 'name',
                 value: searchTerm,
             },
-            //{
-            //    key: 'categories',
-            //    customfields: selectedCategories,
-            //},
             {
                 key: 'selectedCategories',
-                customfields: selectedCategories,
+                categories: selectedCategories,
             },
-            //{
-            //    key: 'customfields',
-            //    customfields: selectedCustomfields,
-            //},
             {
                 key: 'selectedCustomfields',
                 customfields: selectedCustomfields,
@@ -881,16 +832,8 @@ const searchFunctionalityCurry = () => {
  * @return {function(Object): void}
  */
 const catSearchFunctionality = () => {
-    return (dropdownContainer, dropdown, page, inputValue, categories, selectedCategories, customfields, selectedCustomfields) => {
-        const searchingPromise = getSearchCategories(
-            "name",
-            inputValue,
-            true,
-            categories,
-            selectedCategories,
-            customfields,
-            selectedCustomfields
-        ).then(categoriesData => {
+    return (dropdownContainer, dropdown, page, selectedCategories) => {
+        const searchingPromise = getSearchCategories().then(categoriesData => {
             // NOTE: Here it goes.
             selectableCategories = categoriesData;
             selectedCategories.forEach((selected) => {
@@ -984,29 +927,17 @@ const initializePagedContent = (root, promiseFunction, inputValue = null, params
  * @param {string} dropdown The dropdown element for the search results.
  * @param {function} promiseFunction How do we fetch the categories and what do we do with them?
  * @param {object} page The page object.
- * @param {null | string} inputValue What to search for
- * @param {object} categories
  * @param {object} selectedCategories
- * @param {object} customfields
- * @param {object} selectedCustomfields
  */
 const initializeCategorySearchContent = (dropdownContainer,
     dropdown,
     promiseFunction,
     page,
-    inputValue = null,
-    categories,
-    selectedCategories,
-    customfields,
-    selectedCustomfields) => {// eslint-disable-line
+    selectedCategories) => {// eslint-disable-line
     const $categories = promiseFunction(dropdownContainer,
         dropdown,
         page,
-        inputValue,
-        categories,
-        selectedCategories,
-        customfields,
-        selectedCustomfields);
+        selectedCategories);
     window.console.log($categories);
 };
 
@@ -1072,6 +1003,7 @@ const registerEventListeners = (root, page) => {
 
     clearCatIcon.addEventListener('click', () => {
         window.console.log('CLICKED clearCatIcon');
+        catSearchTerm = '';
         catinput.value = '';
         catinput.focus();
         clearCatSearch(clearCatIcon);
@@ -1080,11 +1012,7 @@ const registerEventListeners = (root, page) => {
             SELECTORS.cat.dropdown,
             catSearchFunctionality(),
             page,
-            '',
-            selectableCategories,
-            selectedCategories,
-            customfields,
-            selectedCustomfields);
+            selectedCategories);
     });
 
     input.addEventListener('input', debounce(() => {
@@ -1100,48 +1028,38 @@ const registerEventListeners = (root, page) => {
 
     // Initialize category search dropdown on first click.
     catinput.addEventListener('click', () => {
-        if (!catInit) {
-            initializeCategorySearchContent(
-                SELECTORS.cat.dropdownDiv,
-                SELECTORS.cat.dropdown,
-                catSearchFunctionality(),
-                page,
-                '',
-                selectableCategories,
-                selectedCategories,
-                customfields,
-                selectedCustomfields);
-            catInit = true;
-        }
+        // if (!catInit) {
+        initializeCategorySearchContent(
+            SELECTORS.cat.dropdownDiv,
+            SELECTORS.cat.dropdown,
+            catSearchFunctionality(),
+            page,
+            selectedCategories);
+        // catInit = true;
+        // }
     });
 
     catinput.addEventListener('input', debounce(() => {
         if (catinput.value === '') {
             clearCatSearch(clearCatIcon);
+            catSearchTerm = '';
             initializeCategorySearchContent(
                 SELECTORS.cat.dropdownDiv,
                 SELECTORS.cat.dropdown,
                 catSearchFunctionality(),
                 page,
-                '',
-                selectableCategories,
-                selectedCategories,
-                customfields,
-                selectedCustomfields);
+                selectedCategories);
         } else {
             window.console.log('catinput.value');
             window.console.log(catinput.value);
             activeSearch(clearCatIcon);
+            catSearchTerm = catinput.value.trim();
             initializeCategorySearchContent(
                 SELECTORS.cat.dropdownDiv,
                 SELECTORS.cat.dropdown,
                 catSearchFunctionality(),
                 page,
-                catinput.value.trim(),
-                selectableCategories,
-                selectedCategories,
-                customfields,
-                selectedCustomfields);
+                selectedCategories);
         }
     }, 1000));
 

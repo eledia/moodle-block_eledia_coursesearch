@@ -349,23 +349,7 @@ class externallib extends external_api {
 		\tool_eledia_scripts\util::debug_out("data\n", 'viewdbg.txt');
 		\tool_eledia_scripts\util::debug_out(var_export($data, true). "\n", 'viewdbg.txt');
 		$courseids = [];
-		$searchdata = [];
-		foreach ($data as $key => $value) {
-			[$name, $filterdata] = match ($value['key']) {
-				'selectedCategories' => ['categories', $value['customfields']],
-				'selectedCustomfields' => ['customfields', $value['customfields']],
-				// 'searchterm' => ['searchterm', $value['searchterm']],
-				'name' => ['searchterm', $value['value']],
-				'limit' => ['limit', $value['value']],
-				'offset' => ['offset', $value['value']],
-				default => ['null', 'null'],
-			};
-			$searchdata[$name] = $filterdata;
-		}
-		\tool_eledia_scripts\util::debug_out("searchdata\n", 'viewdbg.txt');
-		\tool_eledia_scripts\util::debug_out(var_export($searchdata, true). "\n", 'viewdbg.txt');
-		$customfields = array_map('self::filterparams', $searchdata['customfields']);
-		$categories = array_map('self::filterparams', $searchdata['categories']);
+		[$searchdata, $customfields, $categories] = self::remap_searchdata($data);
 		$courseids = self::get_filtered_courseids($customfields, $categories, $searchdata['searchterm'], '', 0, $searchdata['limit'], $searchdata['offset']);
 		if (!sizeof($courseids))
 			return self::zero_response();
@@ -393,6 +377,26 @@ class externallib extends external_api {
 			'nextoffset' => 0,
 		];
 		return $result;
+	}
+	
+	public static function remap_searchdata(array $data): array {
+		$searchdata = [];
+		foreach ($data as $value) {
+			[$name, $filterdata] = match ($value['key']) {
+				'selectedCategories' => ['categories', $value['categories']],
+				'selectedCustomfields' => ['customfields', $value['customfields']],
+				// 'searchterm' => ['searchterm', $value['searchterm']],
+				'name' => ['searchterm', $value['value']],
+				'categoryName' => ['catsearchterm', $value['value']],
+				'limit' => ['limit', $value['value']],
+				'offset' => ['offset', $value['value']],
+				default => ['null', 'null'],
+			};
+			$searchdata[$name] = $filterdata;
+		}
+		$customfields = array_map('self::filterparams', $searchdata['customfields']);
+		$categories = array_map('self::filterparams', $searchdata['categories']);
+		return [$searchdata, $customfields, $categories];
 	}
 
     /**
@@ -435,16 +439,13 @@ class externallib extends external_api {
 		\tool_eledia_scripts\util::debug_out( "params1:\n", 'catdebg.txt');
 		\tool_eledia_scripts\util::debug_out($allparams . "\n", 'catdebg.txt');
 		// Builder for category filter.
-		$catids = [];
-		foreach ($categories as $category) {
-			if ($excludetype === 'categories')
-					break;
-			$catids = $category['id'];
-		}
+		if ($excludetype === 'categories')
+			$categories = [];
 
+		// TODO: Fix
 		// Expand query for categories.
-		if (sizeof($catids)) {
-			[$insql, $params] = $DB->get_in_or_equal($catids);
+		if (sizeof($categories)) {
+			[$insql, $params] = $DB->get_in_or_equal($categories);
 			$allparams = array_merge($allparams, $params);
 			$query = " AND c.category $insql ";
 			$insqls .= $query;
@@ -567,25 +568,36 @@ class externallib extends external_api {
                 'criteria' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'key' => new external_value(PARAM_ALPHA,
-                                         'The category column to search, expected keys (value format) are:'.
-                                         '"id" (int) the category id,'.
-                                         '"ids" (string) category ids separated by commas,'.
-                                         '"name" (string) the category name,'.
-                                         '"parent" (int) the parent category id,'.
-                                         '"idnumber" (string) category idnumber'.
-                                         ' - user must have \'moodle/category:manage\' to search on idnumber,'.
-                                         '"visible" (int) whether the returned categories must be visible or hidden. If the key is not passed,
-                                             then the function return all categories that the user can see.'.
-                                         ' - user must have \'moodle/category:manage\' or \'moodle/category:viewhiddencategories\' to search on visible,'.
-                                         '"theme" (string) only return the categories having this theme'.
-                                         ' - user must have \'moodle/category:manage\' to search on theme'),
+                            'key' => new external_value(PARAM_ALPHA, 'The type of what is sent.'),
                             'value' => new external_value(PARAM_RAW, 'the value to match', VALUE_OPTIONAL),
 							'customfields' => new external_multiple_structure(
 								new external_single_structure(
-									// TODO: Define structure.
 									array(
 										new external_value(PARAM_RAW, 'the value to match', VALUE_OPTIONAL),
+									),
+									'custom field objects',
+									VALUE_OPTIONAL
+								),
+								'custom fields',
+								VALUE_OPTIONAL
+							),
+							'categories' => new external_multiple_structure(
+								new external_single_structure(
+									array(
+										'coursecount' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'depth' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'description' => new external_value(PARAM_RAW, 'the value to match', VALUE_OPTIONAL),
+										'descriptionformat' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'id' => new external_value(PARAM_INT, 'the value to match', VALUE_REQUIRED),
+										'idnumber' => new external_value(PARAM_RAW, 'the value to match', VALUE_OPTIONAL),
+										'name' => new external_value(PARAM_TEXT, 'the value to match', VALUE_OPTIONAL),
+										'parent' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'path' => new external_value(PARAM_RAW, 'the value to match', VALUE_OPTIONAL),
+										'sortorder' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'theme' => new external_value(PARAM_TEXT, 'the value to match', VALUE_OPTIONAL),
+										'timemodified' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'visible' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
+										'visibleold' => new external_value(PARAM_INT, 'the value to match', VALUE_OPTIONAL),
 									),
 									'custom field objects',
 									VALUE_OPTIONAL
@@ -620,40 +632,25 @@ class externallib extends external_api {
 		return core_course_external::get_categories_returns();
     }
 
-	public static function get_available_categories(array $searchdata): array {
+	public static function get_available_categories(array $data): array {
 		global $DB;
 		$courseids = [];
 		$whereclause = '';
 		$params = null;
-		$customfields = [];
-		$inparams = null;
-		$searchterm = '';
 
+
+		[$searchdata, $customfields, $categories] = self::remap_searchdata($data);
 		\tool_eledia_scripts\util::debug_out( "Category query:\n", 'catdebg.txt');
 		\tool_eledia_scripts\util::debug_out( var_export($searchdata, true) . "\n", 'catdebg.txt');
 		\tool_eledia_scripts\util::debug_out( "foreach:\n", 'catdebg.txt');
-		// foreach ($searchdata['criteria'] as $key => $val) {
-		foreach ($searchdata as $key => $val) {
-			\tool_eledia_scripts\util::debug_out( var_export($val, true) . "\n", 'catdebg.txt');
-			// $customfields[] = array_splice($searchdata['criteria'][$key];
-			if ($val['key'] !== 'name') {
-				// unset($searchdata[$key]);
-				continue;
-			}
-			$searchterm = $val['value'];
-			unset($searchdata[$key]);
-		}
-
-		if (sizeof($searchdata) && sizeof($courseids = self::get_filtered_courseids([], [], '', 'categories'))) {
-			// $courseids = self::get_filtered_courseids($searchdata, [], 'categories');
-			// $courseids = self::get_filtered_courseids([], [], 'categories');
+		if (sizeof($searchdata) && sizeof($courseids = self::get_filtered_courseids($customfields, $categories, $searchdata['searchterm'], 'categories'))) {
 			[$insql, $params] = $DB->get_in_or_equal($courseids);
 			$whereclause = " WHERE c.id $insql ";
 		}
 
 		if (!sizeof($courseids))
 			return [];
-
+		$searchterm = $searchdata['catsearchterm'];
 		if (!empty($searchterm)) {
 			$params[] = "%$searchterm%";
 			$whereclause .= " AND cat.name ILIKE ? ";
