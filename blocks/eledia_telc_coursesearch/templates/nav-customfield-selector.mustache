@@ -28,20 +28,17 @@
         "customfieldselectable": [],
     }
 }}
-{{#displaygroupingselector}}
-<div class="dropdown mb-1 me-1">
-    <button id="groupingdropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{#str}} aria:groupingdropdown, block_eledia_telc_coursesearch {{/str}}">
-        <span data-active-item-text>
-            {{customfieldname}}
-        </span>
-    {{#count}}
-        <span data-active-item-text class="customfield-count">
-            ({{count}})
-        </span>
-    {{/count}}
-    </button>
-    <ul class="dropdown-menu customfield-container" role="menu" data-customfield-id="{{customfieldid}}" data-show-active-item data-skip-active-class="true" data-active-item-text aria-labelledby="groupingdropdown">
-        {{> block_eledia_telc_coursesearch/nav-customfield-dropdown }}
-    </ul>
+{{#customfields}}
+<div class="dropdown customfieldsearch mb-1 me-1">
+    <div class="mb-1 me-1 flex-grow-1 catprevent">
+        {{> block_eledia_telc_coursesearch/search-input-auto-customfields }}
+    </div>
+    <div class="customfield-droprown-container">
+        {{ > block_eledia_telc_coursesearch/nav-category-dropdown }}
+    </div>
 </div>
-{{/displaygroupingselector}}
+{{! Filler start }}
+<div class="mb-1 me-auto">
+    <span class="filler">&nbsp;</span>
+</div>
+{{/customfields}}
