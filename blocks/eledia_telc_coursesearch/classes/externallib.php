@@ -19,6 +19,7 @@ use core_external\external_files;
 use core_external\external_format_value;
 use core_external\external_warnings;
 use core_external\util;
+use DateTime;
 
 require_once(__DIR__ . "/../../../course/lib.php");
 require_once($CFG->dirroot . '/course/externallib.php');
@@ -350,7 +351,7 @@ class externallib extends external_api {
 		\tool_eledia_scripts\util::debug_out(var_export($data, true). "\n", 'viewdbg.txt');
 		$courseids = [];
 		[$searchdata, $customfields, $categories] = self::remap_searchdata($data);
-		$courseids = self::get_filtered_courseids($customfields, $categories, $searchdata['searchterm'], '', 0, $searchdata['limit'], $searchdata['offset']);
+		$courseids = self::get_filtered_courseids($customfields, $categories, $searchdata['searchterm'], '', 0, $searchdata['limit'], $searchdata['offset'], false, $searchdata['progress']);
 		if (!sizeof($courseids))
 			return self::zero_response();
 		[$insql, $inparams] = $DB->get_in_or_equal($courseids);
@@ -391,6 +392,7 @@ class externallib extends external_api {
 				'categoryName' => ['catsearchterm', $value['value']],
 				'limit' => ['limit', $value['value']],
 				'offset' => ['offset', $value['value']],
+				'progress' => ['progress', $value['value']],
 				default => ['null', 'null'],
 			};
 			$searchdata[$name] = $filterdata;
@@ -415,9 +417,10 @@ class externallib extends external_api {
     }
 
 	// INFO: Customfield queries are separate from course search. Two DB queries are required to populate a field through search.
+	// NOTE: Oops. Theoretically. Due to time constraints for development it is four.
 	// INFO: There is no need to send data about which fields are selected because it can be managed stateful by frontend.
 
-	protected static function get_filtered_courseids(array $customfields, array $categories = [], string $searchterm = '', string $excludetype = 'customfield', string | int $excludevalue = 0, int $limit = 0, int $offset = 0, $contextids = false) {
+	protected static function get_filtered_courseids(array $customfields, array $categories = [], string $searchterm = '', string $excludetype = 'customfield', string | int $excludevalue = 0, int $limit = 0, int $offset = 0, $contextids = false, $progress = 'all') {
 		global $DB, $USER;
 		self::validate_context(\context_user::instance($USER->id));
 		// $insqls = [];
@@ -490,6 +493,21 @@ class externallib extends external_api {
 			$shortname_like = $DB->sql_like('c.shortname', '?', false);
 			// $sql .= " AND (c.fullname ILIKE ? OR c.shortname ILIKE ?) ";
 			$sql .= " AND ($fullname_like OR $shortname_like) ";
+		}
+
+		if ($progress === 'past') {
+			$timestamp = time();
+			$sql .= " AND (c.enddate > $timestamp OR c.enddate = 0 ) ";
+		}
+
+		if ($progress === 'future') {
+			$timestamp = time();
+			$sql .= " AND c.startdate < $timestamp ";
+		}
+
+		if ($progress === 'inprogress') {
+			$timestamp = time();
+			$sql .= " AND (c.startdate < $timestamp AND (c.enddate > $timestamp OR c.enddate = 0 )) ";
 		}
 
 		if ($limit) {
@@ -650,7 +668,7 @@ class externallib extends external_api {
 		\tool_eledia_scripts\util::debug_out( "Category query:\n", 'catdebg.txt');
 		\tool_eledia_scripts\util::debug_out( var_export($searchdata, true) . "\n", 'catdebg.txt');
 		\tool_eledia_scripts\util::debug_out( "foreach:\n", 'catdebg.txt');
-		if (sizeof($searchdata) && sizeof($courseids = self::get_filtered_courseids($customfields, $categories, $searchdata['searchterm'], 'categories'))) {
+		if (sizeof($searchdata) && sizeof($courseids = self::get_filtered_courseids($customfields, $categories, $searchdata['searchterm'], 'categories', false, $searchdata['progress']))) {
 			[$insql, $params] = $DB->get_in_or_equal($courseids);
 			$whereclause = " WHERE c.id $insql ";
 		}
@@ -718,7 +736,7 @@ class externallib extends external_api {
 	public static function map_customfield_info($customfield) {
 		$configdata = json_decode($customfield->configdata);
 		if ((int) $configdata->visibility ===  2)
-			return ['id' => $customfield->id, 'name' => $customfield->name];
+			return (object) ['id' => $customfield->id, 'name' => $customfield->name];
 	}
 	
 	public static function get_customfields() {
