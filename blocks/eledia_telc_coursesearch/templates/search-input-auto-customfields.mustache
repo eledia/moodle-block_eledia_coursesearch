@@ -47,20 +47,21 @@
            data-action="customsearch"
            data-customfieldid="{{id}}"
            id="searchinput-{{uniqid}}"
-           class="form-control withclear rounded customprevent"
+           class="form-control withclear rounded customprevent customsearch-{{id}}"
            placeholder="{{name}}"
            name="{{name}}"
-           value="{{$value}}{{/value}}"
+           value=""
            autocomplete="off"
            {{$additionalattributes}}{{/additionalattributes}}
         >
         <button
-            class="btn btn-clear d-none catprevent"
-            data-action="clearcustsearch"
+            class="btn btn-clear d-none customprevent"
+            data-action="clearcustomsearch"
+			data-customfieldid="{{id}}"
             type="button"
         >
            {{#pix}} e/cancel, core {{/pix}}
-            <span class="sr-only">{{#str}} clearsearch, core {{/str}}</span>
+            <span class="sr-only" data-customfieldid="{{id}}">{{#str}} clearsearch, core {{/str}}</span>
         </button>
     </div>
 </div>

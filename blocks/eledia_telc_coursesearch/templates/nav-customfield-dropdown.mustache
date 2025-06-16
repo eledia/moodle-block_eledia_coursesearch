@@ -15,76 +15,69 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_eledia_telc_coursesearch/nav-customfield-dropdown
+    @template block_eledia_telc_coursesearch/nav-category-dropdown
 
     This template renders grouping dropdown.
 
     Example context (json):
-    "customfieldsselected" : {
+    "categories" : {
         [
             {
-                "customfieldid": 1,
                 "id": 1,
-                "name": "customfieldvalue"
+                "name": "categoryname"
             }
         ]
     },
-    "customfieldsselectables" : {
+    "catselections" : {
         [
             {
-                "customfieldid": 1,
-                "id": 2,
-                "name": "customfieldvalue"
+                "id": 1,
+                "name": "categoryname"
             }
         ]
     }
 }}
-
+<ul class="dropdown-menu dropdown-customfields-{{customfieldid}} dropdown-menu-customfields customprevent" role="menu" data-show-active-item data-skip-active-class="true" data-active-item-text aria-labelledby="groupingdropdown">
     <li class="dropdown-divider" role="presentation">
         <span class="filler">&nbsp;</span>
     </li>
-    {{^customfieldsselected}}
-        <li>
-            <a class="dropdown-item catprevent customfield-no" href="#"
-               aria-label="{{#str}}aria:customfield, block_eledia_telc_coursesearch, {{name}}{{/str}}">
-                {{#str}} noitemsselected, block_eledia_telc_coursesearch {{/str}}
-            </a>
-        </li>
-    {{/customfieldsselected}}
-    {{#customfieldsselected}}
-        <li>
-            <a class="dropdown-item catprevent customfield-no" href="#" data-id="{{id}"
-               aria-label="{{#str}}removeallitems, block_eledia_telc_coursesearch, {{name}}{{/str}}">
-                {{#str}} removeallitems, block_eledia_telc_coursesearch {{/str}}
-            </a>
-        </li>
-        <li>
-            <a class="dropdown-item customfield-item" href="#"
-               data-value="customfield" data-pref="customfield" data-id="{{id}" data-customfield-id="{{customfieldid}"
-               aria-label="{{#str}}aria:customfield, block_eledia_telc_coursesearch, {{name}}{{/str}}"
-               aria-controls="courses-view-{{uniqid}}" role="menuitem" {{#active}}aria-current="true"{{/active}}>
-                {{name}}
-            </a>
-        </li>
-    {{/customfieldsselected}}
+    {{^customselections}}
+    <li>
+        <a class="dropdown-item customprevent customfield-no" href="#" data-customfieldid="{{customfieldid}}"
+           role="menuitem" >
+            {{#str}} nocatselected, block_eledia_telc_coursesearch {{/str}}
+        </a>
+    </li>
+    {{/customselections}}
+    {{#customselections}}
+    <li>
+        <a class="dropdown-item customprevent customfield-selected" href="#" data-customfieldid="{{customfieldid}}"
+		   data-selectvalue="{{value}}"
+		   data-selectname="{{name}}"
+           role="menuitem" >
+            {{name}}
+        </a>
+    </li>
+    {{/customselections}}
     <li class="dropdown-divider" role="presentation">
         <span class="filler">&nbsp;</span>
     </li>
-    {{^customfieldsselectables}}
-        <li>
-            <a class="dropdown-item catprevent customfield-no" href="#"
-               aria-label="{{#str}}aria:customfield, block_eledia_telc_coursesearch, {{name}}{{/str}}">
-                {{#str}} noitemsavailable, block_eledia_telc_coursesearch {{/str}}
-            </a>
-        </li>
-    {{/customfieldsselectables}}
-    {{#customfieldsselectables}}
-        <li>
-            <a class="dropdown-item customfield-item" href="#" data-id="{{id}" data-customfield-id="{{customfieldid}"
-               data-value="customfield" data-pref="customfield" data-customfieldvalue="{{value}}"
-               aria-label="{{#str}}aria:customfield, block_eledia_telc_coursesearch, {{name}}{{/str}}"
-               aria-controls="courses-view-{{uniqid}}" role="menuitem" {{#active}}aria-current="true"{{/active}}>
-                {{name}}
-            </a>
-        </li>
-    {{/customfieldsselectables}}
+    {{^customvalues}}
+    <li>
+        <a class="dropdown-item customprevent customfield-no" href="#" data-customfieldid="{{customfieldid}}"
+           role="menuitem" >
+            {{#str}} nocatavailable, block_eledia_telc_coursesearch {{/str}}
+        </a>
+    </li>
+    {{/customvalues}}
+    {{#customvalues}}
+    <li>
+        <a class="dropdown-item customprevent customfield-selectable" href="#" data-customfieldid="{{customfieldid}}"
+		   data-selectvalue="{{value}}"
+		   data-selectname="{{name}}"
+           role="menuitem" >
+            {{name}}
+        </a>
+    </li>
+    {{/customvalues}}
+</ul>
