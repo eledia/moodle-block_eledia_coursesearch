@@ -909,6 +909,23 @@ const searchFunctionalityCurry = () => {
             limit,
             inputValue
         ).then(coursesData => {
+            const searchTerm = document.querySelector('.block-eledia_telc_coursesearch [data-action="search"]').value;
+            window.console.log('searchTerm');
+            window.console.log(searchTerm);
+            if (searchTerm.trim() !== '') {
+                window.console.log('coursesData');
+                window.console.log(coursesData);
+                coursesData.courses.forEach(c => {
+                    const word = searchTerm.trim();
+                    const summary = c.summary;
+                    const fullname = c.fullname;
+                    const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const regex = new RegExp(`(${escapedWord})`, 'gi');
+                    c.summary = summary.replace(regex, '<mark>$1</mark>');
+                    c.fullname = fullname.replace(regex, '<mark>$1</mark>');
+                });
+            }
+
             pageBuilder(coursesData, currentPage, pageData, actions);
             return renderCourses(root, loadedPages[currentPage]);
         }).catch(Notification.exception);
@@ -1046,6 +1063,8 @@ const initializePagedContent = (root, promiseFunction, inputValue = null, params
 
     pagedContentPromise.then((html, js) => {
         registerPagedEventHandlers(root, namespace);
+        window.console.log('html');
+        window.console.log(html);
         return Templates.replaceNodeContents(root.find(SELECTORS.courseView.region), html, js);
     }).catch(Notification.exception);
 };
