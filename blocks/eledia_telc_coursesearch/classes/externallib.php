@@ -820,6 +820,8 @@ class externallib extends external_api {
 		INNER JOIN {customfield_category} c
 		ON c.id = f.categoryid
 		WHERE c.area = 'course'
+		AND f.id IN (SELECT DISTINCT fieldid FROM {customfield_data})
+		ORDER BY c.sortorder, f.sortorder
 		";
 		$customfields = $DB->get_records_sql($sql);
 		if (!$customfields)
