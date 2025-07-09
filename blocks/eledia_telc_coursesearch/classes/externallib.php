@@ -19,6 +19,7 @@ use core_external\external_files;
 use core_external\external_format_value;
 use core_external\external_warnings;
 use core_external\util;
+use core_reportbuilder\external\reports\retrieve;
 use DateTime;
 
 require_once(__DIR__ . "/../../../course/lib.php");
@@ -331,20 +332,6 @@ class externallib extends external_api {
         );
     }
 
-
-	// Maybe not necessary.
-	// TODO: Remove?
-	public static function get_courses_for_user(array $category_ids = [], array $customfields = [], string $searchterm = '', int $category_contextid = 0) {
-		global $DB, $USER;
-		$where = 'c.id <> :siteid';
-        $params = array('siteid' => SITEID);
-		if ($category_contextid) {
-			$context = context_coursecat::instance($category_contextid);
-			$where .= ' AND ctx.path like :path';
-			$params['path'] = $context->path. '/%';
-			$list = self::get_course_records($where, $params, array_diff_key($options, array('coursecontacts' => 1)), true);
-		}
-	}
 
 	public static function get_courseview(array $data) {
 		global $DB;
@@ -827,7 +814,7 @@ class externallib extends external_api {
 		if (!$customfields)
 			return [];
 
-		$map_function = $info ? 'self::map_customfield_info' : 'self::map_customfield_ids';
+		$map_function = $info ? [self::class, 'map_customfield_info'] : [self::class, 'map_customfield_ids'];
 
 		$custom_ids = array_map($map_function, $customfields);
 		return $custom_ids;
@@ -921,6 +908,15 @@ class externallib extends external_api {
         );
 	}
 
+	public static function get_multiselect_customfields() {
+		global $DB;
+		$fields = $DB->get_records('customfield_field', ['type' => 'multiselect'], '', 'id, shortname, name');
+		return $fields ? (array) $fields : false;
+	}
+
+	public static function get_multiselect_customfield_values() {
+		// TODO: Need to get all values. Need to call this function for all fields.k  
+	}
 
 	protected static function get_customfield_value_options(int | string $fieldid, array $courseids) {
 		// See get_customfield_values_for_export() in main.php and get_config_for_external() in block_eledia...php
@@ -971,65 +967,6 @@ class externallib extends external_api {
 	public static function get_customfield_value_options_returns() {
 		return self::get_available_parameters();
 	}
-
-    /**
-     * Retrieves number of records from course table
-     * TODO: Remove. 
-     * Not all fields are retrieved. Records are ready for preloading context
-     *
-     * @param string $whereclause
-     * @param array $params
-     * @param array $options may indicate that summary needs to be retrieved
-     * @param bool $checkvisibility if true, capability 'moodle/course:viewhiddencourses' will be checked
-     *     on not visible courses and 'moodle/category:viewcourselist' on all courses
-     * @return array array of stdClass objects
-     */
-    protected static function get_course_records($whereclauses, $wherefields, $params, $options, $checkvisibility = false, $additionalfields, $distinct = false) {
-		// INFO: One query is required for search only. There is no need to send data for the searching field because it should be already populated.
-        global $DB;
-		$whereclause = '';
-		$distinct = $distinct ? ' DISTINCT ' : '';
-		if (sizeof($whereclauses)) {
-			$whereclause = ' (' . join(') AND (', $whereclauses) . ')';
-		}
-        $ctxselect = context_helper::get_preload_record_columns_sql('ctx');
-		if (!$distinct) {
-			$fields = array('c.id', 'c.category', 'c.sortorder',
-				'c.shortname', 'c.fullname', 'c.idnumber',
-				'c.startdate', 'c.enddate', 'c.visible', 'c.cacherev');
-			if (!empty($options['summary'])) {
-				$fields[] = 'c.summary';
-				$fields[] = 'c.summaryformat';
-			} else {
-				$fields[] = $DB->sql_substr('c.summary', 1, 1). ' as hassummary';
-			}
-		}
-		$additional_fields = join(',', $additionalfields);
-        $sql = "SELECT " . $distinct . join(',', $fields). ", $ctxselect
-                FROM {course} c
-                JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = :contextcourse
-                WHERE ". $whereclause." ORDER BY c.sortorder";
-        $list = $DB->get_records_sql($sql,
-                array('contextcourse' => CONTEXT_COURSE) + $params);
-
-        if ($checkvisibility) {
-            $mycourses = enrol_get_my_courses();
-            // Loop through all records and make sure we only return the courses accessible by user.
-            foreach ($list as $course) {
-                if (isset($list[$course->id]->hassummary)) {
-                    $list[$course->id]->hassummary = strlen($list[$course->id]->hassummary) > 0;
-                }
-                context_helper::preload_from_record($course);
-                $context = context_course::instance($course->id);
-                // Check that course is accessible by user.
-                if (!array_key_exists($course->id, $mycourses) && !self::can_view_course_info($course)) {
-                    unset($list[$course->id]);
-                }
-            }
-        }
-
-        return $list;
-    }
 
 }
 
