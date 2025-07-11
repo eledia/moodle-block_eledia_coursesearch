@@ -9,18 +9,10 @@ use core_external\external_value;
 use core_course_category;
 use core_course_external;
 use coursecat_helper;
-use moodle_url;
 use context_system;
 
 
 use core_course\external\course_summary_exporter;
-use core_external\external_description;
-use core_external\external_files;
-use core_external\external_format_value;
-use core_external\external_warnings;
-use core_external\util;
-use core_reportbuilder\external\reports\retrieve;
-use DateTime;
 
 require_once(__DIR__ . "/../../../course/lib.php");
 require_once($CFG->dirroot . '/course/externallib.php');
@@ -590,21 +582,6 @@ class externallib extends external_api {
 
 	}
 
-	// TODO: Change search for array only.
-	// TODO: Do I need this anymore?
-	// protected static function get_customfield_available_values(array $data) {
-	protected static function get_customfield_available_values(array $data) {
-		[$searchdata, $customfields, $categories, $tags] = self::remap_searchdata($data);
-		$courseids = self::get_filtered_courseids($customfields, $categories, $tags, $searchdata['searchterm'], 'customfield', $searchdata['current_customfield']);
-		return self::get_customfield_value_options(
-			$searchdata, 
-			$customfields, 
-			$searchdata['current_customfield'], 
-			$searchdata['current_customfield'], 
-			$courseids
-		);
-	}
-
     /**
      * Returns description of method parameters
      *
@@ -976,47 +953,6 @@ class externallib extends external_api {
 		return $customfields;
 	}
 
-	protected static function get_customfield_value_options(int | string $fieldid, array $courseids) {
-		// See get_customfield_values_for_export() in main.php and get_config_for_external() in block_eledia...php
-		// Field identification is the field shortname.
-		// There should be a LIMIT which is checked in frontend for displaying "too many entries to display".
-        global $DB, $USER;
-
-        if (!$fieldid) {
-            return [];
-        }
-        // $courses = enrol_get_all_users_courses($USER->id, false); // INFO: Maybe a settig would be useful to show only courses the user is enrlled in.
-        if (!$courseids) {
-            return [];
-        }
-        list($csql, $params) = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED);
-        $select = "instanceid $csql AND fieldid = :fieldid";
-        $params['fieldid'] = $fieldid;
-        $distinctablevalue = $DB->sql_compare_text('value');
-        $values = $DB->get_records_select_menu('customfield_data', $select, $params, '',
-            "DISTINCT $distinctablevalue, $distinctablevalue AS value2");
-        \core_collator::asort($values, \core_collator::SORT_NATURAL);
-        $values = array_filter($values);
-        if (!$values) {
-            return [];
-        }
-        $field = \core_customfield\field_controller::create($fieldid);
-        $isvisible = $field->get_configdata_property('visibility') == \core_course\customfield\course_handler::VISIBLETOALL;
-        // Only visible fields to everybody supporting course grouping will be displayed.
-		// TODO: Check if there are unsupported custom fields to be used.
-        if (!$field->supports_course_grouping() || !$isvisible) {
-            return []; // The field shouldn't have been selectable in the global settings, but just skip it now.
-        }
-        $values = $field->course_grouping_format_values($values);
-        $ret = [];
-        foreach ($values as $value => $name) {
-            $ret[] = (object)[
-                'name' => $name,
-                'value' => $value,
-            ];
-        }
-        return $ret;
-	}
 
 	public static function get_customfield_value_options_parameters() {
 		return self::get_available_parameters();
