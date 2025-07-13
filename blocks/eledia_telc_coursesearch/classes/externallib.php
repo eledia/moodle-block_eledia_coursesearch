@@ -408,6 +408,7 @@ class externallib extends external_api {
 		$customfields = self::filterconvert_multiselect_customfields($customfields, $current_customfield);
 		// Build query for all courses that have the customfield selection minus the one in question.
 		$insqls = '';
+		$customjoins = '';
 		$customsqls = [];
 		$allparams = [];
 		$customfield_id = $excludetype === 'customfield' ? (string) $excludevalue : -1;
@@ -417,22 +418,14 @@ class externallib extends external_api {
 					continue;
 			}
 			$cid = (int) $customfield['fieldid'];
-			if (!isset($customsqls[$cid]))
-				$customsqls[$cid] = [];
 			[$insql, $params] = $DB->get_in_or_equal($customfield['fieldvalues'], SQL_PARAMS_NAMED);
 			$allparams = array_merge($allparams, $params);
-			$query = " cd.value $insql ";
-			// $query = " ( cd.fieldid = $cid AND cd.value $insql ) ";
-			// $insqls[] = $query;
-			// $insqls .= $query;
-			$customsqls[$cid][] = $query;
-		}
-		foreach ($customsqls as $k => $v) {
-			if (sizeof($v)) 
-				$customsqls[$k] = " ( cd.fieldid = $k AND ( " . implode(' OR ', $v) . ' )) ';
+			$customjoins .= " LEFT JOIN {customfield_data} cd$cid ON cd$cid.contextid = ctx.id AND cd$cid.fieldid = $cid ";
+			$wherequery = " cd$cid.value $insql ";
+			$customsqls[] = $wherequery;
 		}
 		if (sizeof($customsqls)) 
-			$insqls = 'AND ( ' . implode(' AND ', $customsqls) . ' ) ';
+			$insqls = ' AND ' . implode(' AND ', $customsqls) . ' ';
 
 		// Builder for category filter.
 		if ($excludetype === 'categories')
@@ -488,18 +481,7 @@ class externallib extends external_api {
              FROM {course} c
 		LEFT JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = $contextlevel
         LEFT JOIN {customfield_data} cd ON cd.contextid = ctx.id
-		LEFT JOIN {customfield_field} f ON f.id = cd.fieldid
-		LEFT JOIN {customfield_category} cat ON cat.id = f.categoryid
-		$tagsql
-		    WHERE cat.component = 'core_course'
-			  AND cat.area = 'course'
-		      $insqls
-        ";
-        $sql = "
-           SELECT DISTINCT $id_type
-             FROM {course} c
-		LEFT JOIN {context} ctx ON c.id = ctx.instanceid AND ctx.contextlevel = $contextlevel
-        LEFT JOIN {customfield_data} cd ON cd.contextid = ctx.id
+		$customjoins
 		LEFT JOIN {customfield_field} f ON f.id = cd.fieldid
 		LEFT JOIN {customfield_category} cat ON cat.id = f.categoryid
 		$tagsql
@@ -511,7 +493,6 @@ class externallib extends external_api {
 			$allparams['cshortname'] = "%$searchterm%";
 			$fullname_like = $DB->sql_like('c.fullname', ':cfullname', false);
 			$shortname_like = $DB->sql_like('c.shortname', ':cshortname', false);
-			// $sql .= " AND (c.fullname ILIKE ? OR c.shortname ILIKE ?) ";
 			$sql .= " AND ($fullname_like OR $shortname_like) ";
 		}
 
