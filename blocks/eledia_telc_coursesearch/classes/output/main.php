@@ -477,9 +477,11 @@ class main implements renderable, templatable {
         // I know, it's pretty.
         $customfields = array_values(array_filter(externallib::get_customfields(), fn($value) => !is_null($value) ));
         $customfields_collapse = false;
+        $customfield_collapsable = false;
         if (count($customfields) > 4) {
            $customfields_collapse = array_splice($customfields, 4);
            $customfields= array_splice($customfields, 0, 4);
+           $customfield_collapsable = true;
         }
 
         $defaultvariables = [
@@ -506,6 +508,7 @@ class main implements renderable, templatable {
             'displaygroupingcustomfield' => $this->displaygroupingcustomfield && $customfieldvalues,
             'customfields' => $customfields,
             'customfields_collapse' => $customfields_collapse,
+            'customfield_collapsable' => $customfield_collapsable,
             'customfieldname' => $this->customfiltergrouping,
             'customfieldvalue' => $this->customfieldvalue,
             'customfieldvalues' => $customfieldvalues,
