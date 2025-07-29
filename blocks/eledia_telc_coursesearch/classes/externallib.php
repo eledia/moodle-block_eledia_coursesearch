@@ -491,9 +491,11 @@ class externallib extends external_api {
 		if (!empty($searchterm)) {
 			$allparams['cfullname'] = "%$searchterm%";
 			$allparams['cshortname'] = "%$searchterm%";
+			$allparams['csummary'] = "%$searchterm%";
 			$fullname_like = $DB->sql_like('c.fullname', ':cfullname', false);
 			$shortname_like = $DB->sql_like('c.shortname', ':cshortname', false);
-			$sql .= " AND ($fullname_like OR $shortname_like) ";
+			$summary_like = $DB->sql_like('c.summary', ':csummary', false);
+			$sql .= " AND ($fullname_like OR $shortname_like OR $summary_like) ";
 		}
 
 		if ($progress === 'past') {
