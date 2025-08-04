@@ -43,19 +43,13 @@ The following web services are available:
 
 This section describes the main database queries used by the block.
 
-#### `get_filtered_courseids()`
+### SQL Relationships per Web Service
 
-This is the most complex query in the block. It is responsible for finding all course IDs that match a given set of filter criteria. The query is built dynamically based on the provided filters.
+This section provides diagrams illustrating the database table relationships for each of the main web service functions.
 
-Here's a breakdown of how the query is constructed:
+#### `get_courseview` / `get_filtered_courseids`
 
-1.  **Custom Fields:** For each selected custom field, a `LEFT JOIN` is added to the `customfield_data` table, and a `WHERE` clause is added to filter by the selected value.
-2.  **Categories:** If any categories are selected, a `WHERE` clause is added to filter by the selected category IDs.
-3.  **Tags:** If any tags are selected, a `LEFT JOIN` is added to the `tag_instance` table, and a `WHERE` clause is added to filter by the selected tag IDs.
-4.  **Search Term:** If a search term is provided, a `WHERE` clause is added to search for the term in the course's full name, short name, and summary.
-5.  **Progress:** If a progress filter is selected, a `WHERE` clause is added to filter by the course's start and end dates.
-
-Here's a diagram illustrating the table relations in the `get_filtered_courseids()` query:
+This function performs the most complex query, joining multiple tables to filter courses based on various criteria.
 
 ```mermaid
 graph TD
@@ -82,6 +76,53 @@ graph TD
     A -- many-to-many --> G;
     F -- many-to-one --> G;
     A -- one-to-many --> F;
+```
+
+#### `get_available_categories`
+
+This function retrieves the course categories that are associated with the currently filtered list of courses.
+
+```mermaid
+graph TD
+    A[course] -- many-to-one --> B[course_categories];
+```
+
+#### `get_available_tags`
+
+This function retrieves the tags that are associated with the currently filtered list of courses.
+
+```mermaid
+graph TD
+    A[course] -- one-to-many --> B[tag_instance];
+    B -- many-to-one --> C[tag];
+```
+
+#### `get_customfield_available_options`
+
+This function retrieves the available options for a specific custom field based on the values present in the currently filtered list of courses.
+
+```mermaid
+graph TD
+    subgraph "Course"
+        A[course]
+    end
+    subgraph "Context"
+        B[context]
+    end
+    subgraph "Custom Field Data"
+        C[customfield_data]
+    end
+    A -- one-to-one --> B;
+    B -- one-to-many --> C;
+```
+
+#### `get_customfields`
+
+This function retrieves all the course-related custom fields that are configured to be visible.
+
+```mermaid
+graph TD
+    A[customfield_category] -- one-to-many --> B[customfield_field];
 ```
 
 ## Frontend JavaScript Code and API Endpoints
@@ -115,96 +156,17 @@ The `ViewNav` module handles the user's interactions with the navigation element
 *   **`init(root)`**: Initializes the navigation elements and sets up event listeners.
 *   **`registerSelector(root)`**: Sets up event listeners for the filter and display options. When a user changes a filter, it updates the user's preferences and reloads the course list.
 
-### API Calls: `amd/src/repository.js`
+### API Calls and Data Structures
 
-The `repository.js` module is responsible for making all API calls to the backend. It uses the `core/ajax` module to send requests to the Moodle web services.
+The `repository.js` module is responsible for making all API calls to the backend. It uses the `core/ajax` module to send requests to the Moodle web services. The following table details the mapping between the frontend functions and the backend web services they call.
 
-#### Key Functions:
-
-*   **`getEnrolledCoursesByTimeline(args)`**: Calls the `block_eledia_telc_coursesearch_get_courseview` web service.
-*   **`getCategories(args)`**: Calls the `block_eledia_telc_coursesearch_get_available_categories` web service.
-*   **`getTags(args)`**: Calls the `block_eledia_telc_coursesearch_get_available_tags` web service.
-*   **`getCustomfields(args)`**: Calls the `block_eledia_telc_coursesearch_get_customfield_available_options` web service.
-
-### Data Structures
-
-This section describes the main data structures that are transferred between the frontend and backend.
-
-#### Course View Request (`get_courseview`)
-
-This is the data structure that is sent from the frontend to the backend when requesting a list of courses.
-
-```json
-{
-    "criteria": [
-        {
-            "key": "categoryName",
-            "value": ""
-        },
-        {
-            "key": "tagsName",
-            "value": ""
-        },
-        {
-            "key": "name",
-            "value": ""
-        },
-        {
-            "key": "selectedCategories",
-            "categories": []
-        },
-        {
-            "key": "limit",
-            "value": 24
-        },
-        {
-            "key": "offset",
-            "value": 0
-        },
-        {
-            "key": "progress",
-            "value": "all"
-        },
-        {
-            "key": "currentCustomField",
-            "value": 0
-        },
-        {
-            "key": "selectedCustomfields",
-            "customfields": []
-        },
-        {
-            "key": "selectedTags",
-            "tags": []
-        }
-    ],
-    "addsubcategories": true
-}
-```
-
-#### Course View Response (`get_courseview`)
-
-This is the data structure that is returned from the backend to the frontend.
-
-```json
-{
-    "courses": [
-        {
-            "id": 1,
-            "fullname": "My Course",
-            "shortname": "course1",
-            "summary": "<p>This is the summary of my course.</p>",
-            "summaryformat": 1,
-            "startdate": 1672531200,
-            "enddate": 1675209600,
-            "visible": true,
-            "isfavourite": false,
-            "showcoursecategory": true
-        }
-    ],
-    "nextoffset": 24
-}
-```
+| `repository.js` Function | Webservice Called | Important Request `args` Keys | Important Response Keys |
+| :--- | :--- | :--- | :--- |
+| `getEnrolledCoursesByTimeline(args)` | `block_eledia_telc_coursesearch_get_courseview` | `criteria` (contains all filters: `name`, `selectedCategories`, `selectedCustomfields`, `limit`, `offset`, etc.) | `courses` (array of course objects), `nextoffset` |
+| `getCategories(args)` | `block_eledia_telc_coursesearch_get_available_categories` | `criteria` (filters are used to find relevant categories) | An array of category objects: `id`, `name`, `coursecount` |
+| `getTags(args)` | `block_eledia_telc_coursesearch_get_available_tags` | `criteria` (filters are used to find relevant tags) | An array of tag objects: `id`, `name` |
+| `getCustomfields(args)` | `block_eledia_telc_coursesearch_get_customfield_available_options` | `criteria` (especially `currentCustomField` to identify the target field) | An array of option objects: `name`, `value` |
+| `setFavouriteCourses(args)` | `core_course_set_favourite_courses` | `courses` (an array containing `id` and `favourite` status) | `warnings` (array of warnings, empty on success) |
 
 ## Stale Functions and Methods
 
@@ -220,5 +182,4 @@ This section lists functions and methods that are likely stale and no longer use
 
 ### Frontend
 
-*   **File:** `amd/src/repository.js`
-    *   **Function:** `setFavouriteCourses()`
+*There are no apparent stale functions in the frontend JavaScript files.*
