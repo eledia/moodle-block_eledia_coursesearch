@@ -24,9 +24,9 @@ Here's a diagram illustrating the relationship between the main block class, the
 
 ```mermaid
 graph TD
-    A[block_eledia_telc_coursesearch] -- instantiates --> B[\block_eledia_telc_coursesearch\output\main];
+    A[block_eledia_telc_coursesearch] -- instantiates --> B["main (output)"];
     B -- renders --> C[HTML];
-    D[Frontend JS] -- calls --> E[\block_eledia_telc_coursesearch\externallib];
+    D[Frontend JS] -- calls --> E["externallib"];
     E -- returns --> F[JSON Data];
 ```
 
