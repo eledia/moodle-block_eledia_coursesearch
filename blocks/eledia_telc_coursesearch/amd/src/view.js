@@ -693,21 +693,12 @@ const renderCategories = (dropdownContainer, dropdown, categoriesData, selection
         categories: categoriesData,
         catselections: selectionsData,
     }).then(({ html, js }) => {
+        window.console.log('replaceNodeContents');
+        window.console.log(html);
+        window.console.log(js);
         const renderResult = Templates.replaceNodeContents(dropdownContainer, html, js);
-        let attempts = 0;
-        const maxAttempts = 120; // Poll for approx 2 seconds.
-        const findAndShow = () => {
-            const catDropdown = page.querySelector(dropdown);
-            if (catDropdown) {
-                catDropdown.style.display = 'block';
-            } else {
-                attempts++;
-                if (attempts < maxAttempts) {
-                    requestAnimationFrame(findAndShow);
-                }
-            }
-        };
-        requestAnimationFrame(findAndShow);
+        const catDropdowns = page.querySelectorAll(dropdown);
+        catDropdowns.forEach(cdd => { cdd.style.display = 'block'; });
         return renderResult;
     }).catch(error => displayException(error));
 };
@@ -732,20 +723,8 @@ const renderTags = (dropdownContainer, dropdown, tagsData, selectionsData, page)
         tagsselections: selectionsData,
     }).then(({ html, js }) => {
         const renderResult = Templates.replaceNodeContents(dropdownContainer, html, js);
-        let attempts = 0;
-        const maxAttempts = 120; // Poll for approx 2 seconds.
-        const findAndShow = () => {
-            const catDropdown = page.querySelector(dropdown);
-            if (catDropdown) {
-                catDropdown.style.display = 'block';
-            } else {
-                attempts++;
-                if (attempts < maxAttempts) {
-                    requestAnimationFrame(findAndShow);
-                }
-            }
-        };
-        requestAnimationFrame(findAndShow);
+        const catDropdowns = page.querySelectorAll(dropdown);
+        catDropdowns.forEach(cdd => { cdd.style.display = 'block'; });
         return renderResult;
     }).catch(error => displayException(error));
 };
@@ -753,44 +732,36 @@ const renderTags = (dropdownContainer, dropdown, tagsData, selectionsData, page)
 /**
  * Render the categories in search dropdown.
  *
- * @param {string} dropdownContainer The categories element for the courses view.
+ * @param {string} dropdownDiv The categories element for the courses view.
  * @param {string} dropdown The categories element for the courses view.
  * @param {array} customfieldsData containing array of returned categories.
  * @param {array} selectionsData containing array of selected categories.
  * @param {object} page The page object.
  * @return {promise} jQuery promise resolved after rendering is complete.
  */
-const renderCustomfields = (dropdownContainer, dropdown, customfieldsData, selectionsData, page) => { // eslint-disable-line
+const renderCustomfields = (dropdownDiv, dropdown, customfieldsData, selectionsData, page) => { // eslint-disable-line
 
     const template = 'block_eledia_telc_coursesearch/nav-customfield-dropdown';
-
-    const container = document.querySelector(dropdownContainer);
-
+    const dropdownObject = document.querySelector(dropdownDiv);
+    window.console.log('dropdownDiv:', dropdownDiv);
+    window.console.log('dropdownObject:', dropdownObject);
     // NOTE: Render function for mustache.
     return Templates.renderForPromise(template, {
         customvalues: customfieldsData,
         customselections: selectionsData,
         customfieldid: currentCustomField,
-        description: container ? container.dataset.description : '',
+        description: dropdownObject.dataset.description,
     }).then(({ html, js }) => {
-        const renderResult = Templates.replaceNodeContents(dropdownContainer, html, js);
-
-        let attempts = 0;
-        const maxAttempts = 120; // Poll for approx 2 seconds.
-        const findAndShow = () => {
-            window.console.log("Inspecting 'page' variable inside findAndShow:", page);
-            const cuDropdown = page.querySelector(dropdown);
-            if (cuDropdown) {
-                cuDropdown.style.display = 'block';
-            } else {
-                attempts++;
-                if (attempts < maxAttempts) {
-                    requestAnimationFrame(findAndShow);
-                }
-            }
-        };
-        requestAnimationFrame(findAndShow);
-
+        window.console.log('dropdownDiv');
+        window.console.log(dropdownDiv);
+        const renderResult = Templates.replaceNodeContents(dropdownDiv, html, js);
+        window.console.log('renderResult');
+        window.console.log(renderResult);
+        const cuDropdowns = page.querySelectorAll(dropdown);
+        window.console.log(dropdown);
+        window.console.log(cuDropdowns);
+        cuDropdowns.forEach(cuDropdown => { cuDropdown.style.display = 'block'; });
+        window.console.log('renderCustomfields wnd');
         return renderResult;
     }).catch(error => displayException(error));
 };
@@ -981,7 +952,7 @@ const searchFunctionalityCurry = () => {
  * @return {function(Object): void}
  */
 const catSearchFunctionality = () => {
-    return (dropdownContainer, dropdown, page, selectedCategories) => {
+    return (dropdownContainer, dropdown, dropdownHelper, page, selectedCategories) => {
         const searchingPromise = getSearchCategories().then(categoriesData => {
             // NOTE: Here it goes.
             selectableCategories = categoriesData;
@@ -992,7 +963,10 @@ const catSearchFunctionality = () => {
                 }
             });
             //return renderCategories(dropdownContainer, dropdown, categoriesData, page);
-            return renderCategories(dropdownContainer, dropdown, selectableCategories, selectedCategories, page);
+            const dropdowns = dropdownHelper('categories', dropdownContainer, true);
+            return dropdowns.forEach(ddc => {
+                return renderCategories(ddc, dropdown, selectableCategories, selectedCategories, page);
+            });
             //pageBuilder(categoriesData, actions);
             //return renderCategories(root, loadedPages[currentPage]);
         }).catch(Notification.exception);
@@ -1009,7 +983,7 @@ const catSearchFunctionality = () => {
  * @return {function(Object): void}
  */
 const tagsSearchFunctionality = () => {
-    return (dropdownContainer, dropdown, page, selectedTags) => {
+    return (dropdownContainer, dropdown, dropdownHelper, page, selectedTags) => {
         const searchingPromise = getSearchTags().then(tagsData => {
             // NOTE: Here it goes.
             selectableTags = tagsData;
@@ -1020,7 +994,10 @@ const tagsSearchFunctionality = () => {
                 }
             });
             //return renderCategories(dropdownContainer, dropdown, categoriesData, page);
-            return renderTags(dropdownContainer, dropdown, selectableTags, selectedTags, page);
+            const dropdowns = dropdownHelper('tags', dropdownContainer, true);
+            return dropdowns.forEach(ddc => {
+                return renderTags(ddc, dropdown, selectableTags, selectedTags, page);
+            });
             //pageBuilder(categoriesData, actions);
             //return renderCategories(root, loadedPages[currentPage]);
         }).catch(Notification.exception);
@@ -1037,7 +1014,7 @@ const tagsSearchFunctionality = () => {
  * @return {function(Object): void}
  */
 const customfieldSearchFunctionality = () => {
-    return (dropdownContainer, dropdown, page, searchterm) => {
+    return (dropdownDiv, dropdown, dropdownHelper, page, searchterm) => {
         const searchingPromise = getSearchCustomfields().then(customfieldsData => {
             const noneOptionIndex = customfieldsData.findIndex(option => option.value === -1);
             // TODO: Fields may have different methods of signaling 'select none' options. -1 might be a legit value.
@@ -1055,15 +1032,19 @@ const customfieldSearchFunctionality = () => {
                 }
             });
             filteredCustomfields[currentCustomField] = customfields[currentCustomField];
-            if (searchterm.trim() !== '') {
+            if (searchterm && searchterm.trim() !== '') {
                 filteredCustomfields[currentCustomField] = filteredCustomfields[currentCustomField].filter(
                     item => item.name.toLowerCase().includes(searchterm.trim().toLowerCase()));
             }
-            return renderCustomfields(dropdownContainer,
-                dropdown,
-                filteredCustomfields[currentCustomField],
-                selectedCustomfields[currentCustomField],
-                page);
+            const dropdowns = dropdownHelper('customfields', dropdownDiv, true);
+            return dropdowns.forEach(ddiv => {
+
+                return renderCustomfields(ddiv,
+                    dropdown,
+                    filteredCustomfields[currentCustomField],
+                    selectedCustomfields[currentCustomField],
+                    page);
+            });
         }).catch(Notification.exception);
 
         return searchingPromise;
@@ -1154,10 +1135,9 @@ const initializeCategorySearchContent = (dropdownContainer,
     dropdownHelper,
     page,
     selectedCategories) => {// eslint-disable-line
-    dropdownContainer = dropdownHelper('categories', dropdownContainer);
-    dropdown = dropdownHelper('categories', dropdown);
     const categories = promiseFunction(dropdownContainer,
         dropdown,
+        dropdownHelper,
         page,
         selectedCategories);
     window.console.log(categories);
@@ -1179,10 +1159,9 @@ const initializeTagsSearchContent = (dropdownContainer,
     dropdownHelper,
     page,
     selectedTags) => {// eslint-disable-line
-    dropdownContainer = dropdownHelper('tags', dropdownContainer);
-    dropdown = dropdownHelper('tags', dropdown);
     const categories = promiseFunction(dropdownContainer,
         dropdown,
+        dropdownHelper,
         page,
         selectedTags);
     window.console.log(categories);
@@ -1194,21 +1173,20 @@ const initializeTagsSearchContent = (dropdownContainer,
  *
  * @param {string} dropdownContainer The dropdown container element.
  * @param {string} dropdown The dropdown element for the search results.
- * @param {function} dropdownHelper
  * @param {function} promiseFunction How do we fetch the categories and what do we do with them?
+ * @param {object} dropdownHelper
  * @param {object} page The page object.
  * @param {string} searchterm The current searchterm.
  */
 const initializeCustomfieldSearchContent = (dropdownContainer,
     dropdown,
-    dropdownHelper,
     promiseFunction,
+    dropdownHelper,
     page,
     searchterm) => {// eslint-disable-line
-    dropdown = dropdownHelper('customfields', dropdown);
-    dropdownContainer = dropdownHelper('customfields', dropdownContainer);
     const $customfields = promiseFunction(dropdownContainer,
         dropdown,
+        dropdownHelper,
         page,
         searchterm);
     window.console.log($customfields);
@@ -1302,6 +1280,7 @@ const registerEventListeners = (root, page) => {
                 SELECTORS.cat.dropdownDiv,
                 SELECTORS.cat.dropdown,
                 catSearchFunctionality(),
+                dropdownHelper,
                 page,
                 selectedCategories);
         });
@@ -1341,8 +1320,8 @@ const registerEventListeners = (root, page) => {
             initializeCustomfieldSearchContent(
                 SELECTORS.customfields.dropdownDiv + currentCustomField,
                 SELECTORS.customfields.dropdown + currentCustomField,
+                customfieldSearchFunctionality(),
                 dropdownHelper,
-                customfieldSearchFunctionality,
                 page,
                 '');
         });
@@ -1370,30 +1349,19 @@ const registerEventListeners = (root, page) => {
     // renderCustomfields()
     customInputs.forEach(i => {
         i.addEventListener('click', (e) => {
-            const isInsideCollapse = e.target.closest('#filtercollapse');
             currentCustomField = e.target.dataset.customfieldid;
-            const currentSearchterm = (e.target.value || '').toLowerCase();
-
-            let dropdownDivSelector = SELECTORS.customfields.dropdownDiv + currentCustomField;
-            let dropdownSelector = SELECTORS.customfields.dropdown + currentCustomField;
-
-            if (isInsideCollapse) {
-                dropdownDivSelector = '#filtercollapse ' + dropdownDivSelector;
-                dropdownSelector = '#filtercollapse ' + dropdownSelector;
-            }
-
+            const currentSearchterm = e.target.value.toLowerCase();
             initializeCustomfieldSearchContent(
-                dropdownDivSelector,
-                dropdownSelector,
-                dropdownHelper,
+                SELECTORS.customfields.dropdownDiv + currentCustomField,
+                SELECTORS.customfields.dropdown + currentCustomField,
                 customfieldSearchFunctionality(),
+                dropdownHelper,
                 page,
                 currentSearchterm);
         });
         i.addEventListener('input', debounce((e) => {
             currentCustomField = e.target.dataset.customfieldid;
-            const currentSearchterm = (e.target.value || '').toLowerCase();
-            const currentPage = document.querySelector(SELECTORS.region.selectBlock);
+            const currentSearchterm = e.target.value.toLowerCase();
             if (currentSearchterm === '') {
                 clearCustomfieldSearch(clearCustomfieldIcons);
                 manageCustomfielddropdownItems(
@@ -1402,7 +1370,8 @@ const registerEventListeners = (root, page) => {
                     customfieldSelectable,
                     SELECTORS.customfields.dropdownDiv + currentCustomField,
                     SELECTORS.customfields.dropdown + currentCustomField,
-                    currentPage);
+                    dropdownHelper,
+                    page);
             } else {
                 filteredCustomfields[currentCustomField] = filteredCustomfields[currentCustomField].filter(
                     item => item.name.toLowerCase().includes(currentSearchterm.toLowerCase().trim()));
@@ -1413,26 +1382,18 @@ const registerEventListeners = (root, page) => {
                     customfieldSelectable,
                     SELECTORS.customfields.dropdownDiv + currentCustomField,
                     SELECTORS.customfields.dropdown + currentCustomField,
-                    currentPage);
+                    dropdownHelper,
+                    page);
             }
         }, 1000));
     });
 
     // Initialize category search dropdown on first click.
     catinputs.forEach(ci => {
-        ci.addEventListener('click', (e) => {
-            const isInsideCollapse = e.target.closest('#filtercollapse');
-            let dropdownDivSelector = SELECTORS.cat.dropdownDiv;
-            let dropdownSelector = SELECTORS.cat.dropdown;
-
-            if (isInsideCollapse) {
-                dropdownDivSelector = '#filtercollapse ' + dropdownDivSelector;
-                dropdownSelector = '#filtercollapse ' + dropdownSelector;
-            }
-
+        ci.addEventListener('click', () => {
             initializeCategorySearchContent(
-                dropdownDivSelector,
-                dropdownSelector,
+                SELECTORS.cat.dropdownDiv,
+                SELECTORS.cat.dropdown,
                 catSearchFunctionality(),
                 dropdownHelper,
                 page,
@@ -1487,19 +1448,10 @@ const registerEventListeners = (root, page) => {
 
     // Initialize tags search dropdown on first click.
     tagsinputs.forEach(tagsinput => {
-        tagsinput.addEventListener('click', (e) => {
-            const isInsideCollapse = e.target.closest('#filtercollapse');
-            let dropdownDivSelector = SELECTORS.tags.dropdownDiv;
-            let dropdownSelector = SELECTORS.tags.dropdown;
-
-            if (isInsideCollapse) {
-                dropdownDivSelector = '#filtercollapse ' + dropdownDivSelector;
-                dropdownSelector = '#filtercollapse ' + dropdownSelector;
-            }
-
+        tagsinput.addEventListener('click', () => {
             initializeTagsSearchContent(
-                dropdownDivSelector,
-                dropdownSelector,
+                SELECTORS.tags.dropdownDiv,
+                SELECTORS.tags.dropdown,
                 tagsSearchFunctionality(),
                 dropdownHelper,
                 page,
@@ -1560,7 +1512,6 @@ const registerEventListeners = (root, page) => {
     document.body.addEventListener('click', (e) => {
         if (e.target.classList.contains(catSelected) || e.target.classList.contains(catSelectable)) {
             e.preventDefault();
-            const currentPage = document.querySelector(SELECTORS.region.selectBlock);
             manageCategorydropdownItems(
                 e,
                 catSelected,
@@ -1568,7 +1519,7 @@ const registerEventListeners = (root, page) => {
                 SELECTORS.cat.dropdownDiv,
                 SELECTORS.cat.dropdown,
                 dropdownHelper,
-                currentPage);
+                page);
             initializePagedContent(root, searchFunctionalityCurry(), input.value.trim(), getParams());
         }
     });
@@ -1576,7 +1527,6 @@ const registerEventListeners = (root, page) => {
     document.body.addEventListener('click', (e) => {
         if (e.target.classList.contains(tagsSelected) || e.target.classList.contains(tagsSelectable)) {
             e.preventDefault();
-            const currentPage = document.querySelector(SELECTORS.region.selectBlock);
             manageTagsdropdownItems(
                 e,
                 tagsSelected,
@@ -1584,7 +1534,7 @@ const registerEventListeners = (root, page) => {
                 SELECTORS.tags.dropdownDiv,
                 SELECTORS.tags.dropdown,
                 dropdownHelper,
-                currentPage);
+                page);
             initializePagedContent(root, searchFunctionalityCurry(), input.value.trim(), getParams());
         }
     });
@@ -1593,14 +1543,14 @@ const registerEventListeners = (root, page) => {
         if (e.target.classList.contains(customfieldSelected) || e.target.classList.contains(customfieldSelectable)) {
             e.preventDefault();
             const currentId = e.target.dataset.customfieldid;
-            const currentPage = document.querySelector(SELECTORS.region.selectBlock);
             manageCustomfielddropdownItems(
                 e,
                 customfieldSelected,
                 customfieldSelectable,
                 SELECTORS.customfields.dropdownDiv + currentId,
                 SELECTORS.customfields.dropdown + currentId,
-                currentPage);
+                dropdownHelper,
+                page);
             // TODO: Initialize search on *every* change.
             initializePagedContent(root, searchFunctionalityCurry(), input.value.trim(), getParams());
         }
@@ -1635,27 +1585,52 @@ const registerEventListeners = (root, page) => {
     });
 
 };
-
 /*
-
  * @param {string} dataSource
-
  * @param {string} selector
-
+ * @param {boolean} all
  */
+const dropdownHelper = (dataSource, selector, all = false) => {
 
-const dropdownHelper = (dataSource, selector) => {
-
-    // The logic to create a specific selector is now handled in the event listeners.
-
-    // This helper function no longer needs to modify the selector.
-
-    // It just returns the selector that it is passed.
-
-    window.console.log('dropdownHelper ' + dataSource + ' selector: ' + selector);
-
-    return selector;
-
+    let data;
+    let parts;
+    let index;
+    const collapse = '[data-region="filter"][role="search"] > .row > .customfields-collapse > .collapse-filter ';
+    const noCollapse = '[data-region="filter"][role="search"] > .row > .collapse-filter ';
+    switch (dataSource) {
+        case 'categories':
+            data = selectedCategories;
+            break;
+        case 'tags':
+            data = selectedTags;
+            break;
+        case 'customfields':
+            if (all) {
+                break;
+            }
+            if (document.querySelectorAll(selector).length === 1) {
+                return selector;
+            }
+            parts = selector.split('-');
+            index = parseInt(parts[parts.length - 1]);
+            data = selectedCustomfields[index] || [];
+            break;
+        default:
+            throw new Error('Invalid data source "' + dataSource + '" for dropdownHelper');
+    }
+    if (all) {
+        if (document.querySelectorAll(selector).length === 1) {
+            return [selector, selector];
+        }
+        return [collapse + selector, noCollapse + selector];
+    }
+    if (document.querySelectorAll(selector).length === 1) {
+        return selector;
+    }
+    if (data.length === 0) {
+        return collapse + selector;
+    }
+    return noCollapse + selector;
 };
 
 /**
@@ -1681,6 +1656,10 @@ export const tagsinput = () => {
  * @param {String} customfieldClass
  */
 export const customfieldInput = (customfieldClass) => {
+    if (document.querySelectorAll(customfieldClass).length === 1) {
+        const customfieldInput = document.querySelector(customfieldClass);
+        return customfieldInput;
+    }
     const customfieldInputs = document.querySelectorAll(customfieldClass);
     return selectedCustomfields[currentCustomField].length === 0 ? customfieldInputs[1] : customfieldInputs[0];
 };
@@ -1955,9 +1934,10 @@ function manageCustomfielddropdownCollapse() {
  * @param {string} selectable
  * @param {string} dropdownDiv
  * @param {string} dropdown
+ * @param {object} dropdownHelper
  * @param {object} page
  **/
-const manageCustomfielddropdownItems = (e, selected, selectable, dropdownDiv, dropdown, page) => {// eslint-disable-line
+const manageCustomfielddropdownItems = (e, selected, selectable, dropdownDiv, dropdown, dropdownHelper, page) => {
     // const template = 'block_eledia_telc_coursesearch/nav-customfield-dropdown';
     const customfieldValue = e.target.dataset.selectvalue;
     const customfieldName = e.target.dataset.selectname;
@@ -1992,11 +1972,15 @@ const manageCustomfielddropdownItems = (e, selected, selectable, dropdownDiv, dr
         window.console.log('selected');
         window.console.log(selectedCustomfields);
     }
-    return renderCustomfields(dropdownDiv,
-        dropdown,
-        filteredCustomfields[customfieldId],
-        selectedCustomfields[customfieldId],
-        page);
+    const dropdowns = dropdownHelper('customfields', dropdownDiv, true);
+    return dropdowns.forEach(ddiv => {
+
+        return renderCustomfields(ddiv,
+            dropdown,
+            filteredCustomfields[customfieldId],
+            selectedCustomfields[customfieldId],
+            page);
+    });
 };
 
 /**
