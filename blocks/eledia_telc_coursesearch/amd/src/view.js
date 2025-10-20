@@ -1860,14 +1860,14 @@ const manageCategorydropdownItems = (e, selected, selectable, dropdownDiv, dropd
         const categoryIndex = selectableCategories.findIndex(value => value.id == categoryId);
         selectedCategories.push(selectableCategories.splice(categoryIndex, 1)[0]);
         if ((!selectedLength && selectedCategories.length > 0)) {
-            window.console.log('reversed1');
+            window.console.log('cat reversed1');
             catReverseState = !catReverseState;
         }
     } else {
         const categoryIndex = selectedCategories.findIndex(value => value.id == categoryId);
         selectableCategories.push(selectedCategories.splice(categoryIndex, 1)[0]);
         if ((selectedLength && selectedCategories.length === 0)) {
-            window.console.log('reversed2');
+            window.console.log('cat reversed2');
             catReverseState = !catReverseState;
         }
     }
@@ -1898,12 +1898,21 @@ const manageTagsdropdownItems = (e, selected, selectable, dropdownDiv, dropdown,
     const tagsId = e.target.dataset.tagsId;
     dropdownDiv = dropdownHelper('tags', dropdownDiv);
     dropdown = dropdownHelper('tags', dropdown);
+    const selectedLength = selectedTags.length;
     if (e.target.classList.contains(selectable)) {
         const tagsIndex = selectableTags.findIndex(value => value.id == tagsId);
         selectedTags.push(selectableTags.splice(tagsIndex, 1)[0]);
+        if ((!selectedLength && selectedTags.length > 0)) {
+            window.console.log('tags reversed1');
+            tagsReverseState = !tagsReverseState;
+        }
     } else {
         const tagsIndex = selectedTags.findIndex(value => value.id == tagsId);
         selectableTags.push(selectedTags.splice(tagsIndex, 1)[0]);
+        if ((selectedLength && selectedTags.length === 0)) {
+            window.console.log('tags reversed2');
+            tagsReverseState = !tagsReverseState;
+        }
     }
     return Templates.renderForPromise(template, {
         tags: selectableTags,
