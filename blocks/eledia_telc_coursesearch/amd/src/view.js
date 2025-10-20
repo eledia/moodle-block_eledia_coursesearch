@@ -78,6 +78,10 @@ let tagsSearchTerm = '';
 let courseInProgress = 'all';
 let currentCustomField = 0;
 
+let tagsReverseState = false;
+let customReverseState = false;
+let catReverseState = false;
+
 /**
  * Whether the summary display has been loaded.
  *
@@ -1595,13 +1599,16 @@ const dropdownHelper = (dataSource, selector, all = false) => {
     let data;
     let parts;
     let index;
+    let reverseState;
     const collapse = '[data-region="filter"][role="search"] > .row > .customfields-collapse > .collapse-filter ';
     const noCollapse = '[data-region="filter"][role="search"] > .row > .collapse-filter ';
     switch (dataSource) {
         case 'categories':
+            reverseState = catReverseState;
             data = selectedCategories;
             break;
         case 'tags':
+            reverseState = tagsReverseState;
             data = selectedTags;
             break;
         case 'customfields':
@@ -1611,6 +1618,7 @@ const dropdownHelper = (dataSource, selector, all = false) => {
             if (document.querySelectorAll(selector).length === 1) {
                 return selector;
             }
+            reverseState = customReverseState;
             parts = selector.split('-');
             index = parseInt(parts[parts.length - 1]);
             data = selectedCustomfields[index] || [];
@@ -1628,9 +1636,9 @@ const dropdownHelper = (dataSource, selector, all = false) => {
         return selector;
     }
     if (data.length === 0) {
-        return collapse + selector;
+        return reverseState ? noCollapse + selector : collapse + selector;
     }
-    return noCollapse + selector;
+    return reverseState ? collapse + selector : noCollapse + selector;
 };
 
 /**
@@ -1639,7 +1647,7 @@ const dropdownHelper = (dataSource, selector, all = false) => {
  */
 export const catinput = () => {
     const catinputs = document.querySelectorAll(SELECTORS.cat.input);
-    return selectedCategories.length === 0 ? catinputs[1] : catinputs[0];
+    return selectedCategories.length === 0 && !catReverseState ? catinputs[1] : catinputs[0];
 };
 
 /**
@@ -1648,7 +1656,7 @@ export const catinput = () => {
  */
 export const tagsinput = () => {
     const tagsinputs = document.querySelectorAll(SELECTORS.tags.input);
-    return selectedCategories.length === 0 ? tagsinputs[1] : tagsinputs[0];
+    return selectedTags.length === 0 ? tagsinputs[1] : tagsinputs[0];
 };
 
 /**
@@ -1748,6 +1756,7 @@ const manageCategorydropdownCollapse = (e) => {
             return;
         }
     }
+    catReverseState = false;
 
     if (e.target.classList.contains('catprevent') && !e.target.classList.contains('fa-xmark')) {
         catDropdowns.forEach(dropdown => {
@@ -1801,6 +1810,7 @@ const manageTagsdropdownCollapse = (e) => {
             return;
         }
     }
+    tagsReverseState = false;
 
     if (e.target.classList.contains('tagsprevent') && !e.target.classList.contains('fa-xmark')) {
         tagsDropdowns.forEach(dropdown => {
@@ -1845,12 +1855,21 @@ const manageCategorydropdownItems = (e, selected, selectable, dropdownDiv, dropd
     const categoryId = e.target.dataset.catId;
     dropdownDiv = dropdownHelper('categories', dropdownDiv);
     dropdown = dropdownHelper('categories', dropdown);
+    const selectedLength = selectedCategories.length;
     if (e.target.classList.contains(selectable)) {
         const categoryIndex = selectableCategories.findIndex(value => value.id == categoryId);
         selectedCategories.push(selectableCategories.splice(categoryIndex, 1)[0]);
+        if ((!selectedLength && selectedCategories.length > 0)) {
+            window.console.log('reversed1');
+            catReverseState = !catReverseState;
+        }
     } else {
         const categoryIndex = selectedCategories.findIndex(value => value.id == categoryId);
         selectableCategories.push(selectedCategories.splice(categoryIndex, 1)[0]);
+        if ((selectedLength && selectedCategories.length === 0)) {
+            window.console.log('reversed2');
+            catReverseState = !catReverseState;
+        }
     }
     return Templates.renderForPromise(template, {
         categories: selectableCategories,
@@ -1907,6 +1926,7 @@ function manageCustomfielddropdownCollapse() {
     customfieldDropdowns.forEach(dropdown => {
         if (!dropdown.classList.contains(SELECTORS.customfields.dropdown + currentCustomField)) {
             dropdown.style.display = 'none';
+            customReverseState = false;
         } else {
             dropdown.style.display = 'block';
         }
