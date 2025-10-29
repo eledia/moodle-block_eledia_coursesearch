@@ -1654,8 +1654,7 @@ const manageTagsdropdownItems = (e, selected, selectable, dropdownDiv, dropdown,
  * Hide customfield dropdown if clicked outside customfield search.
  *
  */
-function manageCustomfielddropdownCollapse() {
-    // TODO: Somehow this kills the collapsed items.
+const manageCustomfielddropdownCollapse = () => {
     const page = document.querySelector(SELECTORS.region.selectBlock);
     const customfieldDropdowns = page.querySelectorAll(SELECTORS.customfields.dropdownAll);
     customfieldDropdowns.forEach(dropdown => {
@@ -1665,19 +1664,8 @@ function manageCustomfielddropdownCollapse() {
             dropdown.style.display = 'block';
         }
     });
-    this.customfields.forEach((v, i) => {
-        if (i !== currentCustomField) {
-            const customFields = document.getElementsByClassName('collapse-cfid-' + i);
-            Array.from(customFields).forEach(cf => {
-                if (this.selectedCustomfields[i] !== undefined && this.selectedCustomfields[i].length) {
-                    cf.classList.remove('collapse-enabled');
-                } else if (!cf.classList.contains('collapse-enabled')) {
-                    cf.classList.add('collapse-enabled');
-                }
-            });
-        }
-    });
-}
+
+};
 
 /**
  * Hide customfield dropdown if clicked outside customfield search.
