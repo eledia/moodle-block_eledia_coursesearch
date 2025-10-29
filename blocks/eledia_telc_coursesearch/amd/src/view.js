@@ -1970,6 +1970,17 @@ function manageCustomfielddropdownCollapse(e) {
     const customfieldDropdowns = page.querySelectorAll(SELECTORS.customfields.dropdownAll);
     const customfieldInputs = page.querySelectorAll(SELECTORS.customfields.input);
 
+    // Handle delete button for selected options
+    const cancelBtn = e.target.closest('.selected-option-cancelbtn');
+    if (cancelBtn) {
+        e.preventDefault();
+        const type = cancelBtn.dataset.type;
+        const index = parseInt(cancelBtn.dataset.index);
+        const cindex = parseInt(cancelBtn.dataset.cindex);
+        deleteSelectOption(type, index, cindex);
+        return;
+    }
+
     // We don't want to close the dropdown if clicking inside it or the input field.
     for (const dropdown of customfieldDropdowns) {
         if (dropdown.contains(e.target)) {
@@ -2050,6 +2061,72 @@ function renderSelectOptions() {
         return Templates.replaceNodeContents('.coursesearchitems', html, js);
     }).catch(error => displayException(error));
 }
+
+/**
+ * Deletes a selected option item.
+ * @param {string} type The type of the option (category, tag, customfield).
+ * @param {number} index The index of the option in its array.
+ * @param {number} cindex The customfield subindex (only for customfields).
+ */
+function deleteSelectOption(type, index, cindex) {
+    switch (type) {
+        case 'category': {
+            window.console.log('delete category option');
+            if (selectedCategories[index]) {
+                selectableCategories.push(selectedCategories.splice(index, 1)[0]);
+                if (selectedCategories.length === 0) {
+                    catReverseState = false;
+                }
+            }
+            break;
+        }
+        case 'tag': {
+            if (selectedTags[index]) {
+                window.console.log('delete tag option');
+                selectableTags.push(selectedTags.splice(index, 1)[0]);
+                if (selectedTags.length === 0) {
+                    tagsReverseState = false;
+                }
+            }
+            break;
+        }
+        case 'customfield': {
+            window.console.log('delete customfield option');
+            if (selectedCustomfields[index] && selectedCustomfields[index][cindex]) {
+                const interchangedValue = selectedCustomfields[index].splice(cindex, 1)[0];
+                filteredCustomfields[index].push(interchangedValue);
+                filteredCustomfields[index].sort((a, b) => {
+                    return ('' + a.name).localeCompare(b.name);
+                });
+                if (selectedCustomfields[index].length === 0) {
+                    customReverseState = false;
+                }
+            }
+            break;
+        }
+        default:
+            throw new Error('Invalid type "' + type + '" for deleteSelectOption');
+    }
+    renderSelectOptions();
+    // Fetch and render courses again.
+    const root = document.querySelector(SELECTORS.region.selectBlock).closest(SELECTORS.region.selectRoot);
+    const input = root.querySelector(SELECTORS.region.searchInput);
+    initializePagedContent(root, searchFunctionalityCurry(), input.value.trim(), getParams());
+}
+
+/**
+ * Event listener for deleting selected option items on .selected-option-cancelbtn click.
+ */
+// document.body.addEventListener('click', (e) => {
+//     const cancelBtn = e.target;
+//     if (cancelBtn.classList.contains('selected-option-cancelbtn')) {
+//         e.preventDefault();
+//         const type = cancelBtn.dataset.type;
+//         const index = parseInt(cancelBtn.dataset.index);
+//         const cindex = parseInt(cancelBtn.dataset.cindex);
+//         deleteSelectOption(type, index, cindex);
+//     }
+// });
 
 /**
  * Hide customfield dropdown if clicked outside customfield search.
