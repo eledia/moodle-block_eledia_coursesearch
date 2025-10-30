@@ -1835,9 +1835,6 @@ function deleteSelectOption(type, index, cindex) {
             window.console.log('delete category option');
             if (selectedCategories[index]) {
                 selectableCategories.push(selectedCategories.splice(index, 1)[0]);
-                if (selectedCategories.length === 0) {
-                    catReverseState = false;
-                }
             }
             break;
         }
@@ -1845,9 +1842,6 @@ function deleteSelectOption(type, index, cindex) {
             if (selectedTags[index]) {
                 window.console.log('delete tag option');
                 selectableTags.push(selectedTags.splice(index, 1)[0]);
-                if (selectedTags.length === 0) {
-                    tagsReverseState = false;
-                }
             }
             break;
         }
@@ -1859,9 +1853,6 @@ function deleteSelectOption(type, index, cindex) {
                 filteredCustomfields[index].sort((a, b) => {
                     return ('' + a.name).localeCompare(b.name);
                 });
-                if (selectedCustomfields[index].length === 0) {
-                    customReverseState = false;
-                }
             }
             break;
         }
@@ -1870,8 +1861,9 @@ function deleteSelectOption(type, index, cindex) {
     }
     renderSelectOptions();
     // Fetch and render courses again.
-    const root = document.querySelector(SELECTORS.region.selectBlock).closest(SELECTORS.region.selectRoot);
-    const input = root.querySelector(SELECTORS.region.searchInput);
+    const page = document.querySelector(SELECTORS.region.selectBlock);
+    const root = $(page);
+    const input = page.querySelector(SELECTORS.region.searchInput);
     initializePagedContent(root, searchFunctionalityCurry(), input.value.trim(), getParams());
 }
 
