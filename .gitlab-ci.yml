@@ -550,24 +550,24 @@ behat_moodle:
         vendor/bin/behat \
           --config /tmp/moodledata_behat/behatrun/behat/behat.yml \
           --format pretty --out std \
-          --format junit --out /builds/$CI_PROJECT_PATH/behat-junit.xml \
+          --format junit --out "$CI_PROJECT_DIR/behat-junit.xml" \
           --tags "$TAG_EXPR" \
           "/tmp/moodle/$PLUGIN_PATH/tests/behat" || true
       else
         vendor/bin/behat \
           --config /tmp/moodledata_behat/behatrun/behat/behat.yml \
           --format pretty --out std \
-          --format junit --out /builds/$CI_PROJECT_PATH/behat-junit.xml \
+          --format junit --out "$CI_PROJECT_DIR/behat-junit.xml" \
           "/tmp/moodle/$PLUGIN_PATH/tests/behat" || true
       fi
 
-      : >> /builds/$CI_PROJECT_PATH/behat_notice.txt
+      : >> "$CI_PROJECT_DIR/behat_notice.txt"
 
   artifacts:
     when: always
     paths:
-      - "$CI_PROJECT_DIR/behat-junit.xml"
-      - "$CI_PROJECT_DIR/behat_notice.txt"
+      - behat-junit.xml
+      - behat_notice.txt
     expire_in: 1 week
   allow_failure: true
 
