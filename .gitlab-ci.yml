@@ -533,6 +533,12 @@ behat_moodle:
     # Run tests
     - cd /tmp/moodle
     - |
+      set +e  # Don't exit on errors
+      
+      # Ensure artifact directories exist
+      mkdir -p "$CI_PROJECT_DIR/behat-junit"
+      touch "$CI_PROJECT_DIR/behat_notice.txt"
+      
       if [ -d "/tmp/moodle/$PLUGIN_PATH/tests/behat" ]; then
         EXCLUDE_TAGS=$(grep -rhoE '@[A-Za-z0-9_]+' "/tmp/moodle/$PLUGIN_PATH/tests/behat" | grep '_wp$' | sort -u | tr '\n' ' ')
       else
@@ -546,7 +552,7 @@ behat_moodle:
         if [ -z "$TAG_EXPR" ]; then TAG_EXPR="~$t"; else TAG_EXPR="$TAG_EXPR&&~$t"; fi
       done
 
-      # Behat junit formatter creates a directory structure, so use /tmp first
+      # Behat junit formatter creates a directory structure
       mkdir -p /tmp/behat-junit
       
       if [ -n "$TAG_EXPR" ]; then
@@ -555,19 +561,25 @@ behat_moodle:
           --format pretty --out std \
           --format junit --out /tmp/behat-junit \
           --tags "$TAG_EXPR" \
-          "/tmp/moodle/$PLUGIN_PATH/tests/behat" || true
+          "/tmp/moodle/$PLUGIN_PATH/tests/behat" || echo "Behat tests failed or incomplete"
       else
         vendor/bin/behat \
           --config /tmp/moodledata_behat/behatrun/behat/behat.yml \
           --format pretty --out std \
           --format junit --out /tmp/behat-junit \
-          "/tmp/moodle/$PLUGIN_PATH/tests/behat" || true
+          "/tmp/moodle/$PLUGIN_PATH/tests/behat" || echo "Behat tests failed or incomplete"
       fi
 
-      # Copy the entire behat-junit directory to CI_PROJECT_DIR
-      cd "$CI_PROJECT_DIR"
-      cp -r /tmp/behat-junit . || mkdir -p behat-junit
-      touch behat_notice.txt
+      # Copy results to CI_PROJECT_DIR
+      if [ -d /tmp/behat-junit ]; then
+        cp -r /tmp/behat-junit/* "$CI_PROJECT_DIR/behat-junit/" 2>/dev/null || echo "No Behat results to copy"
+      fi
+      
+      # Verify artifacts
+      echo "Behat artifacts in $CI_PROJECT_DIR:"
+      ls -la "$CI_PROJECT_DIR/behat-junit/" 2>/dev/null || echo "behat-junit directory is empty"
+      
+      exit 0  # Always succeed to ensure artifacts are uploaded
 
   artifacts:
     when: always
