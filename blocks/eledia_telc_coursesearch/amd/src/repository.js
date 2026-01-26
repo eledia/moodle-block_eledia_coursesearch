@@ -14,10 +14,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * A javascript module to retrieve enrolled coruses from the server.
+ * A javascript module to retrieve enrolled courses from the server.
  *
  * @module block_eledia_telc_coursesearch/repository
- * @copyright  2018 Bas Brands <base@moodle.com>
+ * @copyright  2018 Bas Brands <bas@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -38,7 +38,6 @@ import Ajax from 'core/ajax';
  */
 export const getEnrolledCoursesByTimeline = args => {
     const request = {
-        // methodname: 'core_course_get_enrolled_courses_by_timeline_classification',
         methodname: 'block_eledia_telc_coursesearch_get_courseview',
         args: args
     };
@@ -54,9 +53,7 @@ export const getEnrolledCoursesByTimeline = args => {
  * @return {promise} Resolved with an array of categories
  */
 export const getCategories = args => {
-    // Some comment.
     const request = {
-        //methodname: 'block_eledia_telc_coursesearch_get_categories',
         methodname: 'block_eledia_telc_coursesearch_get_available_categories',
         args: args
     };
@@ -72,9 +69,7 @@ export const getCategories = args => {
  * @return {promise} Resolved with an array of categories
  */
 export const getTags = args => {
-    // Some comment.
     const request = {
-        //methodname: 'block_eledia_telc_coursesearch_get_categories',
         methodname: 'block_eledia_telc_coursesearch_get_available_tags',
         args: args
     };
@@ -90,9 +85,7 @@ export const getTags = args => {
  * @return {promise} Resolved with an array of categories
  */
 export const getCustomfields = args => {
-    // Some comment.
     const request = {
-        //methodname: 'block_eledia_telc_coursesearch_get_categories',
         methodname: 'block_eledia_telc_coursesearch_get_customfield_available_options',
         args: args
     };

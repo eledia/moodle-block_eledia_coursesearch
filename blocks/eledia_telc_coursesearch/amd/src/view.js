@@ -101,7 +101,6 @@ const getFilterValues = root => {
         grouping: courseRegion.attr('data-grouping'),
         sort: courseRegion.attr('data-sort'),
         displaycategories: courseRegion.attr('data-displaycategories'),
-        // TODO: Remove
         customfieldname: courseRegion.attr('data-customfieldname'),
         customfieldvalue: courseRegion.attr('data-customfieldvalue'),
     };
@@ -113,6 +112,7 @@ const getFilterValues = root => {
  * @param {object} root The root element for the courses view.
  * @return {filters} Set filters.
  */
+// eslint-disable-next-line no-unused-vars
 const getAllFilterValues = root => {
     const courseRegion = root.find(SELECTORS.courseView.region);
     return {
@@ -156,7 +156,6 @@ const getMyCourses = (filters, limit, searchParams) => {
     } else {
         params.requiredfields = Repository.CARDLIST_REQUIRED_FIELDS;
     }
-    // return Repository.getEnrolledCoursesByTimeline(searchParams);
     return Repository.getEnrolledCoursesByTimeline(searchParams);
 };
 
@@ -185,7 +184,6 @@ const getSearchMyCourses = (filters, limit, searchValue) => {
         params.requiredfields = Repository.CARDLIST_REQUIRED_FIELDS;
         summaryDisplayLoaded = false;
     }
-    // return Repository.getEnrolledCoursesByTimeline(params);
     return Repository.getEnrolledCoursesByTimeline(searchValue);
 };
 
@@ -688,14 +686,10 @@ const renderCategories = (dropdownContainer, dropdown, categoriesData, selection
     const template = 'block_eledia_telc_coursesearch/nav-category-dropdown';
 
     // NOTE: Render function for mustache.
-    window.console.log('render categoriesData');
     return Templates.renderForPromise(template, {
         categories: categoriesData,
         catselections: selectionsData,
     }).then(({ html, js }) => {
-        window.console.log('replaceNodeContents');
-        window.console.log(html);
-        window.console.log(js);
         const renderResult = Templates.replaceNodeContents(dropdownContainer, html, js);
         const catDropdown = page.querySelector(dropdown);
         catDropdown.style.display = 'block';
@@ -739,7 +733,7 @@ const renderTags = (dropdownContainer, dropdown, tagsData, selectionsData, page)
  * @param {object} page The page object.
  * @return {promise} jQuery promise resolved after rendering is complete.
  */
-const renderCustomfields = (dropdownContainer, dropdown, customfieldsData, selectionsData, page) => { // eslint-disable-line
+const renderCustomfields = (dropdownContainer, dropdown, customfieldsData, selectionsData, page) => {
 
     const template = 'block_eledia_telc_coursesearch/nav-customfield-dropdown';
 
@@ -750,16 +744,9 @@ const renderCustomfields = (dropdownContainer, dropdown, customfieldsData, selec
         customfieldid: currentCustomField,
         description: document.querySelector(dropdownContainer).dataset.description,
     }).then(({ html, js }) => {
-        window.console.log('dropdownContainer');
-        window.console.log(dropdownContainer);
         const renderResult = Templates.replaceNodeContents(dropdownContainer, html, js);
-        window.console.log('renderResult');
-        window.console.log(renderResult);
         const cuDropdown = page.querySelector(dropdown);
-        window.console.log(dropdown);
-        window.console.log(cuDropdown);
         cuDropdown.style.display = 'block';
-        window.console.log('renderCustomfields wnd');
         return renderResult;
     }).catch(error => displayException(error));
 };
@@ -920,11 +907,7 @@ const searchFunctionalityCurry = () => {
             inputValue
         ).then(coursesData => {
             const searchTerm = document.querySelector('.block-eledia_telc_coursesearch [data-action="search"]').value;
-            window.console.log('searchTerm');
-            window.console.log(searchTerm);
             if (searchTerm.trim() !== '') {
-                window.console.log('coursesData');
-                window.console.log(coursesData);
                 coursesData.courses.forEach(c => {
                     const word = searchTerm.trim();
                     const summary = c.summary;
@@ -960,14 +943,9 @@ const catSearchFunctionality = () => {
                     selectableCategories.splice(categoryIndex, 1);
                 }
             });
-            //return renderCategories(dropdownContainer, dropdown, categoriesData, page);
             return renderCategories(dropdownContainer, dropdown, selectableCategories, selectedCategories, page);
-            //pageBuilder(categoriesData, actions);
-            //return renderCategories(root, loadedPages[currentPage]);
         }).catch(Notification.exception);
 
-        // promises.push(searchingPromise);
-        // window.console.log(searchingPromise);
         return searchingPromise;
     };
 };
@@ -988,14 +966,9 @@ const tagsSearchFunctionality = () => {
                     selectableTags.splice(tagsIndex, 1);
                 }
             });
-            //return renderCategories(dropdownContainer, dropdown, categoriesData, page);
             return renderTags(dropdownContainer, dropdown, selectableTags, selectedTags, page);
-            //pageBuilder(categoriesData, actions);
-            //return renderCategories(root, loadedPages[currentPage]);
         }).catch(Notification.exception);
 
-        // promises.push(searchingPromise);
-        // window.console.log(searchingPromise);
         return searchingPromise;
     };
 };
@@ -1009,7 +982,6 @@ const customfieldSearchFunctionality = () => {
     return (dropdownContainer, dropdown, page, searchterm) => {
         const searchingPromise = getSearchCustomfields().then(customfieldsData => {
             const noneOptionIndex = customfieldsData.findIndex(option => option.value === -1);
-            // TODO: Fields may have different methods of signaling 'select none' options. -1 might be a legit value.
             if (noneOptionIndex !== -1) {
                 customfieldsData.splice(noneOptionIndex, 1);
             }
@@ -1047,7 +1019,8 @@ const customfieldSearchFunctionality = () => {
  * @param {null | string} inputValue What to search for
  * @param {object} params The params
  */
-const initializePagedContent = (root, promiseFunction, inputValue = null, params) => {// eslint-disable-line
+// eslint-disable-next-line no-unused-vars
+const initializePagedContent = (root, promiseFunction, inputValue = null, params) => {
     const pagingLimit = parseInt(root.find(SELECTORS.courseView.region).attr('data-paging'), 10);
     let itemsPerPage = itemsPerPageFunc(pagingLimit, root);
 
@@ -1088,8 +1061,6 @@ const initializePagedContent = (root, promiseFunction, inputValue = null, params
                 // Get the current applied filters.
                 const filters = getFilterValues(root);
 
-                // TODO: exchange with original function.
-                window.console.log(getAllFilterValues(root));
 
                 // Call the curried function that'll handle the course promise and any manipulation of it.
                 promiseFunction(filters, currentPage, pageData, actions, root, promises, limit, params);
@@ -1101,8 +1072,6 @@ const initializePagedContent = (root, promiseFunction, inputValue = null, params
 
     pagedContentPromise.then((html, js) => {
         registerPagedEventHandlers(root, namespace);
-        window.console.log('html');
-        window.console.log(html);
         return Templates.replaceNodeContents(root.find(SELECTORS.courseView.region), html, js);
     }).catch(Notification.exception);
 };
@@ -1120,12 +1089,12 @@ const initializeCategorySearchContent = (dropdownContainer,
     dropdown,
     promiseFunction,
     page,
-    selectedCategories) => {// eslint-disable-line
+    selectedCategories) => {
+    // eslint-disable-next-line no-unused-vars
     const categories = promiseFunction(dropdownContainer,
         dropdown,
         page,
         selectedCategories);
-    window.console.log(categories);
 };
 
 /**
@@ -1141,12 +1110,12 @@ const initializeTagsSearchContent = (dropdownContainer,
     dropdown,
     promiseFunction,
     page,
-    selectedTags) => {// eslint-disable-line
+    selectedTags) => {
+    // eslint-disable-next-line no-unused-vars
     const categories = promiseFunction(dropdownContainer,
         dropdown,
         page,
         selectedTags);
-    window.console.log(categories);
 };
 
 /**
@@ -1163,12 +1132,12 @@ const initializeCustomfieldSearchContent = (dropdownContainer,
     dropdown,
     promiseFunction,
     page,
-    searchterm) => {// eslint-disable-line
+    searchterm) => {
+    // eslint-disable-next-line no-unused-vars
     const $customfields = promiseFunction(dropdownContainer,
         dropdown,
         page,
         searchterm);
-    window.console.log($customfields);
 };
 
 /**
@@ -1241,7 +1210,6 @@ const registerEventListeners = (root, page) => {
     });
 
     clearCatIcon.addEventListener('click', () => {
-        window.console.log('CLICKED clearCatIcon');
         catSearchTerm = '';
         catinput.value = '';
         catinput.focus();
@@ -1255,7 +1223,6 @@ const registerEventListeners = (root, page) => {
     });
 
     clearTagsIcon.addEventListener('click', () => {
-        window.console.log('CLICKED clearCatIcon');
         tagsSearchTerm = '';
         tagsinput.value = '';
         tagsinput.focus();
@@ -1272,7 +1239,6 @@ const registerEventListeners = (root, page) => {
         currentCustomField = icon.dataset.customfieldid;
         const customfieldInput = page.querySelector(customClass + currentCustomField);
         icon.addEventListener('click', () => {
-            window.console.log('CLICKED clearCustomfieldIcon');
             customfieldInput.value = '';
             customfieldInput.focus();
             clearCustomfieldSingleIconSearch(icon);
@@ -1362,8 +1328,6 @@ const registerEventListeners = (root, page) => {
                 page,
                 selectedCategories);
         } else {
-            window.console.log('catinput.value');
-            window.console.log(catinput.value);
             activeSearch(clearCatIcon);
             catSearchTerm = catinput.value.trim();
             initializeCategorySearchContent(
@@ -1422,7 +1386,6 @@ const registerEventListeners = (root, page) => {
                 SELECTORS.cat.dropdown,
                 catSearchFunctionality(),
                 page);
-            // TODO: Initialize search on *every* change.
             initializePagedContent(root, searchFunctionalityCurry(), input.value.trim(), getParams());
         }
     });
@@ -1438,7 +1401,6 @@ const registerEventListeners = (root, page) => {
                 SELECTORS.tags.dropdown,
                 tagsSearchFunctionality(),
                 page);
-            // TODO: Initialize search on *every* change.
             initializePagedContent(root, searchFunctionalityCurry(), input.value.trim(), getParams());
         }
     });
@@ -1455,7 +1417,6 @@ const registerEventListeners = (root, page) => {
                 SELECTORS.customfields.dropdown + currentId,
                 customfieldSearchFunctionality(),
                 page);
-            // TODO: Initialize search on *every* change.
             initializePagedContent(root, searchFunctionalityCurry(), input.value.trim(), getParams());
         }
     });
@@ -1596,7 +1557,7 @@ const manageTagsdropdownCollapse = (e) => {
  * @param {object} promiseFunction
  * @param {object} page
  **/
-const manageCategorydropdownItems = (e, selected, selectable, dropdownDiv, dropdown, promiseFunction, page) => {// eslint-disable-line
+const manageCategorydropdownItems = (e, selected, selectable, dropdownDiv, dropdown, promiseFunction, page) => {
     const template = 'block_eledia_telc_coursesearch/nav-category-dropdown';
     const categoryId = e.target.dataset.catId;
     if (e.target.classList.contains(selectable)) {
@@ -1630,7 +1591,7 @@ const manageCategorydropdownItems = (e, selected, selectable, dropdownDiv, dropd
  * @param {object} promiseFunction
  * @param {object} page
  **/
-const manageTagsdropdownItems = (e, selected, selectable, dropdownDiv, dropdown, promiseFunction, page) => {// eslint-disable-line
+const manageTagsdropdownItems = (e, selected, selectable, dropdownDiv, dropdown, promiseFunction, page) => {
     const template = 'block_eledia_telc_coursesearch/nav-tags-dropdown';
     const tagsId = e.target.dataset.tagsId;
     if (e.target.classList.contains(selectable)) {
@@ -1680,14 +1641,11 @@ const manageCustomfielddropdownCollapse = () => {
  * @param {object} promiseFunction
  * @param {object} page
  **/
-const manageCustomfielddropdownItems = (e, selected, selectable, dropdownDiv, dropdown, promiseFunction, page) => {// eslint-disable-line
+const manageCustomfielddropdownItems = (e, selected, selectable, dropdownDiv, dropdown, promiseFunction, page) => {
     // const template = 'block_eledia_telc_coursesearch/nav-customfield-dropdown';
     const customfieldValue = e.target.dataset.selectvalue;
     const customfieldName = e.target.dataset.selectname;
     const customfieldId = e.target.dataset.customfieldid;
-    window.console.log('manageCustomfielddropdownItems');
-    window.console.log(e);
-    window.console.log(customfieldId);
     if (e.target.classList.contains(selectable)) {
         const customfieldIndex = filteredCustomfields[customfieldId].findIndex(item => item.value == customfieldValue);
         selectedCustomfields[customfieldId].push(filteredCustomfields[customfieldId].splice(customfieldIndex, 1)[0]);
@@ -1697,23 +1655,17 @@ const manageCustomfielddropdownItems = (e, selected, selectable, dropdownDiv, dr
         //filteredCustomfields[customfieldId].splice(
         //    filteredCustomfields[customfieldId].findIndex(item => item.value == customfieldValue),
         //    1);
-        window.console.log('selectable');
-        window.console.log(selectedCustomfields);
     } else if (e.target.classList.contains(selected)) {
         const customfieldIndex = selectedCustomfields[customfieldId].findIndex(item => item.value == customfieldValue);
         const interchangedValue = selectedCustomfields[customfieldId].splice(customfieldIndex, 1)[0];
         // customfields[customfieldId].push(interchangedValue);
         const searchField = page.querySelector(".customsearch-" + customfieldId);
-        window.console.log('searchField');
-        window.console.log(searchField);
         if (searchField.value === '' || customfieldName.toLowerCase().includes(searchField.value.trim().toLowerCase())) {
             filteredCustomfields[customfieldId].push(interchangedValue);
         }
         filteredCustomfields[customfieldId].sort((a, b) => {
             return ('' + a.name).localeCompare(b.name);
         });
-        window.console.log('selected');
-        window.console.log(selectedCustomfields);
     }
     renderSelectOptions();
     return renderCustomfields(dropdownDiv,
@@ -1729,7 +1681,6 @@ const manageCustomfielddropdownItems = (e, selected, selectable, dropdownDiv, dr
  * @param {object} root The root element for the courses view.
  */
 export const init = root => {
-    // TODO: include course categories custom fields.
     root = $(root);
     loadedPages = [];
     lastPage = 0;
@@ -1755,7 +1706,6 @@ export const init = root => {
  * @param {Object} root The root element for the timeline view.
  */
 export const reset = root => {
-    // TODO: Include categories and custom fields. May be included automatically.
     if (loadedPages.length > 0) {
         const filters = getFilterValues(root);
         // If the display mode is changed to 'summary' but the summary display has not been loaded yet,
@@ -1832,7 +1782,6 @@ function renderSelectOptions() {
 function deleteSelectOption(type, index, cindex) {
     switch (type) {
         case 'category': {
-            window.console.log('delete category option');
             if (selectedCategories[index]) {
                 selectableCategories.push(selectedCategories.splice(index, 1)[0]);
             }
@@ -1840,13 +1789,11 @@ function deleteSelectOption(type, index, cindex) {
         }
         case 'tag': {
             if (selectedTags[index]) {
-                window.console.log('delete tag option');
                 selectableTags.push(selectedTags.splice(index, 1)[0]);
             }
             break;
         }
         case 'customfield': {
-            window.console.log('delete customfield option');
             if (selectedCustomfields[index] && selectedCustomfields[index][cindex]) {
                 const interchangedValue = selectedCustomfields[index].splice(cindex, 1)[0];
                 filteredCustomfields[index].push(interchangedValue);

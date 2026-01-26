@@ -34,7 +34,8 @@ import SELECTORS from 'block_eledia_telc_coursesearch/selectors';
  * @param {String} value The current preferred value.
  * @return {Promise}
  */
-const updatePreferences = (filter, value) => { // eslint-disable-line
+// eslint-disable-next-line no-unused-vars
+const updatePreferences = (filter, value) => {
     let type = null;
     if (filter === 'display') {
         type = 'block_eledia_telc_coursesearch_user_view_preference';
@@ -60,8 +61,6 @@ const registerSelector = root => {
     const Selector = root.find(SELECTORS.FILTERS);
 
     CustomEvents.define(Selector, [CustomEvents.events.activate]);
-    // TODO: Repurpose this selector for custom fields.
-    // TODO: Repurpose this selector for category select.
     Selector.on(
         CustomEvents.events.activate,
         SELECTORS.FILTER_OPTION,
@@ -75,15 +74,14 @@ const registerSelector = root => {
             }
 
             const filter = option.attr('data-filter');
-            const pref = option.attr('data-pref'); // eslint-disable-line
+            // eslint-disable-next-line no-unused-vars
+            const pref = option.attr('data-pref');
             const customfieldvalue = option.attr('data-customfieldvalue');
 
             root.find(SELECTORS.courseView.region).attr('data-' + filter, option.attr('data-value'));
-            // updatePreferences(filter, pref);
 
             if (customfieldvalue) {
                 root.find(SELECTORS.courseView.region).attr('data-customfieldvalue', customfieldvalue);
-                // updatePreferences('customfieldvalue', customfieldvalue);
             }
 
             // Reset the views.
@@ -92,9 +90,6 @@ const registerSelector = root => {
             // NOTE: This empties the search when something in the "All" dropdown is being selected.
             const page = document.querySelector(SELECTORS.region.selectBlock);
             const input = page.querySelector(SELECTORS.region.searchInput);
-            // TODO: Add code for check searching state for category search.
-            // NOTE: The category search needs an extra webservice function.
-            // NOTE: The category search doesn't need a blocking when searching because the select is the narrowing action.
             if (input.value !== '') {
                 const clearIcon = page.querySelector(SELECTORS.region.clearIcon);
                 input.value = '';
@@ -118,8 +113,10 @@ const registerSelector = root => {
                 return;
             }
 
-            const filter = option.attr('data-display-option'); // eslint-disable-line
-            const pref = option.attr('data-pref'); // eslint-disable-line
+            // eslint-disable-next-line no-unused-vars
+            const filter = option.attr('data-display-option');
+            // eslint-disable-next-line no-unused-vars
+            const pref = option.attr('data-pref');
 
             root.find(SELECTORS.courseView.region).attr('data-display', option.attr('data-value'));
             const elediaButtons = document.getElementsByClassName(SELECTORS.courseView.elediaButton);
@@ -130,7 +127,6 @@ const registerSelector = root => {
                     e.classList.add('d-none');
                 }
             });
-            // updatePreferences(filter, pref);
             View.reset(root);
             data.originalEvent.preventDefault();
         }
