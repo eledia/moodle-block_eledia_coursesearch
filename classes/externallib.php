@@ -970,6 +970,9 @@ class externallib extends external_api {
 
     /**
      * Export IDs of all visible custom fields.
+     *
+     * @param bool $info Whether to return additional info
+     * @return array Array of custom field data
      */
     public static function get_customfield_fields(bool $info = false): array {
         global $DB;

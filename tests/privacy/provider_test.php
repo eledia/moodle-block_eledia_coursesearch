@@ -51,6 +51,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
      *
      * @param string $type The name of the user preference to get/set
      * @param string $value The value you are storing
+     * @param string $expected The expected value
      *
      * @dataProvider user_preference_provider
      */

@@ -77,12 +77,11 @@ jobs:
 
       - name: Moodle Code Checker
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpcs
+        run: moodle-plugin-ci phpcs --max-warnings 0
 
       - name: Moodle PHPDoc Checker
-        continue-on-error: true # Allow PHPDoc errors for now
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpdoc
+        run: moodle-plugin-ci phpdoc --max-warnings 0
 
       - name: Validating
         if: ${{ !cancelled() }}
@@ -93,14 +92,12 @@ jobs:
         run: moodle-plugin-ci savepoints
 
       - name: Mustache Lint
-        continue-on-error: true # Allow warnings in templates
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci mustache
 
       - name: Grunt
-        continue-on-error: true # Allow grunt/linting errors for now
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci grunt
+        run: moodle-plugin-ci grunt --max-lint-warnings 0
 
       - name: PHPUnit tests
         if: ${{ !cancelled() }}
