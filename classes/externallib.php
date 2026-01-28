@@ -679,16 +679,7 @@ class externallib extends external_api {
             $sql .= " AND (c.startdate < $timestamp AND (c.enddate > $timestamp OR c.enddate = 0 )) ";
         }
 
-        if ($limit) {
-            $sql .= "
-            LIMIT :limit
-            OFFSET :offset
-            ";
-            $allparams['limit'] = $limit;
-            $allparams['offset'] = $offset;
-        }
-
-        $idsunfiltered = $DB->get_records_sql($sql, $allparams);
+        $idsunfiltered = $DB->get_records_sql($sql, $allparams, $offset, $limit);
         $idsunfiltered = array_keys($idsunfiltered);
 
         if ($contextids) {

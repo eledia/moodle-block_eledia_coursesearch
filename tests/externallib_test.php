@@ -429,6 +429,11 @@ final class externallib_test extends \advanced_testcase {
      * @covers \block_eledia_telc_coursesearch\externallib::get_multiselect_customfields
      */
     public function test_get_multiselect_customfields(): void {
+        // Check if multiselect field type is available (requires customfield_multiselect plugin).
+        if (!class_exists('customfield_multiselect\field_controller')) {
+            $this->markTestSkipped('Multiselect custom field type not available. Install customfield_multiselect plugin.');
+        }
+
         $fieldcategory = $this->getDataGenerator()->create_custom_field_category(['name' => 'Multi']);
 
         $customfield = [
