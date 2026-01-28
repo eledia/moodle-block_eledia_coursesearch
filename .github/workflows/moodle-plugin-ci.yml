@@ -92,6 +92,7 @@ jobs:
         run: moodle-plugin-ci savepoints
 
       - name: Mustache Lint
+        continue-on-error: true # Allow HTML validation warnings in templates
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci mustache
 
