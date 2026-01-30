@@ -101,7 +101,7 @@ class provider implements \core_privacy\local\metadata\provider, user_preference
 
         $preferences = get_user_preferences(null, null, $userid);
         foreach ($preferences as $name => $value) {
-            if ((substr($name, 0, 45) == 'block_eledia_coursesearch_hidden_course_')) {
+            if ((substr($name, 0, 40) == 'block_eledia_coursesearch_hidden_course_')) {
                 writer::export_user_preference(
                     'block_eledia_coursesearch',
                     $name,
