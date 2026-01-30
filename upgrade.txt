@@ -1,14 +1,31 @@
-=== 4.5 Onwards ===
+===================================
+Upgrading notes for block_eledia_coursesearch
+===================================
 
-This file has been replaced by UPGRADING.md. See MDL-81125 for further information.
+This file contains important information for developers and administrators
+about changes between versions of the eledia_coursesearch block.
 
-===
-This file describes API changes in the myoverview block code.
+=== 1.0 (2026012900) ===
 
-=== 3.7 ===
+Initial release of the eLeDia Course Search block.
 
-* The 'block/myoverview:addinstance' capability has been removed. It has never been used in code.
+Features:
+* Advanced course search with multiple filter criteria
+* Support for course categories, tags, and custom fields
+* Multiple view modes: cards, list, and summary
+* Progress tracking integration
+* Favorite courses management
+* Responsive design with accessibility support
+* Privacy API implementation
+* Multi-language support (English and German)
 
-=== 3.9 ===
+Requirements:
+* Moodle 4.5 or higher
+* PHP 8.1, 8.2, or 8.3
+* PostgreSQL 15+ or MariaDB 10+
 
-* Rename setting block_myoverview->displaygroupingstarred to block_myoverview->displaygroupingfavourites.
+Installation notes:
+* No database tables required - uses core Moodle tables
+* Recommended placement: Dashboard
+* Custom fields must be set to "Visible to everyone" to appear in filters
+* See README.md and docs/ folder for detailed documentation
