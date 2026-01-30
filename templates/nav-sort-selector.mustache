@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_eledia_telc_coursesearch/nav-sort-selector
+    @template block_eledia_coursesearch/nav-sort-selector
 
     This template renders sorting dropdown.
 
@@ -28,29 +28,29 @@
 
 <div class="mb-3 d-flex flex-wrap align-items-center">
     <div class="dropdown">
-        <button id="sortingdropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{#str}} aria:sortingdropdown, block_eledia_telc_coursesearch {{/str}}">
+        <button id="sortingdropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{#str}} aria:sortingdropdown, block_eledia_coursesearch {{/str}}">
             <span data-active-item-text>
-                {{#title}}{{#str}} sortbytitle, block_eledia_telc_coursesearch {{/str}}{{/title}}
-                {{#lastaccessed}}{{#str}} sortbylastaccessed, block_eledia_telc_coursesearch {{/str}}{{/lastaccessed}}
-                {{#shortname}}{{#str}} sortbyshortname, block_eledia_telc_coursesearch {{/str}}{{/shortname}}
+                {{#title}}{{#str}} sortbytitle, block_eledia_coursesearch {{/str}}{{/title}}
+                {{#lastaccessed}}{{#str}} sortbylastaccessed, block_eledia_coursesearch {{/str}}{{/lastaccessed}}
+                {{#shortname}}{{#str}} sortbyshortname, block_eledia_coursesearch {{/str}}{{/shortname}}
             </span>
         </button>
         <ul class="dropdown-menu" role="menu" data-show-active-item data-skip-active-class="true" aria-labelledby="sortingdropdown">
             <li>
                 <a class="dropdown-item" href="#" data-filter="sort" data-pref="title" data-value="fullname" role="menuitem" {{#title}}aria-current="true"{{/title}}>
-                    {{#str}} sortbytitle, block_eledia_telc_coursesearch {{/str}}
+                    {{#str}} sortbytitle, block_eledia_coursesearch {{/str}}
                 </a>
             </li>
             {{#showsortbyshortname}}
             <li>
                 <a class="dropdown-item" href="#" data-filter="sort" data-pref="shortname" data-value="shortname" role="menuitem" {{#shortname}}aria-current="true"{{/shortname}}>
-                    {{#str}} sortbyshortname, block_eledia_telc_coursesearch {{/str}}
+                    {{#str}} sortbyshortname, block_eledia_coursesearch {{/str}}
                 </a>
             </li>
              {{/showsortbyshortname}}
             <li>
                 <a class="dropdown-item" href="#" data-filter="sort" data-pref="lastaccessed" data-value="ul.timeaccess desc" role="menuitem" {{#lastaccessed}}aria-current="true"{{/lastaccessed}}>
-                    {{#str}} sortbylastaccessed, block_eledia_telc_coursesearch {{/str}}
+                    {{#str}} sortbylastaccessed, block_eledia_coursesearch {{/str}}
                 </a>
             </li>
         </ul>

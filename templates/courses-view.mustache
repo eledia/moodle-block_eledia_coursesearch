@@ -15,13 +15,13 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_eledia_telc_coursesearch/courses-view
+    @template block_eledia_coursesearch/courses-view
 
-    This template renders the courses view for the eledia_telc_coursesearch block.
+    This template renders the courses view for the eledia_coursesearch block.
 
     Example context (json):
     {
-        "nocoursesimg": "https://moodlesite/theme/image.php/boost/block_eledia_telc_coursesearch/1535727318/courses",
+        "nocoursesimg": "https://moodlesite/theme/image.php/boost/block_eledia_coursesearch/1535727318/courses",
         "newcourseurl": "https://moodlesite/course/edit.php",
         "grouping": "all",
         "sort": "fullname",
@@ -42,6 +42,6 @@
     data-displaycategories="{{displaycategories}}"
     data-newcourseurl="{{newcourseurl}}">
     <div data-region="course-view-content">
-        {{> block_eledia_telc_coursesearch/placeholders }}
+        {{> block_eledia_coursesearch/placeholders }}
     </div>
 </div>

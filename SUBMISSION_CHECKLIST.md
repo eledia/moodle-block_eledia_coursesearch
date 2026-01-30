@@ -1,8 +1,8 @@
 # Moodle Plugin Directory Submission Checklist
 
 ## ✅ Package Information
-- **File**: `eledia_telc_coursesearch_v2025120100.zip`
-- **Location**: `/home/ipasanec/moodles/moodle45/public_html/blocks/eledia_telc_coursesearch/`
+- **File**: `eledia_coursesearch_v2025120100.zip`
+- **Location**: `/home/ipasanec/moodles/moodle45/public_html/blocks/eledia_coursesearch/`
 - **Size**: 1.1 MB
 - **Files**: 107
 - **Version**: 2025120100
@@ -56,13 +56,13 @@
 
 ### 2. Fill in Plugin Details
 - **Plugin type**: Block (block)
-- **Plugin name**: eledia_telc_coursesearch
-- **Short name**: eledia_telc_coursesearch  
-- **Full name**: eLeDia TELC Course Search
+- **Plugin name**: eledia_coursesearch
+- **Short name**: eledia_coursesearch  
+- **Full name**: eLeDia Course Search
 - **Category**: Course
 
 ### 3. Upload Package
-- Upload: `eledia_telc_coursesearch_v2025120100.zip`
+- Upload: `eledia_coursesearch_v2025120100.zip`
 - Version: 2025120100
 - Requires Moodle: 4.5 (2024100100)
 - Supported Moodle: 4.5+
@@ -77,8 +77,8 @@
   - Responsive design
   - Accessibility compliant
 
-- **Repository**: https://github.com/eledia/moodle-block_eledia_telc_coursesearch
-- **Issue Tracker**: https://github.com/eledia/moodle-block_eledia_telc_coursesearch/issues
+- **Repository**: https://github.com/eledia/moodle-block_eledia_coursesearch
+- **Issue Tracker**: https://github.com/eledia/moodle-block_eledia_coursesearch/issues
 - **Maintainer**: eLeDia GmbH
 - **Contact**: info@eledia.de
 

@@ -15,9 +15,9 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_eledia_telc_coursesearch/view-list
+    @template block_eledia_coursesearch/view-list
 
-    This template renders the list view for the eledia_telc_coursesearch block.
+    This template renders the list view for the eledia_coursesearch block.
 
     Example context (json):
     {
@@ -85,12 +85,12 @@
                     {{/visible}}
                     {{#hasprogress}}
                         <div class="text-muted muted d-flex flex-wrap mt-auto">
-                            {{> block_eledia_telc_coursesearch/progress-bar}}
+                            {{> block_eledia_coursesearch/progress-bar}}
                         </div>
                     {{/hasprogress}}
                 </div>
                 <div class="col-md-1 p-0 d-flex menu">
-                    {{!> block_eledia_telc_coursesearch/course-action-menu }}
+                    {{!> block_eledia_coursesearch/course-action-menu }}
                 </div>
             </div>
         </li>

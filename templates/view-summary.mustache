@@ -15,9 +15,9 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_eledia_telc_coursesearch/view-summary
+    @template block_eledia_coursesearch/view-summary
 
-    This template renders the list view for the eledia_telc_coursesearch block.
+    This template renders the list view for the eledia_coursesearch block.
 
     Example context (json):
     {
@@ -86,25 +86,25 @@
                     </div>
                 {{/visible}}
                 <div class="summary summary-fadeout">
-                    <span class="sr-only">{{#str}}aria:coursesummary, block_eledia_telc_coursesearch{{/str}}</span>
+                    <span class="sr-only">{{#str}}aria:coursesummary, block_eledia_coursesearch{{/str}}</span>
                     <div class="summary-inner">
                     {{{summary}}}
                     </div>
 				    {{#summary}}
-				        <a href="#" class="eledia-telc-collapsesummary">{{#str}}collapsesummary, block_eledia_telc_coursesearch{{/str}}</a>
+				        <a href="#" class="eledia-collapsesummary">{{#str}}collapsesummary, block_eledia_coursesearch{{/str}}</a>
 				    {{/summary}}
                 </div>
 				{{#summary}}
-				    <a href="#" class="eledia-telc-expandsummary">{{#str}}expandsummary, block_eledia_telc_coursesearch{{/str}}</a>
+				    <a href="#" class="eledia-expandsummary">{{#str}}expandsummary, block_eledia_coursesearch{{/str}}</a>
 				{{/summary}}
                 {{#hasprogress}}
                     <div class="text-muted muted d-flex flex-wrap mt-auto">
-                        {{> block_eledia_telc_coursesearch/progress-bar}}
+                        {{> block_eledia_coursesearch/progress-bar}}
                     </div>
                 {{/hasprogress}}
             </div>
             <div class="col-md-1 p-0 d-flex menu">
-                {{!> block_eledia_telc_coursesearch/course-action-menu }}
+                {{!> block_eledia_coursesearch/course-action-menu }}
             </div>
         </div>
     </div>

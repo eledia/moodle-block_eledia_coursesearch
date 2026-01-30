@@ -1,7 +1,7 @@
 # Installation and setup
 
 ## Installation
-Place the plugin folder (`eledia_telc_coursesearch/`) into the Moodle `blocks/` directory and trigger the installation process. (Go to the admin page or trigger via CLI)
+Place the plugin folder (`eledia_coursesearch/`) into the Moodle `blocks/` directory and trigger the installation process. (Go to the admin page or trigger via CLI)
 
 ## Setup
 

@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace block_eledia_telc_coursesearch;
+namespace block_eledia_coursesearch;
 
 /**
  * Custom field multiselect class
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

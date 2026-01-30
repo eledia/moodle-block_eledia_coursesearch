@@ -15,31 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Unit tests for the block_eledia_telc_coursesearch implementation of the privacy API.
+ * Unit tests for the block_eledia_coursesearch implementation of the privacy API.
  *
- * @package block_eledia_telc_coursesearch
+ * @package block_eledia_coursesearch
  * @category test
- * @copyright 2025 eLeDia GmbH
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace block_eledia_telc_coursesearch\privacy;
+namespace block_eledia_coursesearch\privacy;
 
 use core_privacy\local\request\writer;
-use block_eledia_telc_coursesearch\privacy\provider;
+use block_eledia_coursesearch\privacy\provider;
 
 /**
- * Unit tests for the block_eledia_telc_coursesearch implementation of the privacy API.
+ * Unit tests for the block_eledia_coursesearch implementation of the privacy API.
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \block_eledia_telc_coursesearch\privacy\provider
+ * @covers \block_eledia_coursesearch\privacy\provider
  */
 final class provider_test extends \core_privacy\tests\provider_testcase {
     /**
-     * Ensure that export_user_preferences returns no data if the user has not visited the eledia_telc_coursesearch block.
+     * Ensure that export_user_preferences returns no data if the user has not visited the eledia_coursesearch block.
      */
     public function test_export_user_preferences_no_pref(): void {
         $this->resetAfterTest();
@@ -64,49 +64,49 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         set_user_preference($type, $value, $user);
         provider::export_user_preferences($user->id);
         $writer = writer::with_context(\context_system::instance());
-        $blockpreferences = $writer->get_user_preferences('block_eledia_telc_coursesearch');
+        $blockpreferences = $writer->get_user_preferences('block_eledia_coursesearch');
         if (!$expected) {
-            $expected = get_string($value, 'block_eledia_telc_coursesearch');
+            $expected = get_string($value, 'block_eledia_coursesearch');
         }
         $this->assertEquals($expected, $blockpreferences->{$type}->value);
     }
 
     /**
-     * Create an array of valid user preferences for the eledia_telc_coursesearch block.
+     * Create an array of valid user preferences for the eledia_coursesearch block.
      *
      * @return array Array of valid user preferences.
      */
     public static function user_preference_provider(): array {
         return [
-            ['block_eledia_telc_coursesearch_user_sort_preference', 'lastaccessed', ''],
-            ['block_eledia_telc_coursesearch_user_sort_preference', 'title', ''],
-            ['block_eledia_telc_coursesearch_user_sort_preference', 'shortname', ''],
-            ['block_eledia_telc_coursesearch_user_grouping_preference', 'allincludinghidden', ''],
-            ['block_eledia_telc_coursesearch_user_grouping_preference', 'all', ''],
-            ['block_eledia_telc_coursesearch_user_grouping_preference', 'inprogress', ''],
-            ['block_eledia_telc_coursesearch_user_grouping_preference', 'future', ''],
-            ['block_eledia_telc_coursesearch_user_grouping_preference', 'past', ''],
-            ['block_eledia_telc_coursesearch_user_grouping_preference', 'hidden', ''],
-            ['block_eledia_telc_coursesearch_user_grouping_preference', 'favourites', ''],
-            ['block_eledia_telc_coursesearch_user_view_preference', 'card', ''],
-            ['block_eledia_telc_coursesearch_user_view_preference', 'list', ''],
-            ['block_eledia_telc_coursesearch_user_view_preference', 'summary', ''],
-            ['block_eledia_telc_coursesearch_user_paging_preference', 12, 12],
+            ['block_eledia_coursesearch_user_sort_preference', 'lastaccessed', ''],
+            ['block_eledia_coursesearch_user_sort_preference', 'title', ''],
+            ['block_eledia_coursesearch_user_sort_preference', 'shortname', ''],
+            ['block_eledia_coursesearch_user_grouping_preference', 'allincludinghidden', ''],
+            ['block_eledia_coursesearch_user_grouping_preference', 'all', ''],
+            ['block_eledia_coursesearch_user_grouping_preference', 'inprogress', ''],
+            ['block_eledia_coursesearch_user_grouping_preference', 'future', ''],
+            ['block_eledia_coursesearch_user_grouping_preference', 'past', ''],
+            ['block_eledia_coursesearch_user_grouping_preference', 'hidden', ''],
+            ['block_eledia_coursesearch_user_grouping_preference', 'favourites', ''],
+            ['block_eledia_coursesearch_user_view_preference', 'card', ''],
+            ['block_eledia_coursesearch_user_view_preference', 'list', ''],
+            ['block_eledia_coursesearch_user_view_preference', 'summary', ''],
+            ['block_eledia_coursesearch_user_paging_preference', 12, 12],
         ];
     }
 
     public function test_export_user_preferences_with_hidden_courses(): void {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
-        $name = "block_eledia_telc_coursesearch_hidden_course_1";
+        $name = "block_eledia_coursesearch_hidden_course_1";
 
         set_user_preference($name, 1, $user);
         provider::export_user_preferences($user->id);
         $writer = writer::with_context(\context_system::instance());
-        $blockpreferences = $writer->get_user_preferences('block_eledia_telc_coursesearch');
+        $blockpreferences = $writer->get_user_preferences('block_eledia_coursesearch');
 
         $this->assertEquals(
-            get_string("privacy:request:preference:set", 'block_eledia_telc_coursesearch', (object) [
+            get_string("privacy:request:preference:set", 'block_eledia_coursesearch', (object) [
                 'name' => $name,
                 'value' => 1,
             ]),

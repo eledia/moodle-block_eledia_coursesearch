@@ -15,23 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * eledia_telc_coursesearch block rendrer
+ * eledia_coursesearch block rendrer
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace block_eledia_telc_coursesearch\output;
+namespace block_eledia_coursesearch\output;
 
 use plugin_renderer_base;
 use renderable;
 
 /**
- * eledia_telc_coursesearch block renderer
+ * eledia_coursesearch block renderer
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -56,10 +56,10 @@ class renderer extends plugin_renderer_base {
 
         if (!count($userscourses)) {
             return $this->render_from_template(
-                'block_eledia_telc_coursesearch/zero-state',
+                'block_eledia_coursesearch/zero-state',
                 $main->export_for_zero_state_template($this)
             );
         }
-        return $this->render_from_template('block_eledia_telc_coursesearch/main', $main->export_for_template($this));
+        return $this->render_from_template('block_eledia_coursesearch/main', $main->export_for_template($this));
     }
 }

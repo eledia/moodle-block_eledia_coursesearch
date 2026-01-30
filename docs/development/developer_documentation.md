@@ -2,29 +2,29 @@
 
 ## Backend classes and functions and their relations
 
-This document describes the backend architecture of the Eledia Telc Coursesearch block.
+This document describes the backend architecture of the eLeDia Coursesearch block (made possible by TU Ilmenau).
 
-### Entry Point: `block_eledia_telc_coursesearch.php`
+### Entry Point: `block_eledia_coursesearch.php`
 
-The main entry point for the block is the `block_eledia_telc_coursesearch` class in `block_eledia_telc_coursesearch.php`. This class is responsible for:
+The main entry point for the block is the `block_eledia_coursesearch` class in `block_eledia_coursesearch.php`. This class is responsible for:
 
 *   **Initialization:** The `init()` method sets the block's title.
 *   **Content Rendering:** The `get_content()` method is the core of the block's rendering logic. It performs the following steps:
     1.  Retrieves user preferences for grouping, sorting, and view mode using `get_user_preferences()`.
-    2.  Instantiates the `\block_eledia_telc_coursesearch\output\main` class, passing the user preferences as arguments.
-    3.  Gets the appropriate renderer for the block using `$this->page->get_renderer('block_eledia_telc_coursesearch')`.
+    2.  Instantiates the `\block_eledia_coursesearch\output\main` class, passing the user preferences as arguments.
+    3.  Gets the appropriate renderer for the block using `$this->page->get_renderer('block_eledia_coursesearch')`.
     4.  Renders the output of the `main` class using the renderer's `render()` method.
     5.  Sets the rendered HTML as the block's content.
 
 ### Web Services: `classes/externallib.php`
 
-The block exposes a set of web services through the `\block_eledia_telc_coursesearch\externallib` class. These services are defined in `db/services.php` and are used by the frontend to fetch data.
+The block exposes a set of web services through the `\block_eledia_coursesearch\externallib` class. These services are defined in `db/services.php` and are used by the frontend to fetch data.
 
 Here's a diagram illustrating the relationship between the main block class, the output class, and the external library:
 
 ```mermaid
 graph TD
-    A[block_eledia_telc_coursesearch] -- instantiates --> B["main (output)"];
+    A[block_eledia_coursesearch] -- instantiates --> B["main (output)"];
     B -- renders --> C[HTML];
     D[Frontend JS] -- calls --> E["externallib"];
     E -- returns --> F[JSON Data];
@@ -144,7 +144,7 @@ The `View` module is responsible for fetching and rendering the course list. It 
 
 *   **`init(root)`**: Initializes the course view, sets up event listeners, and triggers the initial loading of courses.
 *   **`initializePagedContent(root, promiseFunction, inputValue, params)`**: Creates a `PagedContentFactory` instance to handle pagination. It takes a `promiseFunction` that is responsible for fetching the course data.
-*   **`getMyCourses(filters, limit, searchParams)`**: Fetches the list of courses from the backend using the `block_eledia_telc_coursesearch_get_courseview` web service.
+*   **`getMyCourses(filters, limit, searchParams)`**: Fetches the list of courses from the backend using the `block_eledia_coursesearch_get_courseview` web service.
 *   **`renderCourses(root, coursesData)`**: Renders the course list using Mustache templates.
 
 ### Course Navigation: `amd/src/view_nav.js`
@@ -162,10 +162,10 @@ The `repository.js` module is responsible for making all API calls to the backen
 
 | `repository.js` Function | Webservice Called | Important Request `args` Keys | Important Response Keys |
 | :--- | :--- | :--- | :--- |
-| `getEnrolledCoursesByTimeline(args)` | `block_eledia_telc_coursesearch_get_courseview` | `criteria` (contains all filters: `name`, `selectedCategories`, `selectedCustomfields`, `limit`, `offset`, etc.) | `courses` (array of course objects), `nextoffset` |
-| `getCategories(args)` | `block_eledia_telc_coursesearch_get_available_categories` | `criteria` (filters are used to find relevant categories) | An array of category objects: `id`, `name`, `coursecount` |
-| `getTags(args)` | `block_eledia_telc_coursesearch_get_available_tags` | `criteria` (filters are used to find relevant tags) | An array of tag objects: `id`, `name` |
-| `getCustomfields(args)` | `block_eledia_telc_coursesearch_get_customfield_available_options` | `criteria` (especially `currentCustomField` to identify the target field) | An array of option objects: `name`, `value` |
+| `getEnrolledCoursesByTimeline(args)` | `block_eledia_coursesearch_get_courseview` | `criteria` (contains all filters: `name`, `selectedCategories`, `selectedCustomfields`, `limit`, `offset`, etc.) | `courses` (array of course objects), `nextoffset` |
+| `getCategories(args)` | `block_eledia_coursesearch_get_available_categories` | `criteria` (filters are used to find relevant categories) | An array of category objects: `id`, `name`, `coursecount` |
+| `getTags(args)` | `block_eledia_coursesearch_get_available_tags` | `criteria` (filters are used to find relevant tags) | An array of tag objects: `id`, `name` |
+| `getCustomfields(args)` | `block_eledia_coursesearch_get_customfield_available_options` | `criteria` (especially `currentCustomField` to identify the target field) | An array of option objects: `name`, `value` |
 | `setFavouriteCourses(args)` | `core_course_set_favourite_courses` | `courses` (an array containing `id` and `favourite` status) | `warnings` (array of warnings, empty on success) |
 
 ## Stale Functions and Methods

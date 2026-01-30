@@ -14,7 +14,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Javascript to initialise the eledia_telc_coursesearch block.
+ * Javascript to initialise the eledia_coursesearch block.
  *
  * @package
  * @copyright 2025 eLeDia GmbH
@@ -22,8 +22,8 @@
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import * as View from 'block_eledia_telc_coursesearch/view';
-import * as ViewNav from 'block_eledia_telc_coursesearch/view_nav';
+import * as View from 'block_eledia_coursesearch/view';
+import * as ViewNav from 'block_eledia_coursesearch/view_nav';
 
 /**
  * Initialise all of the modules for the overview block.

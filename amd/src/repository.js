@@ -16,7 +16,7 @@
 /**
  * A javascript module to retrieve enrolled courses from the server.
  *
- * @module block_eledia_telc_coursesearch/repository
+ * @module block_eledia_coursesearch/repository
  * @package
  * @copyright 2025 eLeDia GmbH
  * @author Immanuel Pasanec <support@eledia.de>
@@ -40,7 +40,7 @@ import Ajax from 'core/ajax';
  */
 export const getEnrolledCoursesByTimeline = args => {
     const request = {
-        methodname: 'block_eledia_telc_coursesearch_get_courseview',
+        methodname: 'block_eledia_coursesearch_get_courseview',
         args: args
     };
 
@@ -56,7 +56,7 @@ export const getEnrolledCoursesByTimeline = args => {
  */
 export const getCategories = args => {
     const request = {
-        methodname: 'block_eledia_telc_coursesearch_get_available_categories',
+        methodname: 'block_eledia_coursesearch_get_available_categories',
         args: args
     };
 
@@ -72,7 +72,7 @@ export const getCategories = args => {
  */
 export const getTags = args => {
     const request = {
-        methodname: 'block_eledia_telc_coursesearch_get_available_tags',
+        methodname: 'block_eledia_coursesearch_get_available_tags',
         args: args
     };
 
@@ -88,7 +88,7 @@ export const getTags = args => {
  */
 export const getCustomfields = args => {
     const request = {
-        methodname: 'block_eledia_telc_coursesearch_get_customfield_available_options',
+        methodname: 'block_eledia_coursesearch_get_customfield_available_options',
         args: args
     };
 

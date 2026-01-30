@@ -2,7 +2,7 @@
 
 ## Installation
 
-Legen Sie den Plugin-Ordner (`eledia_telc_coursesearch/`) in das Moodle-Verzeichnis `blocks/` und starten Sie den Installationsprozess.  
+Legen Sie den Plugin-Ordner (`eledia_coursesearch/`) in das Moodle-Verzeichnis `blocks/` und starten Sie den Installationsprozess.  
 (Gehen Sie zur Seite **Website-Administration** oder starten Sie die Installation über die CLI)
 
 ## Einrichtung

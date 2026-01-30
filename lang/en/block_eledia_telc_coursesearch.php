@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for the eledia_telc_coursesearch block.
+ * Lang strings for the eledia_coursesearch block.
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -62,7 +62,7 @@ $string['customfiltergrouping'] = 'Field to use';
 $string['customfiltergrouping_nofields'] = 'This option requires a course custom field to be set up and visible to everyone.';
 $string['displaycategories'] = 'Display categories';
 $string['displaycategories_help'] = 'Display the course category on dashboard course items including cards, list items and summary items.';
-$string['eledia_telc_coursesearch:myaddinstance'] = 'Add a new course overview block to Dashboard';
+$string['eledia_coursesearch:myaddinstance'] = 'Add a new course overview block to Dashboard';
 $string['expandsearch'] = 'Expand search';
 $string['expandsummary'] = 'expand summary';
 $string['favourites'] = 'Starred';

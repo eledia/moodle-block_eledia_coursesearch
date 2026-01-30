@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * External library class for eledia_telc_coursesearch block
+ * External library class for eledia_coursesearch block
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace block_eledia_telc_coursesearch;
+namespace block_eledia_coursesearch;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -44,8 +44,8 @@ require_once($CFG->dirroot . '/course/renderer.php');
 /**
  * External library class
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -1075,7 +1075,7 @@ class externallib extends external_api {
         $isvisible = $field->get_configdata_property('visibility') == $coursehandler;
         if (
             (!$field->supports_course_grouping() || !$isvisible) &&
-            !$field = \block_eledia_telc_coursesearch\fieldcontroller_factory::create($field)
+            !$field = \block_eledia_coursesearch\fieldcontroller_factory::create($field)
         ) {
             return [];
         }

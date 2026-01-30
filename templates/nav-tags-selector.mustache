@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_eledia_telc_coursesearch/nav-tags-selector
+    @template block_eledia_coursesearch/nav-tags-selector
 
     This template renders grouping dropdown.
 
@@ -31,16 +31,16 @@
 }}
 <div class="dropdown tagssearch mb-3 col-md-3">
     <div class="mb-1 me-1 flex-grow-1 tagsprevent">
-        {{< block_eledia_telc_coursesearch/search-input-auto-tags }}
+        {{< block_eledia_coursesearch/search-input-auto-tags }}
             {{$label}}{{#str}}
-                searchtags, block_eledia_telc_coursesearch
+                searchtags, block_eledia_coursesearch
             {{/str}}{{/label}}
             {{$placeholder}}{{#str}}
-                searchtags, block_eledia_telc_coursesearch
+                searchtags, block_eledia_coursesearch
             {{/str}}{{/placeholder}}
-        {{/ block_eledia_telc_coursesearch/search-input-auto-tags }}
+        {{/ block_eledia_coursesearch/search-input-auto-tags }}
     </div>
     <div class="tags-droprown-container">
-        {{> block_eledia_telc_coursesearch/nav-tags-dropdown }}
+        {{> block_eledia_coursesearch/nav-tags-dropdown }}
     </div>
 </div>

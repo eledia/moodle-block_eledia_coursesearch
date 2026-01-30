@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Library functions for eledia_telc_coursesearch block.
+ * Library functions for eledia_coursesearch block.
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -84,8 +84,8 @@ define('BLOCK_ETCOURSESEARCH_OPTIONS_BOTTOM', 'bottom');
  *
  * @return array[] Array representing current options along with defaults
  */
-function block_eledia_telc_coursesearch_user_preferences(): array {
-    $preferences['block_eledia_telc_coursesearch_user_grouping_preference'] = [
+function block_eledia_coursesearch_user_preferences(): array {
+    $preferences['block_eledia_coursesearch_user_grouping_preference'] = [
         'null' => NULL_NOT_ALLOWED,
         'default' => BLOCK_ETCOURSESEARCH_GROUPING_ALL,
         'type' => PARAM_ALPHA,
@@ -102,14 +102,14 @@ function block_eledia_telc_coursesearch_user_preferences(): array {
         'permissioncallback' => [core_user::class, 'is_current_user'],
     ];
 
-    $preferences['block_eledia_telc_coursesearch_user_grouping_customfieldvalue_preference'] = [
+    $preferences['block_eledia_coursesearch_user_grouping_customfieldvalue_preference'] = [
         'null' => NULL_ALLOWED,
         'default' => null,
         'type' => PARAM_RAW,
         'permissioncallback' => [core_user::class, 'is_current_user'],
     ];
 
-    $preferences['block_eledia_telc_coursesearch_user_sort_preference'] = [
+    $preferences['block_eledia_coursesearch_user_sort_preference'] = [
         'null' => NULL_NOT_ALLOWED,
         'default' => BLOCK_ETCOURSESEARCH_SORTING_LASTACCESSED,
         'type' => PARAM_ALPHA,
@@ -121,7 +121,7 @@ function block_eledia_telc_coursesearch_user_preferences(): array {
         'permissioncallback' => [core_user::class, 'is_current_user'],
     ];
 
-    $preferences['block_eledia_telc_coursesearch_user_view_preference'] = [
+    $preferences['block_eledia_coursesearch_user_view_preference'] = [
         'null' => NULL_NOT_ALLOWED,
         'default' => BLOCK_ETCOURSESEARCH_VIEW_CARD,
         'type' => PARAM_ALPHA,
@@ -133,7 +133,7 @@ function block_eledia_telc_coursesearch_user_preferences(): array {
         'permissioncallback' => [core_user::class, 'is_current_user'],
     ];
 
-    $preferences['/^block_eledia_telc_coursesearch_hidden_course_(\d)+$/'] = [
+    $preferences['/^block_eledia_coursesearch_hidden_course_(\d)+$/'] = [
         'isregex' => true,
         'choices' => [0, 1],
         'type' => PARAM_INT,
@@ -142,7 +142,7 @@ function block_eledia_telc_coursesearch_user_preferences(): array {
         'permissioncallback' => [core_user::class, 'is_current_user'],
     ];
 
-    $preferences['block_eledia_telc_coursesearch_user_paging_preference'] = [
+    $preferences['block_eledia_coursesearch_user_paging_preference'] = [
         'null' => NULL_NOT_ALLOWED,
         'default' => BLOCK_ETCOURSESEARCH_PAGING_12,
         'type' => PARAM_INT,
@@ -164,7 +164,7 @@ function block_eledia_telc_coursesearch_user_preferences(): array {
  *
  * @param stdClass $course The deleted course
  */
-function block_eledia_telc_coursesearch_pre_course_delete(\stdClass $course) {
+function block_eledia_coursesearch_pre_course_delete(\stdClass $course) {
     // Removing any favourited courses which have been created for users, for this course.
     $service = \core_favourites\service_factory::get_service_for_component('core_course');
     $service->delete_favourites_by_type_and_item('courses', $course->id);

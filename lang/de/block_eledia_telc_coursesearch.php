@@ -17,8 +17,8 @@
 /**
  * Lang strings for the My overview block.
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -62,7 +62,7 @@ $string['customfiltergrouping'] = 'Zu verwendendes Feld';
 $string['customfiltergrouping_nofields'] = 'Diese Option erfordert ein benutzerdefiniertes Kursfeld, das für alle sichtbar ist.';
 $string['displaycategories'] = 'Kategorien anzeigen';
 $string['displaycategories_help'] = 'Zeigt die Kurskategorie auf Dashboard-Elementen wie Kacheln, Listen- und Zusammenfassungselementen an.';
-$string['eledia_telc_coursesearch:myaddinstance'] = 'Neuen Kursübersichtsblock zum Dashboard hinzufügen';
+$string['eledia_coursesearch:myaddinstance'] = 'Neuen Kursübersichtsblock zum Dashboard hinzufügen';
 $string['expandsearch'] = 'Erweiterte Suche';
 $string['expandsummary'] = 'Zusammenfassung ausklappen';
 $string['favourites'] = 'Markierte';

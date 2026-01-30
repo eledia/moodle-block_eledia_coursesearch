@@ -15,51 +15,51 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_eledia_telc_coursesearch/main
+    @template block_eledia_coursesearch/main
 
-    This template renders the main content area for the eledia_telc_coursesearch block.
+    This template renders the main content area for the eledia_coursesearch block.
 
     Example context (json):
     {}
 }}
 
-<div id="block-eledia_telc_coursesearch-{{uniqid}}" class="block-eledia_telc_coursesearch block-cards" data-region="eledia_telc_coursesearch" role="navigation">
+<div id="block-eledia_coursesearch-{{uniqid}}" class="block-eledia_coursesearch block-cards" data-region="eledia_coursesearch" role="navigation">
     <hr class="mt-0"/>
 
-    <div role="search" data-region="filter" class="d-flex align-items-center my-2" aria-label="{{#str}} aria:controls, block_eledia_telc_coursesearch {{/str}}">
+    <div role="search" data-region="filter" class="d-flex align-items-center my-2" aria-label="{{#str}} aria:controls, block_eledia_coursesearch {{/str}}">
         <div class="row g-1">
             <div class="col-md-9">
-            {{> block_eledia_telc_coursesearch/nav-search-widget }}
+            {{> block_eledia_coursesearch/nav-search-widget }}
             </div>
-            {{> block_eledia_telc_coursesearch/nav-grouping-selector }}
+            {{> block_eledia_coursesearch/nav-grouping-selector }}
 
-            {{> block_eledia_telc_coursesearch/nav-customfield-selector }}
+            {{> block_eledia_coursesearch/nav-customfield-selector }}
 
 			{{#options_top}}
             <div class="coursesearchitems row g-1 pe-3 ps-3 w-100">
-            {{> block_eledia_telc_coursesearch/nav-selected-option-items }}
+            {{> block_eledia_coursesearch/nav-selected-option-items }}
 			</div>
 			{{/options_top}}
             {{! Expansion start }}
             <div class="search-extension col-12 mb-3 d-flex">
                 <a class="btn btn-primary me-3" data-toggle="collapse" data-target="#filtercollapse"
                     role="button" aria-expanded="false" aria-controls="filtercollapse">
-                    {{#str}} expandsearch, block_eledia_telc_coursesearch {{/str}}
+                    {{#str}} expandsearch, block_eledia_coursesearch {{/str}}
                 </a>
-                {{> block_eledia_telc_coursesearch/nav-display-selector }}
+                {{> block_eledia_coursesearch/nav-display-selector }}
             </div>
             <div class="collapse customfields-collapse row g-1 pe-3 ps-3 w-100" id="filtercollapse">
-            {{> block_eledia_telc_coursesearch/nav-customfield-selector-collapse }}
+            {{> block_eledia_coursesearch/nav-customfield-selector-collapse }}
 
-            {{> block_eledia_telc_coursesearch/nav-category-selector }}
+            {{> block_eledia_coursesearch/nav-category-selector }}
 
-            {{> block_eledia_telc_coursesearch/nav-tags-selector }}
+            {{> block_eledia_coursesearch/nav-tags-selector }}
 
-            {{!> block_eledia_telc_coursesearch/nav-sort-selector }}
+            {{!> block_eledia_coursesearch/nav-sort-selector }}
             </div>
 			{{#options_bottom}}
             <div class="coursesearchitems row g-1 pe-3 ps-3 w-100">
-            {{> block_eledia_telc_coursesearch/nav-selected-option-items }}
+            {{> block_eledia_coursesearch/nav-selected-option-items }}
 			</div>
 			{{/options_bottom}}
             {{! Expansion end }}
@@ -67,20 +67,20 @@
     </div>
 
     <div class="container-fluid p-0">
-        {{> block_eledia_telc_coursesearch/courses-view }}
+        {{> block_eledia_coursesearch/courses-view }}
     </div>
 </div>
 {{#js}}
 require(
 [
     'jquery',
-    'block_eledia_telc_coursesearch/main',
+    'block_eledia_coursesearch/main',
 ],
 function(
     $,
     Main
 ) {
-    var root = $('#block-eledia_telc_coursesearch-{{uniqid}}');
+    var root = $('#block-eledia_coursesearch-{{uniqid}}');
     Main.init(root);
 });
 {{/js}}

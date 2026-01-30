@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_eledia_telc_coursesearch/course-action-menu
+    @template block_eledia_coursesearch/course-action-menu
 
     This template renders action menu for each course.
 
@@ -30,44 +30,44 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false">
-        <i class="icon fa fa-ellipsis-v fa-fw m-0" title="{{#str}} aria:courseactions, block_eledia_telc_coursesearch {{/str}} {{{fullname}}}" aria-hidden="true"></i>
-        <span class="sr-only">{{#str}} aria:courseactions, block_eledia_telc_coursesearch {{/str}} {{{fullname}}}</span>
+        <i class="icon fa fa-ellipsis-v fa-fw m-0" title="{{#str}} aria:courseactions, block_eledia_coursesearch {{/str}} {{{fullname}}}" aria-hidden="true"></i>
+        <span class="sr-only">{{#str}} aria:courseactions, block_eledia_coursesearch {{/str}} {{{fullname}}}</span>
     </button>
     <div class="dropdown-menu dropdown-menu-right">
         <a class="dropdown-item {{#isfavourite}}hidden{{/isfavourite}}" href="#"
             data-action="add-favourite"
             data-course-id="{{id}}"
             >
-            {{#str}} addtofavourites, block_eledia_telc_coursesearch {{/str}}
+            {{#str}} addtofavourites, block_eledia_coursesearch {{/str}}
             <div class="sr-only">
-                {{#str}} aria:addtofavourites, block_eledia_telc_coursesearch {{/str}} {{{fullname}}}
+                {{#str}} aria:addtofavourites, block_eledia_coursesearch {{/str}} {{{fullname}}}
             </div>
         </a>
         <a class="dropdown-item {{^isfavourite}}hidden{{/isfavourite}}" href="#"
             data-action="remove-favourite"
             data-course-id="{{id}}"
             >
-            {{#str}} removefromfavourites, block_eledia_telc_coursesearch {{/str}}
+            {{#str}} removefromfavourites, block_eledia_coursesearch {{/str}}
             <div class="sr-only">
-                {{#str}} aria:removefromfavourites, block_eledia_telc_coursesearch {{/str}} {{{fullname}}}
+                {{#str}} aria:removefromfavourites, block_eledia_coursesearch {{/str}} {{{fullname}}}
             </div>
         </a>
         <a class="dropdown-item {{^hidden}}hidden{{/hidden}}" href="#"
             data-action="show-course"
             data-course-id="{{id}}"
             >
-            {{#str}} show, block_eledia_telc_coursesearch {{/str}}
+            {{#str}} show, block_eledia_coursesearch {{/str}}
             <div class="sr-only">
-                {{#str}} aria:showcourse, block_eledia_telc_coursesearch, {{fullname}} {{/str}}
+                {{#str}} aria:showcourse, block_eledia_coursesearch, {{fullname}} {{/str}}
             </div>
         </a>
         <a class="dropdown-item {{#hidden}}hidden{{/hidden}}" href="#"
             data-action="hide-course"
             data-course-id="{{id}}"
             >
-            {{#str}} hidecourse, block_eledia_telc_coursesearch {{/str}}
+            {{#str}} hidecourse, block_eledia_coursesearch {{/str}}
             <div class="sr-only">
-                {{#str}} aria:hidecourse, block_eledia_telc_coursesearch, {{fullname}} {{/str}}
+                {{#str}} aria:hidecourse, block_eledia_coursesearch, {{fullname}} {{/str}}
             </div>
         </a>
     </div>

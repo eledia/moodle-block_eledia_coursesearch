@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace block_eledia_telc_coursesearch;
+namespace block_eledia_coursesearch;
 
 /**
  * Unit tests for web service functions
  *
- * @package block_eledia_telc_coursesearch
+ * @package block_eledia_coursesearch
  * @category test
- * @copyright 2025 eLeDia GmbH
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -37,7 +37,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test get_data web service function
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::get_data
+     * @covers \block_eledia_coursesearch\externallib::get_data
      */
     public function test_get_data(): void {
         global $DB;
@@ -67,7 +67,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test get_courseview web service function
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::get_courseview
+     * @covers \block_eledia_coursesearch\externallib::get_courseview
      */
     public function test_get_courseview(): void {
         $user = $this->getDataGenerator()->create_user();
@@ -101,7 +101,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test get_available_categories web service function
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::get_available_categories
+     * @covers \block_eledia_coursesearch\externallib::get_available_categories
      */
     public function test_get_available_categories(): void {
         $user = $this->getDataGenerator()->create_user();
@@ -128,7 +128,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test get_available_tags web service function
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::get_available_tags
+     * @covers \block_eledia_coursesearch\externallib::get_available_tags
      */
     public function test_get_available_tags(): void {
         global $CFG;
@@ -160,7 +160,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test get_customfields web service function
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::get_customfields
+     * @covers \block_eledia_coursesearch\externallib::get_customfields
      */
     public function test_get_customfields(): void {
         $user = $this->getDataGenerator()->create_user();
@@ -190,7 +190,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test get_customfield_available_options web service function
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::get_customfield_available_options
+     * @covers \block_eledia_coursesearch\externallib::get_customfield_available_options
      */
     public function test_get_customfield_available_options(): void {
         $user = $this->getDataGenerator()->create_user();
@@ -229,7 +229,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test get_enrolled_courses_by_timeline_classification with different classifications
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::get_enrolled_courses_by_timeline_classification
+     * @covers \block_eledia_coursesearch\externallib::get_enrolled_courses_by_timeline_classification
      */
     public function test_get_enrolled_courses_by_timeline_classification(): void {
         $user = $this->getDataGenerator()->create_user();
@@ -292,7 +292,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test search functionality in get_courseview
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::get_courseview
+     * @covers \block_eledia_coursesearch\externallib::get_courseview
      */
     public function test_get_courseview_with_search(): void {
         $user = $this->getDataGenerator()->create_user();
@@ -328,7 +328,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test category filtering in get_courseview
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::get_courseview
+     * @covers \block_eledia_coursesearch\externallib::get_courseview
      */
     public function test_get_courseview_with_category_filter(): void {
         $user = $this->getDataGenerator()->create_user();
@@ -372,7 +372,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test remap_searchdata helper function
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::remap_searchdata
+     * @covers \block_eledia_coursesearch\externallib::remap_searchdata
      */
     public function test_remap_searchdata(): void {
         $data = [
@@ -400,7 +400,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test zero response helper
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::zero_response
+     * @covers \block_eledia_coursesearch\externallib::zero_response
      */
     public function test_zero_response(): void {
         $result = externallib::zero_response();
@@ -415,7 +415,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test filterparams helper
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::filterparams
+     * @covers \block_eledia_coursesearch\externallib::filterparams
      */
     public function test_filterparams(): void {
         $data = ['id' => 42, 'name' => 'Test'];
@@ -427,7 +427,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test get_multiselect_customfields
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::get_multiselect_customfields
+     * @covers \block_eledia_coursesearch\externallib::get_multiselect_customfields
      */
     public function test_get_multiselect_customfields(): void {
         // Check if multiselect field type is available (requires customfield_multiselect plugin).
@@ -454,7 +454,7 @@ final class externallib_test extends \advanced_testcase {
     /**
      * Test select_translation helper
      *
-     * @covers \block_eledia_telc_coursesearch\externallib::select_translation
+     * @covers \block_eledia_coursesearch\externallib::select_translation
      */
     public function test_select_translation(): void {
         $text = 'German;English';

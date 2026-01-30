@@ -15,9 +15,9 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_eledia_telc_coursesearch/view-cards
+    @template block_eledia_coursesearch/view-cards
 
-    This template renders the cards view for the eledia_telc_coursesearch block.
+    This template renders the cards view for the eledia_coursesearch block.
 
     Example context (json):
     {
@@ -39,13 +39,13 @@
 {{< core_course/coursecards }}
     {{$menu}}
         <div class="card-footer menu border-0 bg-white ms-auto">
-            {{!> block_eledia_telc_coursesearch/course-action-menu }}
+            {{!> block_eledia_coursesearch/course-action-menu }}
         </div>
     {{/menu}}
     {{$progress}}
         {{#hasprogress}}
             <div class="card-footer border-0 bg-white w-100">
-                {{> block_eledia_telc_coursesearch/progress-bar}}
+                {{> block_eledia_coursesearch/progress-bar}}
             </div>
         {{/hasprogress}}
     {{/progress}}

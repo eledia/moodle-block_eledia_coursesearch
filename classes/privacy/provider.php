@@ -15,98 +15,98 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy Subsystem implementation for block_eledia_telc_coursesearch.
+ * Privacy Subsystem implementation for block_eledia_coursesearch.
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace block_eledia_telc_coursesearch\privacy;
+namespace block_eledia_coursesearch\privacy;
 
 use core_privacy\local\request\user_preference_provider;
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\writer;
 
 /**
- * Privacy Subsystem for block_eledia_telc_coursesearch.
+ * Privacy Subsystem for block_eledia_coursesearch.
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\provider, user_preference_provider {
     /**
-     * Returns meta-data information about the eledia_telc_coursesearch block.
+     * Returns meta-data information about the eledia_coursesearch block.
      *
      * @param  \core_privacy\local\metadata\collection $collection A collection of meta-data.
      * @return \core_privacy\local\metadata\collection Return the collection of meta-data.
      */
     public static function get_metadata(collection $collection): collection {
         $collection->add_user_preference(
-            'block_eledia_telc_coursesearch_user_sort_preference',
+            'block_eledia_coursesearch_user_sort_preference',
             'privacy:metadata:overviewsortpreference'
         );
         $collection->add_user_preference(
-            'block_eledia_telc_coursesearch_user_view_preference',
+            'block_eledia_coursesearch_user_view_preference',
             'privacy:metadata:overviewviewpreference'
         );
         $collection->add_user_preference(
-            'block_eledia_telc_coursesearch_user_grouping_preference',
+            'block_eledia_coursesearch_user_grouping_preference',
             'privacy:metadata:overviewgroupingpreference'
         );
         $collection->add_user_preference(
-            'block_eledia_telc_coursesearch_user_paging_preference',
+            'block_eledia_coursesearch_user_paging_preference',
             'privacy:metadata:overviewpagingpreference'
         );
         return $collection;
     }
     /**
-     * Export all user preferences for the eledia_telc_coursesearch block
+     * Export all user preferences for the eledia_coursesearch block
      *
      * @param int $userid The userid of the user whose data is to be exported.
      */
     public static function export_user_preferences(int $userid) {
-        $preference = get_user_preferences('block_eledia_telc_coursesearch_user_sort_preference', null, $userid);
+        $preference = get_user_preferences('block_eledia_coursesearch_user_sort_preference', null, $userid);
         if (isset($preference)) {
             writer::export_user_preference(
-                'block_eledia_telc_coursesearch',
-                'block_eledia_telc_coursesearch_user_sort_preference',
-                get_string($preference, 'block_eledia_telc_coursesearch'),
-                get_string('privacy:metadata:overviewsortpreference', 'block_eledia_telc_coursesearch')
+                'block_eledia_coursesearch',
+                'block_eledia_coursesearch_user_sort_preference',
+                get_string($preference, 'block_eledia_coursesearch'),
+                get_string('privacy:metadata:overviewsortpreference', 'block_eledia_coursesearch')
             );
         }
 
-        $preference = get_user_preferences('block_eledia_telc_coursesearch_user_view_preference', null, $userid);
+        $preference = get_user_preferences('block_eledia_coursesearch_user_view_preference', null, $userid);
         if (isset($preference)) {
             writer::export_user_preference(
-                'block_eledia_telc_coursesearch',
-                'block_eledia_telc_coursesearch_user_view_preference',
-                get_string($preference, 'block_eledia_telc_coursesearch'),
-                get_string('privacy:metadata:overviewviewpreference', 'block_eledia_telc_coursesearch')
+                'block_eledia_coursesearch',
+                'block_eledia_coursesearch_user_view_preference',
+                get_string($preference, 'block_eledia_coursesearch'),
+                get_string('privacy:metadata:overviewviewpreference', 'block_eledia_coursesearch')
             );
         }
 
-        $preference = get_user_preferences('block_eledia_telc_coursesearch_user_grouping_preference', null, $userid);
+        $preference = get_user_preferences('block_eledia_coursesearch_user_grouping_preference', null, $userid);
         if (isset($preference)) {
             writer::export_user_preference(
-                'block_eledia_telc_coursesearch',
-                'block_eledia_telc_coursesearch_user_grouping_preference',
-                get_string($preference, 'block_eledia_telc_coursesearch'),
-                get_string('privacy:metadata:overviewgroupingpreference', 'block_eledia_telc_coursesearch')
+                'block_eledia_coursesearch',
+                'block_eledia_coursesearch_user_grouping_preference',
+                get_string($preference, 'block_eledia_coursesearch'),
+                get_string('privacy:metadata:overviewgroupingpreference', 'block_eledia_coursesearch')
             );
         }
 
         $preferences = get_user_preferences(null, null, $userid);
         foreach ($preferences as $name => $value) {
-            if ((substr($name, 0, 45) == 'block_eledia_telc_coursesearch_hidden_course_')) {
+            if ((substr($name, 0, 45) == 'block_eledia_coursesearch_hidden_course_')) {
                 writer::export_user_preference(
-                    'block_eledia_telc_coursesearch',
+                    'block_eledia_coursesearch',
                     $name,
                     $value,
-                    get_string('privacy:request:preference:set', 'block_eledia_telc_coursesearch', (object) [
+                    get_string('privacy:request:preference:set', 'block_eledia_coursesearch', (object) [
                         'name' => $name,
                         'value' => $value,
                     ])
@@ -114,13 +114,13 @@ class provider implements \core_privacy\local\metadata\provider, user_preference
             }
         }
 
-        $preference = get_user_preferences('block_eledia_telc_coursesearch_user_paging_preference', null, $userid);
+        $preference = get_user_preferences('block_eledia_coursesearch_user_paging_preference', null, $userid);
         if (isset($preference)) {
             \core_privacy\local\request\writer::export_user_preference(
-                'block_eledia_telc_coursesearch',
-                'block_eledia_telc_coursesearch_user_paging_preference',
+                'block_eledia_coursesearch',
+                'block_eledia_coursesearch_user_paging_preference',
                 $preference,
-                get_string('privacy:metadata:overviewpagingpreference', 'block_eledia_telc_coursesearch')
+                get_string('privacy:metadata:overviewpagingpreference', 'block_eledia_coursesearch')
             );
         }
     }

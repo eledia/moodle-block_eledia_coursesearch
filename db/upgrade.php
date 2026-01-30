@@ -15,21 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file keeps track of upgrades to the eledia_telc_coursesearch block
+ * This file keeps track of upgrades to the eledia_coursesearch block
  *
  * @since 3.8
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
- * Upgrade code for the eledia_telc_coursesearch block.
+ * Upgrade code for the eledia_coursesearch block.
  *
  * @param int $oldversion
  */
-function xmldb_block_eledia_telc_coursesearch_upgrade($oldversion) {
+function xmldb_block_eledia_coursesearch_upgrade($oldversion) {
     // Automatically generated Moodle v4.1.0 release upgrade line.
     // Put any upgrade step following this.
 

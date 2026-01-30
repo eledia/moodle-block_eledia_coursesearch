@@ -1,20 +1,20 @@
 /* Hide the first dropdown-divider if no filter option element is listed before it.
-   This can happen for some subset configurations of the block_eledia_telc_coursesearch course filter. */
-.block_eledia_telc_coursesearch button#groupingdropdown + .dropdown-menu li:first-of-type.dropdown-divider:first-of-type {
+   This can happen for some subset configurations of the block_eledia_coursesearch course filter. */
+.block_eledia_coursesearch button#groupingdropdown + .dropdown-menu li:first-of-type.dropdown-divider:first-of-type {
     display: none;
 }
-.block_eledia_telc_coursesearch .whitebutton .btn-secondary {
+.block_eledia_coursesearch .whitebutton .btn-secondary {
     background: white;
     border-color: var(--primary);
     color: var(--primary);
 }
 
-.page-mycourses .block_eledia_telc_coursesearch .block-controls {
+.page-mycourses .block_eledia_coursesearch .block-controls {
     display: none;
 }
 
-.block_eledia_telc_coursesearch .list-image,
-.block_eledia_telc_coursesearch .summary-image {
+.block_eledia_coursesearch .list-image,
+.block_eledia_coursesearch .summary-image {
     height: 5rem;
     width: 20rem;
     background-position: center;
@@ -56,7 +56,7 @@ input::after {
     float: right;
 }
 
-.summary-fadeout .eledia-telc-collapsesummary {
+.summary-fadeout .eledia-collapsesummary {
     display: none;
 }
 
@@ -89,24 +89,24 @@ div[data-region="paging-control-limit-container"] {
 }
 
 /* Change search fields into dropdowns. */
-.block_eledia_telc_coursesearch .customfieldsearch .input-group,
-.block_eledia_telc_coursesearch .customfields-collapse .input-group {
+.block_eledia_coursesearch .customfieldsearch .input-group,
+.block_eledia_coursesearch .customfields-collapse .input-group {
     position: relative;
 }
-.block_eledia_telc_coursesearch .customfieldsearch .input-group > span,
-.block_eledia_telc_coursesearch .customfields-collapse .input-group > span {
+.block_eledia_coursesearch .customfieldsearch .input-group > span,
+.block_eledia_coursesearch .customfields-collapse .input-group > span {
     position: relative;
     display: block;
     width: 100%;
 }
-.block_eledia_telc_coursesearch .customfieldsearch .input-group > span > .form-control[readonly],
-.block_eledia_telc_coursesearch .customfields-collapse .input-group > span > .form-control[readonly] {
+.block_eledia_coursesearch .customfieldsearch .input-group > span > .form-control[readonly],
+.block_eledia_coursesearch .customfields-collapse .input-group > span > .form-control[readonly] {
     background-color: #fff;
     cursor: pointer;
     padding-right: 30px;
 }
-.block_eledia_telc_coursesearch .customfieldsearch .input-group > span::after,
-.block_eledia_telc_coursesearch .customfields-collapse .input-group > span::after {
+.block_eledia_coursesearch .customfieldsearch .input-group > span::after,
+.block_eledia_coursesearch .customfields-collapse .input-group > span::after {
     content: "";
     position: absolute;
     right: 12px;

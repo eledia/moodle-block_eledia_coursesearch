@@ -15,28 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Contains the class for the eledia_telc_coursesearch block.
+ * Contains the class for the eledia_coursesearch block.
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
- * TELC course search block class.
+ * eLeDia course search block class.
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class block_eledia_telc_coursesearch extends block_base {
+class block_eledia_coursesearch extends block_base {
     /**
      * Init.
      */
     public function init() {
-        $this->title = get_string('pluginname', 'block_eledia_telc_coursesearch');
+        $this->title = get_string('pluginname', 'block_eledia_coursesearch');
     }
 
     /**
@@ -48,20 +48,20 @@ class block_eledia_telc_coursesearch extends block_base {
         if (isset($this->content)) {
             return $this->content;
         }
-        $group = get_user_preferences('block_eledia_telc_coursesearch_user_grouping_preference');
-        $sort = get_user_preferences('block_eledia_telc_coursesearch_user_sort_preference');
-        $view = get_user_preferences('block_eledia_telc_coursesearch_user_view_preference');
+        $group = get_user_preferences('block_eledia_coursesearch_user_grouping_preference');
+        $sort = get_user_preferences('block_eledia_coursesearch_user_sort_preference');
+        $view = get_user_preferences('block_eledia_coursesearch_user_view_preference');
         $device = $this->page->devicetypeinuse;
         if ($device === 'mobile') {
             $view = 'card';
         } else {
             $view = 'summary';
         }
-        $paging = get_user_preferences('block_eledia_telc_coursesearch_user_paging_preference');
-        $customfieldvalue = get_user_preferences('block_eledia_telc_coursesearch_user_grouping_customfieldvalue_preference');
+        $paging = get_user_preferences('block_eledia_coursesearch_user_paging_preference');
+        $customfieldvalue = get_user_preferences('block_eledia_coursesearch_user_grouping_customfieldvalue_preference');
 
-        $renderable = new \block_eledia_telc_coursesearch\output\main($group, $sort, $view, $paging, $customfieldvalue);
-        $renderer = $this->page->get_renderer('block_eledia_telc_coursesearch');
+        $renderable = new \block_eledia_coursesearch\output\main($group, $sort, $view, $paging, $customfieldvalue);
+        $renderer = $this->page->get_renderer('block_eledia_coursesearch');
 
         $this->content = new stdClass();
         $this->content->text = $renderer->render($renderable);
@@ -96,17 +96,17 @@ class block_eledia_telc_coursesearch extends block_base {
      */
     public function get_config_for_external() {
         // Return all settings for all users since it is safe (no private keys, etc..).
-        $configs = get_config('block_eledia_telc_coursesearch');
+        $configs = get_config('block_eledia_coursesearch');
 
         // Get the customfield values (if any).
         if ($configs->displaygroupingcustomfield) {
-            $group = get_user_preferences('block_eledia_telc_coursesearch_user_grouping_preference');
-            $sort = get_user_preferences('block_eledia_telc_coursesearch_user_sort_preference');
-            $view = get_user_preferences('block_eledia_telc_coursesearch_user_view_preference');
-            $paging = get_user_preferences('block_eledia_telc_coursesearch_user_paging_preference');
-            $customfieldvalue = get_user_preferences('block_eledia_telc_coursesearch_user_grouping_customfieldvalue_preference');
+            $group = get_user_preferences('block_eledia_coursesearch_user_grouping_preference');
+            $sort = get_user_preferences('block_eledia_coursesearch_user_sort_preference');
+            $view = get_user_preferences('block_eledia_coursesearch_user_view_preference');
+            $paging = get_user_preferences('block_eledia_coursesearch_user_paging_preference');
+            $customfieldvalue = get_user_preferences('block_eledia_coursesearch_user_grouping_customfieldvalue_preference');
 
-            $renderable = new \block_eledia_telc_coursesearch\output\main($group, $sort, $view, $paging, $customfieldvalue);
+            $renderable = new \block_eledia_coursesearch\output\main($group, $sort, $view, $paging, $customfieldvalue);
             $customfieldsexport = $renderable->get_customfield_values_for_export();
             if (!empty($customfieldsexport)) {
                 $configs->customfieldsexport = json_encode($customfieldsexport);

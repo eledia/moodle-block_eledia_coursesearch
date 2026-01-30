@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * External functions and service declarations for eledia_telc_coursesearch block
+ * External functions and service declarations for eledia_coursesearch block
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $functions = [
     // The name of your web service function, as discussed above.
-    'block_eledia_telc_coursesearch_get_categories' => [
+    'block_eledia_coursesearch_get_categories' => [
         'classname' => 'core_course_external',
         'methodname' => 'get_categories',
         'classpath' => 'course/externallib.php',
@@ -35,36 +35,36 @@ $functions = [
         'type' => 'read',
         'capabilities' => 'moodle/category:viewhiddencategories',
     ],
-    'block_eledia_telc_coursesearch_get_available_categories' => [
-        'classname' => 'block_eledia_telc_coursesearch\externallib',
+    'block_eledia_coursesearch_get_available_categories' => [
+        'classname' => 'block_eledia_coursesearch\externallib',
         'methodname' => 'get_available_categories',
         'description' => 'Return category details',
         'type' => 'read',
         'ajax' => true,
     ],
-    'block_eledia_telc_coursesearch_get_available_tags' => [
-        'classname' => 'block_eledia_telc_coursesearch\externallib',
+    'block_eledia_coursesearch_get_available_tags' => [
+        'classname' => 'block_eledia_coursesearch\externallib',
         'methodname' => 'get_available_tags',
         'description' => 'Return course tags',
         'type' => 'read',
         'ajax' => true,
     ],
-    'block_eledia_telc_coursesearch_get_customfield_available_options' => [
-        'classname' => 'block_eledia_telc_coursesearch\externallib',
+    'block_eledia_coursesearch_get_customfield_available_options' => [
+        'classname' => 'block_eledia_coursesearch\externallib',
         'methodname' => 'get_customfield_available_options',
         'description' => 'Return category details',
         'type' => 'read',
         'ajax' => true,
     ],
-    'block_eledia_telc_coursesearch_get_customfields' => [
-        'classname' => 'block_eledia_telc_coursesearch\externallib',
+    'block_eledia_coursesearch_get_customfields' => [
+        'classname' => 'block_eledia_coursesearch\externallib',
         'methodname' => 'get_customfields',
         'description' => 'Return customfields for filter rendering.',
         'type' => 'read',
         'ajax' => true,
     ],
-    'block_eledia_telc_coursesearch_get_courseview' => [
-        'classname' => 'block_eledia_telc_coursesearch\externallib',
+    'block_eledia_coursesearch_get_courseview' => [
+        'classname' => 'block_eledia_coursesearch\externallib',
         'methodname' => 'get_courseview',
         'description' => 'Return category details',
         'type' => 'read',

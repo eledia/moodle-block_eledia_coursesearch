@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_eledia_telc_coursesearch/nav-grouping-selector
+    @template block_eledia_coursesearch/nav-grouping-selector
 
     This template renders grouping dropdown.
 
@@ -41,12 +41,12 @@
 {{#displaygroupingselector}}
     <div class="col-md-3">
     <div class="dropdown mb-3">
-        <button id="groupingdropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{#str}} aria:groupingdropdown, block_eledia_telc_coursesearch {{/str}}">
+        <button id="groupingdropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{#str}} aria:groupingdropdown, block_eledia_coursesearch {{/str}}">
             <span data-active-item-text>
-                {{#all}}{{#str}} all, block_eledia_telc_coursesearch {{/str}}{{/all}}
-                {{#inprogress}}{{#str}} inprogress, block_eledia_telc_coursesearch {{/str}}{{/inprogress}}
-                {{#future}}{{#str}} future, block_eledia_telc_coursesearch {{/str}}{{/future}}
-                {{#past}}{{#str}} past, block_eledia_telc_coursesearch {{/str}}{{/past}}
+                {{#all}}{{#str}} all, block_eledia_coursesearch {{/str}}{{/all}}
+                {{#inprogress}}{{#str}} inprogress, block_eledia_coursesearch {{/str}}{{/inprogress}}
+                {{#future}}{{#str}} future, block_eledia_coursesearch {{/str}}{{/future}}
+                {{#past}}{{#str}} past, block_eledia_coursesearch {{/str}}{{/past}}
                 {{selectedcustomfield}}
             </span>
         </button>
@@ -56,8 +56,8 @@
                 <span class="filler">&nbsp;</span>
             </li>
             <li>
-                <a class="dropdown-item" href="#" data-filter="grouping" data-value="all" data-pref="all" aria-label="{{#str}} aria:allcourses, block_eledia_telc_coursesearch {{/str}}" role="menuitem" {{#all}}aria-current="true"{{/all}}>
-                    {{#str}} all, block_eledia_telc_coursesearch {{/str}}
+                <a class="dropdown-item" href="#" data-filter="grouping" data-value="all" data-pref="all" aria-label="{{#str}} aria:allcourses, block_eledia_coursesearch {{/str}}" role="menuitem" {{#all}}aria-current="true"{{/all}}>
+                    {{#str}} all, block_eledia_coursesearch {{/str}}
                 </a>
             </li>
             {{/displaygroupingall}}
@@ -66,8 +66,8 @@
                 <span class="filler">&nbsp;</span>
             </li>
             <li>
-                <a class="dropdown-item" href="#" data-filter="grouping" data-value="inprogress" data-pref="inprogress" aria-label="{{#str}} aria:inprogress, block_eledia_telc_coursesearch {{/str}}" role="menuitem" {{#inprogress}}aria-current="true"{{/inprogress}}>
-                    {{#str}} inprogress, block_eledia_telc_coursesearch {{/str}}
+                <a class="dropdown-item" href="#" data-filter="grouping" data-value="inprogress" data-pref="inprogress" aria-label="{{#str}} aria:inprogress, block_eledia_coursesearch {{/str}}" role="menuitem" {{#inprogress}}aria-current="true"{{/inprogress}}>
+                    {{#str}} inprogress, block_eledia_coursesearch {{/str}}
                 </a>
             </li>
             {{/displaygroupinginprogress}}
@@ -78,8 +78,8 @@
                 </li>
                 {{/displaygroupinginprogress}}
             <li>
-                <a class="dropdown-item" href="#" data-filter="grouping" data-value="future" data-pref="future" aria-label="{{#str}} aria:future, block_eledia_telc_coursesearch {{/str}}" role="menuitem" {{#future}}aria-current="true"{{/future}}>
-                    {{#str}} future, block_eledia_telc_coursesearch {{/str}}
+                <a class="dropdown-item" href="#" data-filter="grouping" data-value="future" data-pref="future" aria-label="{{#str}} aria:future, block_eledia_coursesearch {{/str}}" role="menuitem" {{#future}}aria-current="true"{{/future}}>
+                    {{#str}} future, block_eledia_coursesearch {{/str}}
                 </a>
             </li>
             {{/displaygroupingfuture}}
@@ -92,8 +92,8 @@
                     {{/displaygroupingfuture}}
                 {{/displaygroupinginprogress}}
             <li>
-                <a class="dropdown-item" href="#" data-filter="grouping" data-value="past" data-pref="past" aria-label="{{#str}} aria:past, block_eledia_telc_coursesearch {{/str}}" role="menuitem" {{#past}}aria-current="true"{{/past}}>
-                    {{#str}} past, block_eledia_telc_coursesearch {{/str}}
+                <a class="dropdown-item" href="#" data-filter="grouping" data-value="past" data-pref="past" aria-label="{{#str}} aria:past, block_eledia_coursesearch {{/str}}" role="menuitem" {{#past}}aria-current="true"{{/past}}>
+                    {{#str}} past, block_eledia_coursesearch {{/str}}
                 </a>
             </li>
             {{/displaygroupingpast}}

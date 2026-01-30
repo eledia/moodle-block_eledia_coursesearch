@@ -14,7 +14,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Javascript to initialise the selectors for the eledia_telc_coursesearch block.
+ * Javascript to initialise the selectors for the eledia_coursesearch block.
  *
  * @package
  * @copyright 2025 eLeDia GmbH
@@ -26,7 +26,7 @@ export default {
     courseView: {
         region: '[data-region="courses-view"]',
         regionContent: '[data-region="course-view-content"]',
-        elediaButton: 'eledia-telc-courseseach-viewbtn',
+        elediaButton: 'eledia-courseseach-viewbtn',
         courseSummary: 'summary'
     },
     FILTERS: '[data-region="filter"]',
@@ -41,7 +41,7 @@ export default {
     ICON_IS_FAVOURITE: '[data-region="is-favourite"]',
     ICON_NOT_FAVOURITE: '[data-region="not-favourite"]',
     region: {
-        selectBlock: '[data-region="eledia_telc_coursesearch"]',
+        selectBlock: '[data-region="eledia_coursesearch"]',
         searchInput: '[data-action="search"]',
         clearIcon: '[data-action="clearsearch"]',
     },

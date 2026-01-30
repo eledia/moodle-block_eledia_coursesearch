@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_eledia_telc_coursesearch/nav-category-selector
+    @template block_eledia_coursesearch/nav-category-selector
 
     This template renders grouping dropdown.
 
@@ -32,17 +32,17 @@
 <div class="col-md-3">
     <div class="dropdown categorysearch mb-1">
         <div class="mb-1 flex-grow-1 catprevent">
-            {{< block_eledia_telc_coursesearch/search-input-auto-categories }}
+            {{< block_eledia_coursesearch/search-input-auto-categories }}
                 {{$label}}{{#str}}
-                    searchcategories, block_eledia_telc_coursesearch
+                    searchcategories, block_eledia_coursesearch
                 {{/str}}{{/label}}
                 {{$placeholder}}{{#str}}
-                    searchcategories, block_eledia_telc_coursesearch
+                    searchcategories, block_eledia_coursesearch
                 {{/str}}{{/placeholder}}
-            {{/ block_eledia_telc_coursesearch/search-input-auto-categories }}
+            {{/ block_eledia_coursesearch/search-input-auto-categories }}
         </div>
         <div class="category-droprown-container">
-            {{> block_eledia_telc_coursesearch/nav-category-dropdown }}
+            {{> block_eledia_coursesearch/nav-category-dropdown }}
         </div>
     </div>
 </div>

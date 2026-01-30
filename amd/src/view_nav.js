@@ -26,8 +26,8 @@ import $ from 'jquery';
 import * as CustomEvents from 'core/custom_interaction_events';
 import Notification from 'core/notification';
 import {setUserPreference} from 'core_user/repository';
-import * as View from 'block_eledia_telc_coursesearch/view';
-import SELECTORS from 'block_eledia_telc_coursesearch/selectors';
+import * as View from 'block_eledia_coursesearch/view';
+import SELECTORS from 'block_eledia_coursesearch/selectors';
 
 /**
  * Update the user preference for the block.
@@ -40,13 +40,13 @@ import SELECTORS from 'block_eledia_telc_coursesearch/selectors';
 const updatePreferences = (filter, value) => {
     let type = null;
     if (filter === 'display') {
-        type = 'block_eledia_telc_coursesearch_user_view_preference';
+        type = 'block_eledia_coursesearch_user_view_preference';
     } else if (filter === 'sort') {
-        type = 'block_eledia_telc_coursesearch_user_sort_preference';
+        type = 'block_eledia_coursesearch_user_sort_preference';
     } else if (filter === 'customfieldvalue') {
-        type = 'block_eledia_telc_coursesearch_user_grouping_customfieldvalue_preference';
+        type = 'block_eledia_coursesearch_user_grouping_customfieldvalue_preference';
     } else {
-        type = 'block_eledia_telc_coursesearch_user_grouping_preference';
+        type = 'block_eledia_coursesearch_user_grouping_preference';
     }
 
     return setUserPreference(type, value)
@@ -139,7 +139,7 @@ const registerSelector = root => {
  * Initialise the timeline view navigation by adding event listeners to
  * the navigation elements.
  *
- * @param {object} root The root element for the eledia_telc_coursesearch block
+ * @param {object} root The root element for the eledia_coursesearch block
  */
 export const init = root => {
     root = $(root);

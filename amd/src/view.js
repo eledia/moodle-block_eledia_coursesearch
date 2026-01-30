@@ -24,7 +24,7 @@
 
 // Import $, { error } from 'jquery';
 import $ from 'jquery';
-import * as Repository from 'block_eledia_telc_coursesearch/repository';
+import * as Repository from 'block_eledia_coursesearch/repository';
 import * as PagedContentFactory from 'core/paged_content_factory';
 import * as PubSub from 'core/pubsub';
 import * as CustomEvents from 'core/custom_interaction_events';
@@ -32,16 +32,16 @@ import * as Notification from 'core/notification';
 import {exception as displayException} from 'core/notification';
 import * as Templates from 'core/templates';
 import * as CourseEvents from 'core_course/events';
-import SELECTORS from 'block_eledia_telc_coursesearch/selectors';
+import SELECTORS from 'block_eledia_coursesearch/selectors';
 import * as PagedContentEvents from 'core/paged_content_events';
 import * as Aria from 'core/aria';
 import {debounce} from 'core/utils';
 import {setUserPreference} from 'core_user/repository';
 
 const TEMPLATES = {
-    COURSES_CARDS: 'block_eledia_telc_coursesearch/view-cards',
-    COURSES_LIST: 'block_eledia_telc_coursesearch/view-list',
-    COURSES_SUMMARY: 'block_eledia_telc_coursesearch/view-summary',
+    COURSES_CARDS: 'block_eledia_coursesearch/view-cards',
+    COURSES_LIST: 'block_eledia_coursesearch/view-list',
+    COURSES_SUMMARY: 'block_eledia_coursesearch/view-summary',
     NOCOURSES: 'core_course/no-courses'
 };
 
@@ -132,7 +132,7 @@ const getAllFilterValues = root => {
 const DEFAULT_PAGED_CONTENT_CONFIG = {
     ignoreControlWhileLoading: true,
     controlPlacementBottom: true,
-    persistentLimitKey: 'block_eledia_telc_coursesearch_user_paging_preference'
+    persistentLimitKey: 'block_eledia_coursesearch_user_paging_preference'
 };
 
 /**
@@ -515,7 +515,7 @@ const setCourseHiddenState = (courseId, status) => {
         status = null;
     }
 
-    return setUserPreference(`block_eledia_telc_coursesearch_hidden_course_${courseId}`, status)
+    return setUserPreference(`block_eledia_coursesearch_hidden_course_${courseId}`, status)
         .catch(Notification.exception);
 };
 
@@ -685,7 +685,7 @@ const renderCategories = (dropdownContainer, dropdown, categoriesData, selection
 
     // Const filters = getFilterValues(categories);
 
-    const template = 'block_eledia_telc_coursesearch/nav-category-dropdown';
+    const template = 'block_eledia_coursesearch/nav-category-dropdown';
 
     // NOTE: Render function for mustache.
     return Templates.renderForPromise(template, {
@@ -711,7 +711,7 @@ const renderCategories = (dropdownContainer, dropdown, categoriesData, selection
  */
 const renderTags = (dropdownContainer, dropdown, tagsData, selectionsData, page) => {
 
-    const template = 'block_eledia_telc_coursesearch/nav-tags-dropdown';
+    const template = 'block_eledia_coursesearch/nav-tags-dropdown';
 
     // NOTE: Render function for mustache.
     return Templates.renderForPromise(template, {
@@ -737,7 +737,7 @@ const renderTags = (dropdownContainer, dropdown, tagsData, selectionsData, page)
  */
 const renderCustomfields = (dropdownContainer, dropdown, customfieldsData, selectionsData, page) => {
 
-    const template = 'block_eledia_telc_coursesearch/nav-customfield-dropdown';
+    const template = 'block_eledia_coursesearch/nav-customfield-dropdown';
 
     // NOTE: Render function for mustache.
     return Templates.renderForPromise(template, {
@@ -908,7 +908,7 @@ const searchFunctionalityCurry = () => {
             limit,
             inputValue
         ).then(coursesData => {
-            const searchTerm = document.querySelector('.block-eledia_telc_coursesearch [data-action="search"]').value;
+            const searchTerm = document.querySelector('.block-eledia_coursesearch [data-action="search"]').value;
             if (searchTerm.trim() !== '') {
                 coursesData.courses.forEach(c => {
                     const word = searchTerm.trim();
@@ -1143,9 +1143,9 @@ const initializeCustomfieldSearchContent = (dropdownContainer,
 };
 
 /**
- * Listen to, and handle events for the eledia_telc_coursesearch block.
+ * Listen to, and handle events for the eledia_coursesearch block.
  *
- * @param {Object} root The eledia_telc_coursesearch block container element.
+ * @param {Object} root The eledia_coursesearch block container element.
  * @param {HTMLElement} page The whole HTMLElement for our block.
  */
 const registerEventListeners = (root, page) => {
@@ -1425,7 +1425,7 @@ const registerEventListeners = (root, page) => {
 
     document.body.addEventListener('click', (e) => {
         const expandLink = e.target;
-        if (expandLink.classList.contains('eledia-telc-expandsummary')) {
+        if (expandLink.classList.contains('eledia-expandsummary')) {
             e.preventDefault();
             const summary = e.target.previousElementSibling;
             expandLink.classList.add('d-none');
@@ -1435,7 +1435,7 @@ const registerEventListeners = (root, page) => {
 
     document.body.addEventListener('click', (e) => {
         const collapseLink = e.target;
-        if (collapseLink.classList.contains('eledia-telc-collapsesummary')) {
+        if (collapseLink.classList.contains('eledia-collapsesummary')) {
             e.preventDefault();
             const summary = e.target.parentElement;
             const expandLink = summary.nextElementSibling;
@@ -1457,7 +1457,7 @@ const registerEventListeners = (root, page) => {
  * Reset the search icon and trigger the init for the block.
  *
  * @param {HTMLElement} clearIcon Our closing icon to manipulate.
- * @param {Object} root The eledia_telc_coursesearch block container element.
+ * @param {Object} root The eledia_coursesearch block container element.
  */
 export const clearSearch = (clearIcon, root) => {
     clearIcon.classList.add('d-none');
@@ -1562,7 +1562,7 @@ const manageTagsdropdownCollapse = (e) => {
  * @param {object} page
  **/
 const manageCategorydropdownItems = (e, selected, selectable, dropdownDiv, dropdown, promiseFunction, page) => {
-    const template = 'block_eledia_telc_coursesearch/nav-category-dropdown';
+    const template = 'block_eledia_coursesearch/nav-category-dropdown';
     const categoryId = e.target.dataset.catId;
     if (e.target.classList.contains(selectable)) {
         const categoryIndex = selectableCategories.findIndex(value => value.id == categoryId);
@@ -1596,7 +1596,7 @@ const manageCategorydropdownItems = (e, selected, selectable, dropdownDiv, dropd
  * @param {object} page
  **/
 const manageTagsdropdownItems = (e, selected, selectable, dropdownDiv, dropdown, promiseFunction, page) => {
-    const template = 'block_eledia_telc_coursesearch/nav-tags-dropdown';
+    const template = 'block_eledia_coursesearch/nav-tags-dropdown';
     const tagsId = e.target.dataset.tagsId;
     if (e.target.classList.contains(selectable)) {
         const tagsIndex = selectableTags.findIndex(value => value.id == tagsId);
@@ -1646,7 +1646,7 @@ const manageCustomfielddropdownCollapse = () => {
  * @param {object} page
  **/
 const manageCustomfielddropdownItems = (e, selected, selectable, dropdownDiv, dropdown, promiseFunction, page) => {
-    // Const template = 'block_eledia_telc_coursesearch/nav-customfield-dropdown'.
+    // Const template = 'block_eledia_coursesearch/nav-customfield-dropdown'.
     const customfieldValue = e.target.dataset.selectvalue;
     const customfieldName = e.target.dataset.selectname;
     const customfieldId = e.target.dataset.customfieldid;
@@ -1693,7 +1693,7 @@ export const init = root => {
     if (!root.attr('data-init')) {
         const page = document.querySelector(SELECTORS.region.selectBlock);
         registerEventListeners(root, page);
-        namespace = "block_eledia_telc_coursesearch_" + root.attr('id') + "_" + Math.random();
+        namespace = "block_eledia_coursesearch_" + root.attr('id') + "_" + Math.random();
         root.attr('data-init', true);
     }
 
@@ -1770,7 +1770,7 @@ function renderSelectOptions() {
             cindex: 0
         });
     });
-    Templates.renderForPromise('block_eledia_telc_coursesearch/nav-selected-option-items', {
+    Templates.renderForPromise('block_eledia_coursesearch/nav-selected-option-items', {
         options: options
     }).then(({html, js}) => {
         return Templates.replaceNodeContents('.coursesearchitems', html, js);

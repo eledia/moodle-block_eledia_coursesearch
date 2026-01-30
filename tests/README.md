@@ -1,6 +1,6 @@
-# Unit Tests for block_eledia_telc_coursesearch
+# Unit Tests for block_eledia_coursesearch
 
-This directory contains unit tests for the eledia_telc_coursesearch block plugin.
+This directory contains unit tests for the eledia_coursesearch block plugin.
 
 ## Test Files
 
@@ -40,19 +40,19 @@ To run all unit tests for this block:
 ```bash
 cd /path/to/moodle
 php admin/tool/phpunit/cli/util.php --buildcomponentconfigs
-vendor/bin/phpunit --testsuite block_eledia_telc_coursesearch_testsuite
+vendor/bin/phpunit --testsuite block_eledia_coursesearch_testsuite
 ```
 
 To run a specific test class:
 
 ```bash
-vendor/bin/phpunit blocks/eledia_telc_coursesearch/tests/externallib_test.php
+vendor/bin/phpunit blocks/eledia_coursesearch/tests/externallib_test.php
 ```
 
 To run a specific test method:
 
 ```bash
-vendor/bin/phpunit --filter test_get_courseview blocks/eledia_telc_coursesearch/tests/externallib_test.php
+vendor/bin/phpunit --filter test_get_courseview blocks/eledia_coursesearch/tests/externallib_test.php
 ```
 
 ## Behat Tests

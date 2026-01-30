@@ -15,17 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Class containing data for eledia_telc_coursesearch block.
+ * Class containing data for eledia_coursesearch block.
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace block_eledia_telc_coursesearch\output;
+namespace block_eledia_coursesearch\output;
 defined('MOODLE_INTERNAL') || die();
 
-use block_eledia_telc_coursesearch\externallib;
+use block_eledia_coursesearch\externallib;
 use core_competency\url;
 use core_contentbank\output\customfields;
 use renderable;
@@ -33,14 +33,14 @@ use renderer_base;
 use templatable;
 use stdClass;
 
-require_once($CFG->dirroot . '/blocks/eledia_telc_coursesearch/lib.php');
+require_once($CFG->dirroot . '/blocks/eledia_coursesearch/lib.php');
 require_once($CFG->dirroot . '/course/renderer.php');
 
 /**
- * Class containing data for eledia_telc_coursesearch block.
+ * Class containing data for eledia_coursesearch block.
  *
- * @package block_eledia_telc_coursesearch
- * @copyright 2025 eLeDia GmbH
+ * @package block_eledia_coursesearch
+ * @copyright 2025 eLeDia GmbH (made possible by TU Ilmenau)
  * @author Immanuel Pasanec <support@eledia.de>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -48,28 +48,28 @@ class main implements renderable, templatable {
     /**
      * Store the grouping preference.
      *
-     * @var string String matching the grouping constants defined in eledia_telc_coursesearch/lib.php
+     * @var string String matching the grouping constants defined in eledia_coursesearch/lib.php
      */
     private $grouping;
 
     /**
      * Store the sort preference.
      *
-     * @var string String matching the sort constants defined in eledia_telc_coursesearch/lib.php
+     * @var string String matching the sort constants defined in eledia_coursesearch/lib.php
      */
     private $sort;
 
     /**
      * Store the view preference.
      *
-     * @var string String matching the view/display constants defined in eledia_telc_coursesearch/lib.php
+     * @var string String matching the view/display constants defined in eledia_coursesearch/lib.php
      */
     private $view;
 
     /**
      * Store the paging preference.
      *
-     * @var int Integer matching the paging constants defined in eledia_telc_coursesearch/lib.php
+     * @var int Integer matching the paging constants defined in eledia_coursesearch/lib.php
      */
     private $paging;
 
@@ -81,9 +81,9 @@ class main implements renderable, templatable {
     private $displaycategories;
 
     /**
-     * Store the configuration values for the eledia_telc_coursesearch block.
+     * Store the configuration values for the eledia_coursesearch block.
      *
-     * @var array Array of available layouts matching view/display constants defined in eledia_telc_coursesearch/lib.php
+     * @var array Array of available layouts matching view/display constants defined in eledia_coursesearch/lib.php
      */
     private $layouts;
 
@@ -175,7 +175,7 @@ class main implements renderable, templatable {
     public function __construct($grouping, $sort, $view, $paging, $customfieldvalue = null) {
         global $CFG;
         // Get plugin config.
-        $config = get_config('block_eledia_telc_coursesearch');
+        $config = get_config('block_eledia_coursesearch');
 
         // Build the course grouping option name to check if the given grouping is enabled afterwards.
         $groupingconfigname = 'displaygrouping' . $grouping;
@@ -303,7 +303,7 @@ class main implements renderable, templatable {
      */
     public function set_available_layouts() {
 
-        if ($config = get_config('block_eledia_telc_coursesearch', 'layouts')) {
+        if ($config = get_config('block_eledia_coursesearch', 'layouts')) {
             $this->layouts = explode(',', $config);
         } else {
             $this->layouts = [BLOCK_ETCOURSESEARCH_VIEW_CARD];
@@ -341,9 +341,9 @@ class main implements renderable, templatable {
         $layout = new stdClass();
 
         $layout->id = $layoutname;
-        $layout->name = get_string($layoutname, 'block_eledia_telc_coursesearch');
+        $layout->name = get_string($layoutname, 'block_eledia_coursesearch');
         $layout->active = $this->view == $layoutname ? true : false;
-        $layout->arialabel = get_string('aria:' . $layoutname, 'block_eledia_telc_coursesearch');
+        $layout->arialabel = get_string('aria:' . $layoutname, 'block_eledia_coursesearch');
 
         return $layout;
     }
@@ -431,7 +431,7 @@ class main implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
         global $CFG, $USER;
 
-        $nocoursesurl = $output->image_url('courses', 'block_eledia_telc_coursesearch')->out();
+        $nocoursesurl = $output->image_url('courses', 'block_eledia_coursesearch')->out();
 
         $newcourseurl = '';
         $coursecat = \core_course_category::user_top();
@@ -451,7 +451,7 @@ class main implements renderable, templatable {
             // If the selected custom field value has not been found (possibly because the field has
             // been changed in the settings) find a suitable fallback.
             if (!$selectedcustomfield) {
-                $this->grouping = $this->get_fallback_grouping(get_config('block_eledia_telc_coursesearch'));
+                $this->grouping = $this->get_fallback_grouping(get_config('block_eledia_coursesearch'));
                 if ($this->grouping == BLOCK_ETCOURSESEARCH_GROUPING_CUSTOMFIELD) {
                     // If the fallback grouping is still customfield, then select the first field.
                     $firstfield = reset($customfieldvalues);
@@ -489,7 +489,7 @@ class main implements renderable, templatable {
             $customfields = array_splice($customfields, 0, 4);
             $customfieldcollapsable = true;
         }
-        $optionsposition = get_config('block_eledia_telc_coursesearch', 'options_position');
+        $optionsposition = get_config('block_eledia_coursesearch', 'options_position');
 
         $defaultvariables = [
             'totalcoursecount' => count($userscourses),
@@ -538,7 +538,7 @@ class main implements renderable, templatable {
     public function export_for_zero_state_template(renderer_base $output) {
         global $CFG, $DB;
 
-        $nocoursesimg = $output->image_url('courses', 'block_eledia_telc_coursesearch');
+        $nocoursesimg = $output->image_url('courses', 'block_eledia_coursesearch');
 
         $buttons = [];
         $coursecat = \core_course_category::user_top();
@@ -583,7 +583,7 @@ class main implements renderable, templatable {
             if ($category = \core_course_category::get_nearest_editable_subcategory($coursecat, ['create'])) {
                 $createbutton = new \single_button(
                     new \moodle_url('/course/edit.php', ['category' => $category->id]),
-                    get_string('createcourse', 'block_eledia_telc_coursesearch'),
+                    get_string('createcourse', 'block_eledia_coursesearch'),
                     'post',
                     \single_button::BUTTON_PRIMARY,
                 );
@@ -629,14 +629,14 @@ class main implements renderable, templatable {
             $quickstart = new \moodle_url($CFG->coursecreationguide, ['lang' => current_language()]);
             $docparams = [
                 'quickhref' => $quickstart->out(),
-                'quicktitle' => get_string('viewquickstart', 'block_eledia_telc_coursesearch'),
+                'quicktitle' => get_string('viewquickstart', 'block_eledia_coursesearch'),
                 'quicktarget' => '_blank',
             ];
         }
         return [
             'nocoursesimg' => $imageurl->out(),
-            'title' => ($strings['title']) ? get_string($strings['title'], 'block_eledia_telc_coursesearch') : '',
-            'intro' => ($strings['intro']) ? get_string($strings['intro'], 'block_eledia_telc_coursesearch', $docparams) : '',
+            'title' => ($strings['title']) ? get_string($strings['title'], 'block_eledia_coursesearch') : '',
+            'intro' => ($strings['intro']) ? get_string($strings['intro'], 'block_eledia_coursesearch', $docparams) : '',
             'buttons' => $buttons,
         ];
     }
