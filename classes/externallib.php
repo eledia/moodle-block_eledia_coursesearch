@@ -418,6 +418,9 @@ class externallib extends external_api {
      */
     public static function get_courseview(array $data) {
         global $DB;
+        // Ensure the user is logged in.
+        $context = \context_system::instance();
+        self::validate_context($context);
         $courseids = [];
         [$searchdata, $customfields, $categories, $tags] = self::remap_searchdata($data);
         $courseids = self::get_filtered_courseids(
@@ -808,6 +811,9 @@ class externallib extends external_api {
      */
     public static function get_available_categories(array $data): array {
         global $DB;
+        // Ensure the user is logged in.
+        $context = \context_system::instance();
+        self::validate_context($context);
         $courseids = [];
         $whereclause = '';
         $params = null;
@@ -1005,6 +1011,9 @@ class externallib extends external_api {
      * @return array
      */
     public static function get_customfields() {
+        // Ensure the user is logged in.
+        $context = \context_system::instance();
+        self::validate_context($context);
         return self::get_customfield_fields(true);
     }
 
@@ -1029,6 +1038,9 @@ class externallib extends external_api {
      */
     public static function get_customfield_available_options(array $data): array {
         global $DB;
+        // Ensure the user is logged in.
+        $context = \context_system::instance();
+        self::validate_context($context);
         $customfieldfieldids = self::get_customfield_fields();
 
         [$searchdata, $customfields, $categories, $tags] = self::remap_searchdata($data);
