@@ -36,7 +36,7 @@
     box-sizing: border-box;
 }
 
-input::after {
+.block_eledia-coursesearch input::after {
     /*content: "";*/
     /*TODO: Make visible.*/
     /*content: "aft";*/
@@ -84,7 +84,7 @@ input::after {
     margin-bottom: .5rem;
 }
 
-div[data-region="paging-control-limit-container"] {
+.block_eledia-coursesearch div[data-region="paging-control-limit-container"] {
     display: none;
 }
 
