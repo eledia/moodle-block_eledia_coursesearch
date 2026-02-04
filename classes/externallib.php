@@ -906,6 +906,10 @@ class externallib extends external_api {
      */
     public static function get_available_tags(array $data): array {
         global $DB;
+        if (defined('AJAX_SCRIPT') && AJAX_SCRIPT) {
+            $context = \context_system::instance();
+            self::validate_context($context);
+        }
         $courseids = [];
         $params = null;
         $tags = [];
