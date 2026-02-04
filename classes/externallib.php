@@ -506,8 +506,8 @@ class externallib extends external_api {
             $searchdata[$name] = $filterdata;
         }
         $customfields = $searchdata['customfields'];
-        $categories = array_map('self::filterparams', $searchdata['categories']);
-        $tags = array_map('self::filterparams', $searchdata['tags']);
+        $categories = array_map([self::class, 'filterparams'], $searchdata['categories']);
+        $tags = array_map([self::class, 'filterparams'], $searchdata['tags']);
         return [$searchdata, $customfields, $categories, $tags];
     }
 
