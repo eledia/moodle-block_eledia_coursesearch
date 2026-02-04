@@ -43,7 +43,6 @@ class renderer extends plugin_renderer_base {
      * @return string HTML string
      */
     public function render_main(main $main) {
-        global $USER;
         $chelper = new \coursecat_helper();
         $chelper->set_show_courses(20)
             ->set_courses_display_options([
