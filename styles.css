@@ -98,6 +98,13 @@
     min-height: calc(1.5em + .75rem + 2px);
 }
 
+/* Anchor filter dropdowns directly below input. BS4 sets top:100%, which positions the menu below the column... */
+.block_eledia_coursesearch .dropdown-menu-customfields,
+.block_eledia_coursesearch .dropdown-categories,
+.block_eledia_coursesearch .dropdown-tags {
+    top: auto;
+}
+
 /* Unified inset shadow hover for all filter inputs and the grouping dropdown */
 .block_eledia_coursesearch [data-action="catsearch"]:hover,
 .block_eledia_coursesearch [data-action="tagssearch"]:hover,

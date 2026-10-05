@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Make selected filter pills keyboard selectable and provide aria labels
 - Honor context-specific site theme overrides and adapt block display style automatically
+- Fix positioning of drop-down filter selectors on Moodle 4.5
 - Fix duplicate course details modals when using boost union theme on the site home in listing view and clicking on a details button on page >= 3
 - Declare missing boost union fields in get_courseview() external function
 
