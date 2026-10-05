@@ -6,9 +6,6 @@ Place the plugin folder (`eledia_coursesearch/`) into the Moodle `blocks/` direc
 ## Setup
 
 ### Make the block available
-Because the plugin is a *block*, it is only recommended to display it on the dashboard.  
-
-If you need the block in other places (start page, for example), your theme must support this.  
 
 To display the plugin to all users on the dashboard:
 
@@ -20,6 +17,26 @@ To display the plugin to all users on the dashboard:
 - Click on *Reset Dashboard for all users*  
 
 Now the course search is available to all users.
+
+### Public course search on the site home
+
+The block can be added to the site home to provide a public course catalogue.
+This setup requires Moodle to establish a guest session automatically; the
+search services do not run in a sessionless anonymous request.
+
+Before adding the block:
+
+1. Verify that the Moodle guest account exists.
+2. Review the guest role and grant only the intended course catalogue
+   permissions, in particular `moodle/category:viewcourselist`.
+3. Go to *Site administration* **→** *Users* **→** *Permissions* **→**
+   *User policies* and enable *Auto-login guests*.
+4. Open the site home, turn edit mode on, and add *eLeDia Course Search*.
+
+*Auto-login guests* is a site-wide Moodle setting. Without it, an anonymous
+visitor may be redirected to the login page when the block finds at least one
+catalogue-visible course. A listed course can still require enrolment,
+authentication, or a guest-access password when opened.
 
 ### Add custom fields
 The plugin only shows custom fields that are visible to everyone.  
@@ -42,9 +59,9 @@ The plugin only shows custom fields that are visible to everyone.
 
 <img src="../assets/create_customfield_en.png" alt="Add customfield details" width="60%">
 
-- **Translation:** The plugin supports German and English translation for the custom field *Name* field:  
-    - Syntax: `Deutscher Name;English name`  
-    - If the user language is not German (any type of German), the English name is shown.
+- **Translation:** Use Moodle's built-in multilang filter in custom-field names
+  and descriptions. The legacy `Deutscher Name;English name` syntax is no
+  longer supported.
 
 - In the *Common course custom fields settings* section, set *Visible to* to **Everyone**  
 
@@ -67,6 +84,15 @@ Following is a list of the available settings and their state.
 
 ### Appearance
 
+#### Course listing style
+
+Status: functional
+
+Choose the standard Moodle presentation or the optional Boost Union course
+cards and lists. The Boost Union option is available when the Boost Union theme
+is installed and is applied only on pages whose effective theme is Boost Union
+or a child theme of Boost Union.
+
 #### Display categories
 Status: functional  
 Show categories in course list or on course info cards.  
@@ -81,9 +107,12 @@ This breaks the plugin frontend if changed.
 #### Selected options items position
 Status: functional  
 Choose where the selected options items are displayed:  
+- Inline within the filter input fields
 - Top of the block (above the search fields)  
 - Bottom of the block (below the search fields)
-Default: Off
+- Off
+
+Default: Inline within the filter input fields.
 
 ### Available filters
 

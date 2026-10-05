@@ -9,10 +9,6 @@ Legen Sie den Plugin-Ordner (`eledia_coursesearch/`) in das Moodle-Verzeichnis `
 
 ### Block verfügbar machen
 
-Da es sich bei dem Plugin um einen *Block* handelt, wird empfohlen, ihn nur im **Dashboard** anzuzeigen.  
-
-Wenn Sie den Block an anderen Stellen benötigen (z. B. auf der Startseite), muss Ihr Theme dies unterstützen.  
-
 So machen Sie den Block für alle Nutzer im Dashboard sichtbar:
 
 - Gehen Sie zu **Website-Administration** **→** **Darstellung** **→** **Standard-Dashboard-Seite**  
@@ -23,6 +19,29 @@ So machen Sie den Block für alle Nutzer im Dashboard sichtbar:
 - Klicken Sie auf **Dashboard für alle Nutzer zurücksetzen**  
 
 Jetzt ist die Kurssuche für alle Nutzer verfügbar.
+
+### Öffentliche Kurssuche auf der Startseite
+
+Der Block kann auf der Startseite als öffentlicher Kurskatalog eingesetzt
+werden. Dafür muss Moodle automatisch eine Gastsitzung einrichten; die
+Suchdienste funktionieren nicht ohne Sitzung für vollständig anonyme Anfragen.
+
+Bevor Sie den Block hinzufügen:
+
+1. Prüfen Sie, ob das Moodle-Gastkonto vorhanden ist.
+2. Prüfen Sie die Gastrolle und vergeben Sie nur die gewünschten Rechte für
+   den Kurskatalog, insbesondere `moodle/category:viewcourselist`.
+3. Öffnen Sie **Website-Administration** **→** **Nutzer/innen** **→**
+   **Rechte ändern** **→** **Nutzereigenschaften** und aktivieren Sie
+   **Gäste automatisch anmelden**.
+4. Öffnen Sie die Startseite, aktivieren Sie den Bearbeitungsmodus und fügen
+   Sie **eLeDia Kurssuche** hinzu.
+
+**Gäste automatisch anmelden** ist eine websiteweite Moodle-Einstellung. Ohne
+diese Einstellung kann ein anonymer Besucher zur Anmeldeseite weitergeleitet
+werden, sobald der Block mindestens einen sichtbaren Kurs findet. Beim Öffnen
+eines aufgelisteten Kurses können weiterhin Einschreibung, Anmeldung oder ein
+Gastschlüssel erforderlich sein.
 
 ### Benutzerdefinierte Felder hinzufügen
 
@@ -46,10 +65,9 @@ Das Plugin zeigt nur benutzerdefinierte Felder an, die für **Jeden** sichtbar s
 
 <img src="../assets/create_customfield_de.png" alt="Details zum benutzerdefinierten Feld hinzufügen" width="60%">
 
-- **Übersetzung:** Das Plugin unterstützt deutsche und englische Übersetzungen für das Feld **Name**:  
-  
-  - Syntax: `Deutscher Name;English name`  
-  - Wenn die Benutzersprache nicht Deutsch ist (jegliche Form von Deutsch), wird der englische Name angezeigt.
+- **Übersetzung:** Verwenden Sie Moodles integrierten Mehrsprachigkeitsfilter
+  in Namen und Beschreibungen benutzerdefinierter Felder. Die frühere Syntax
+  `Deutscher Name;English name` wird nicht mehr unterstützt.
 
 - Im Abschnitt **Allgemeine Einstellungen für benutzerdefinierte Kursfelder** setzen Sie **Sichtbar für** auf **Jeden**  
 
@@ -71,6 +89,15 @@ Die meisten Einstellungen sollten nicht geändert werden.
 Im Folgenden finden Sie eine Liste der verfügbaren Einstellungen und deren Status.
 
 ### Darstellung
+
+#### Kursdarstellungsstil
+
+Status: funktionsfähig
+
+Wählen Sie die Moodle-Standarddarstellung oder optional Kurskacheln und
+Kurslisten von Boost Union. Die Boost-Union-Option steht zur Verfügung, wenn
+das Theme installiert ist, und wird nur auf Seiten verwendet, deren effektives
+Theme Boost Union oder ein Child-Theme von Boost Union ist.
 
 #### Kategorien anzeigen
 
@@ -95,8 +122,14 @@ Einige Teile des Codes erwarten diese Option, sie hat jedoch keine funktionale A
 #### Position der ausgewählten Optionen
 
 Status: funktionsfähig  
-Legt fest, ob die ausgewählten Optionen oben oder unten im Dropdown angezeigt werden.
-Standard ist **Aus**.
+Legt fest, wo ausgewählte Filter angezeigt werden:
+
+- Inline innerhalb der Filterfelder
+- Oberhalb der Suchfelder
+- Unterhalb der Suchfelder
+- Aus
+
+Standard ist **Inline innerhalb der Filterfelder**.
 
 #### Alle
 
