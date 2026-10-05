@@ -526,6 +526,7 @@ class externallib extends external_api {
         $coursestruct->keys['boostunion'] = new external_single_structure(
             [
                 'showcourseimage'    => new external_value(PARAM_BOOL, ''),
+                'courseimage'        => new external_value(PARAM_RAW, ''),
                 'showcoursecontacts' => new external_value(PARAM_BOOL, ''),
                 'hascontacts'        => new external_value(PARAM_BOOL, ''),
                 'contacts'           => new external_multiple_structure(
@@ -537,9 +538,12 @@ class externallib extends external_api {
                     ])
                 ),
                 'showcoursecategory'   => new external_value(PARAM_BOOL, ''),
+                'coursecategory'       => new external_value(PARAM_RAW, ''),
                 'showshortname'        => new external_value(PARAM_BOOL, ''),
                 'showcourseprogress'   => new external_value(PARAM_BOOL, ''),
                 'progressstyleasbar'   => new external_value(PARAM_BOOL, ''),
+                'progress'             => new external_value(PARAM_INT, ''),
+                'hasprogress'          => new external_value(PARAM_BOOL, ''),
                 'showcourseenrolicons' => new external_value(PARAM_BOOL, ''),
                 'hasenrolicons'        => new external_value(PARAM_BOOL, ''),
                 'enrolmenticons'       => new external_multiple_structure(
