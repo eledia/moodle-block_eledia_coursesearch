@@ -283,17 +283,19 @@ const getCustomFields = () => {
 
 /**
  * Updates the input field for a category selector based on the current selection.
+ *
+ * @return {Promise} Resolved once the input field has been re-rendered.
  */
 const updateCategoryInputDisplay = () => {
     const page = document.querySelector(SELECTORS.region.selectBlock);
     const container = page.querySelector(SELECTORS.cat.input);
     if (!container || !container.dataset.optionsInline) {
-        return;
+        return Promise.resolve();
     }
     const items = selectedCategories.map((cat, idx) => (
         {name: cat.name, type: 'category', index: idx, cindex: 0}
     ));
-    Templates.renderForPromise('block_eledia_coursesearch/nav-input-pill-items', {
+    return Templates.renderForPromise('block_eledia_coursesearch/nav-input-pill-items', {
         placeholder: container.dataset.placeholder,
         items: items,
         hasitems: items.length > 0
@@ -304,17 +306,19 @@ const updateCategoryInputDisplay = () => {
 
 /**
  * Updates the input field for a tags selector based on the current selection.
+ *
+ * @return {Promise} Resolved once the input field has been re-rendered.
  */
 const updateTagsInputDisplay = () => {
     const page = document.querySelector(SELECTORS.region.selectBlock);
     const container = page.querySelector(SELECTORS.tags.input);
     if (!container || !container.dataset.optionsInline) {
-        return;
+        return Promise.resolve();
     }
     const items = selectedTags.map((tag, idx) => (
         {name: tag.name, type: 'tag', index: idx, cindex: 0}
     ));
-    Templates.renderForPromise('block_eledia_coursesearch/nav-input-pill-items', {
+    return Templates.renderForPromise('block_eledia_coursesearch/nav-input-pill-items', {
         placeholder: container.dataset.placeholder,
         items: items,
         hasitems: items.length > 0
@@ -327,18 +331,19 @@ const updateTagsInputDisplay = () => {
  * Updates the input field for a custom field selector based on the current selection.
  *
  * @param {Number} customfieldId ID of the custom field input element to re-render
+ * @return {Promise} Resolved once the input field has been re-rendered.
  */
 const updateCustomfieldInputDisplay = (customfieldId) => {
     const page = document.querySelector(SELECTORS.region.selectBlock);
     const container = page.querySelector(SELECTORS.customfields.searchfield + customfieldId);
     if (!container || !container.dataset.optionsInline) {
-        return;
+        return Promise.resolve();
     }
     const selections = selectedCustomfields[customfieldId] || [];
     const items = selections.map((item, idx) => (
         {name: item.name, type: 'customfield', index: customfieldId, cindex: idx}
     ));
-    Templates.renderForPromise('block_eledia_coursesearch/nav-input-pill-items', {
+    return Templates.renderForPromise('block_eledia_coursesearch/nav-input-pill-items', {
         placeholder: container.dataset.placeholder,
         items: items,
         hasitems: items.length > 0
@@ -1892,6 +1897,7 @@ function renderSelectOptions() {
  * @param {string} type The type of the option (category, tag, customfield).
  * @param {number} index The index of the option in its array.
  * @param {number} cindex The customfield subindex (only for customfields).
+ * @return {Promise} Resolved once the respective input field has been re-rendered.
  */
 function deleteSelectOption(type, index, cindex) {
     switch (type) {
@@ -1922,12 +1928,13 @@ function deleteSelectOption(type, index, cindex) {
     }
 
     // Update respective input type display.
+    let displayUpdated = Promise.resolve();
     if (type === 'category') {
-        updateCategoryInputDisplay();
+        displayUpdated = updateCategoryInputDisplay();
     } else if (type === 'tag') {
-        updateTagsInputDisplay();
+        displayUpdated = updateTagsInputDisplay();
     } else if (type === 'customfield') {
-        updateCustomfieldInputDisplay(index);
+        displayUpdated = updateCustomfieldInputDisplay(index);
     }
     renderSelectOptions();
     // Fetch and render courses again.
@@ -1935,6 +1942,8 @@ function deleteSelectOption(type, index, cindex) {
     const root = $(page);
     const input = page.querySelector(SELECTORS.region.searchInput);
     initializePagedContent(root, searchFunctionalityCurry(), input.value.trim(), getParams());
+
+    return displayUpdated;
 }
 
 /**
@@ -1964,7 +1973,6 @@ document.body.addEventListener('click', (e) => {
             pillBtn.dataset.type,
             parseInt(pillBtn.dataset.index),
             parseInt(pillBtn.dataset.cindex)
-        );
-        filterInput?.focus();
+        ).then(() => filterInput?.focus());
     }
 });
