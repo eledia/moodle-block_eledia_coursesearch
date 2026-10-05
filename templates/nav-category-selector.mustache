@@ -29,20 +29,18 @@
         ]
     }
 }}
-<div class="col-md-3">
-    <div class="dropdown categorysearch mb-1">
-        <div class="mb-1 flex-grow-1 catprevent">
-            {{< block_eledia_coursesearch/search-input-auto-categories }}
-                {{$label}}{{#str}}
-                    searchcategories, block_eledia_coursesearch
-                {{/str}}{{/label}}
-                {{$placeholder}}{{#str}}
-                    searchcategories, block_eledia_coursesearch
-                {{/str}}{{/placeholder}}
-            {{/ block_eledia_coursesearch/search-input-auto-categories }}
-        </div>
-        <div class="category-droprown-container">
-            {{> block_eledia_coursesearch/nav-category-dropdown }}
-        </div>
+<div class="dropdown categorysearch col-md-3">
+    <div class="mb-1 me-0 mr-0 flex-grow-1 catprevent">
+        {{< block_eledia_coursesearch/search-input-auto-categories }}
+            {{$label}}{{#str}}
+                category, block_eledia_coursesearch
+            {{/str}}{{/label}}
+            {{$placeholder}}{{#str}}
+                category, block_eledia_coursesearch
+            {{/str}}{{/placeholder}}
+        {{/ block_eledia_coursesearch/search-input-auto-categories }}
+    </div>
+    <div class="category-dropdown-container">
+        {{> block_eledia_coursesearch/nav-category-dropdown }}
     </div>
 </div>

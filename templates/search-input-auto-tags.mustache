@@ -38,24 +38,19 @@
 }}
 <div id="searchform-auto-tags-{{uniqid}}" class="d-flex flex-wrap align-items-center simplesearchform">
     <div class="input-group searchbar w-100" role="search">
-        <label for="searchinput-tags-{{uniqid}}">
-            <span class="sr-only">{{$label}}{{#str}} search, core {{/str}}{{/label}}</span>
-        </label>
-        <span>
-        <input
-           type="text"
+        <div
            data-region="input"
            data-action="tagssearch"
+           data-placeholder="{{$placeholder}}{{#str}} search, core {{/str}}{{/placeholder}}"
            id="searchinput-tags-{{uniqid}}"
-           class="form-control withclear rounded tagsprevent"
-           placeholder="{{$placeholder}}{{#str}} search, core {{/str}}{{/placeholder}}"
-           name="search"
-           value="{{$value}}{{/value}}"
-           autocomplete="off"
-           readonly
-           {{$additionalattributes}}{{/additionalattributes}}
+           class="form-control dropdown-toggle withclear rounded tagsprevent d-flex flex-wrap align-items-center gap-1"
+           tabindex="0"
+           role="button"
+           aria-label="{{$label}}{{#str}} search, core {{/str}}{{/label}}"
+           {{#options_inline}}data-options-inline="1"{{/options_inline}}
         >
-        </span>
+            <div class="text-muted">{{$placeholder}}{{#str}} search, core {{/str}}{{/placeholder}}</div>
+        </div>
         <button
             class="btn btn-clear d-none tagsprevent"
             data-action="cleartagssearch"

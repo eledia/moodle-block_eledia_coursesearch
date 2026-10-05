@@ -35,6 +35,22 @@ if ($ADMIN->fulltree) {
         ''
     ));
 
+    // Course listing style (boost_union integration).
+    $courselistingstyleoptions = [
+        'default' => get_string('courselistingstyle_default', 'block_eledia_coursesearch'),
+    ];
+    if (core_component::get_component_directory('theme_boost_union') !== null) {
+        $courselistingstyleoptions['boostunion'] = get_string('courselistingstyle_boostunion', 'block_eledia_coursesearch');
+    }
+    $settings->add(new admin_setting_configselect(
+        'block_eledia_coursesearch/courselistingstyle',
+        get_string('courselistingstyle', 'block_eledia_coursesearch'),
+        get_string('courselistingstyle_desc', 'block_eledia_coursesearch'),
+        'default',
+        $courselistingstyleoptions
+    ));
+    unset($courselistingstyleoptions);
+
     // Display Course Categories on Dashboard course items (cards, lists, summary items).
     $settings->add(new admin_setting_configcheckbox(
         'block_eledia_coursesearch/displaycategories',
@@ -47,8 +63,8 @@ if ($ADMIN->fulltree) {
     // Note: This setting should not be changed as it breaks the plugin frontend.
     // Hidden from admin interface but accessible to code.
     $choices = [
-        BLOCK_ELEDIACOURSESEARCH_VIEW_CARD => get_string('list', 'block_eledia_coursesearch'),
-        BLOCK_ELEDIACOURSESEARCH_VIEW_SUMMARY => get_string('cards', 'block_eledia_coursesearch'),
+        BLOCK_ELEDIACOURSESEARCH_VIEW_CARD => get_string('cards', 'block_eledia_coursesearch'),
+        BLOCK_ELEDIACOURSESEARCH_VIEW_SUMMARY => get_string('list', 'block_eledia_coursesearch'),
     ];
     if (get_config('block_eledia_coursesearch', 'layouts') === false) {
         set_config('layouts', implode(',', array_keys($choices)), 'block_eledia_coursesearch');
@@ -58,6 +74,7 @@ if ($ADMIN->fulltree) {
     // Enable / Disable available layouts.
     $choices = [
         BLOCK_ELEDIACOURSESEARCH_OPTIONS_OFF => get_string('selectedoption_off', 'block_eledia_coursesearch'),
+        BLOCK_ELEDIACOURSESEARCH_OPTIONS_INLINE => get_string('selectedoption_inline', 'block_eledia_coursesearch'),
         BLOCK_ELEDIACOURSESEARCH_OPTIONS_TOP => get_string('selectedoption_top', 'block_eledia_coursesearch'),
         BLOCK_ELEDIACOURSESEARCH_OPTIONS_BOTTOM => get_string('selectedoption_bottom', 'block_eledia_coursesearch'),
     ];
@@ -65,7 +82,7 @@ if ($ADMIN->fulltree) {
         'block_eledia_coursesearch/options_position',
         get_string('selected_options_position', 'block_eledia_coursesearch'),
         get_string('selected_options_position_description', 'block_eledia_coursesearch'),
-        BLOCK_ELEDIACOURSESEARCH_OPTIONS_OFF,
+        BLOCK_ELEDIACOURSESEARCH_OPTIONS_INLINE,
         $choices
     ));
     unset($choices);
@@ -119,6 +136,9 @@ if ($ADMIN->fulltree) {
 
     $choices = \core_customfield\api::get_fields_supporting_course_grouping();
     if ($choices) {
+        // Apply translation filters to custom field titles.
+        $choices = array_map(fn ($title) => format_text($title, FORMAT_HTML), $choices);
+
         $choices  = ['' => get_string('choosedots')] + $choices;
         $settings->add(new admin_setting_configselect(
             'block_eledia_coursesearch/customfiltergrouping',

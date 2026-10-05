@@ -5,6 +5,35 @@ All notable changes to the eLeDia Course Search block will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+- Make selected filter pills keyboard selectable and provide aria labels
+- Honor context-specific site theme overrides and adapt block display style automatically
+- Fix positioning of drop-down filter selectors on Moodle 4.5
+- Fix duplicate course details modals when using boost union theme on the site home in listing view and clicking on a details button on page >= 3
+- Declare missing boost union fields in get_courseview() external function
+
+
+## [2.0] - 2026-09-01
+
+- Add support for displaying course cards grid and list layouts using the Boost Union Moodle theme if available
+- Add "Inline within filter input fields" display mode for selected filter options, showing active selections as removable pills directly inside the input fields
+- Improve design of filter input fields and dropdowns and fix UX issues
+- Allow courses to be excluded from search results via a custom course field / checkbox (`block_eledia_coursesearch_visible`)
+- Fix pagination of search results
+- Replaced text button for switching between card and list mode with bootstrap icon button group
+- Move collapsible custom field filters above the action buttons to group all filter options together
+- Replace custom translation system with Moodle's built-in multilang filter
+- Align course search bar placeholder with the input field label
+- Improve course freetext search bar and remove dependency on core component
+- Add link to clear all selected search filters at once
+- Display cards grid layout by default, regardless of the clients device type since it is now responsive
+- Add Bootstrap 5 compatibility for newer Moodle releases
+- Fix course category filter dropdown and selectors for customfield dropdowns
+- Unify spacing between different filter input fields
+- Align German translations for course timeframe with Moodle core translations
+
+
 ## [1.0] - 2026-01-29
 
 ### Initial Release

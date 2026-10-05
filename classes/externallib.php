@@ -50,6 +50,9 @@ require_once($CFG->dirroot . '/course/renderer.php');
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class externallib extends external_api {
+    /** @var string Shortname of the custom field that controls visibility of courses inside the course search block */
+    const VISIBILITY_CUSTOMFIELD_SHORTNAME = 'block_eledia_coursesearch_visible';
+
     /**
      * Define input parameters
      *
@@ -446,7 +449,8 @@ class externallib extends external_api {
         WHERE id $insql
         ";
         $courses = $DB->get_records_sql($sql, $inparams);
-        return self::get_courses_rendered($courses, 0);
+        $style = $searchdata['style'] ?? 'default';
+        return self::get_courses_rendered($courses, $searchdata['offset'], $style);
     }
 
     /**
@@ -501,6 +505,7 @@ class externallib extends external_api {
                 'limit' => ['limit', $value['value']],
                 'offset' => ['offset', $value['value']],
                 'progress' => ['progress', $value['value']],
+                'style' => ['style', $value['value']],
                 default => ['null', 'null'],
             };
             $searchdata[$name] = $filterdata;
@@ -517,9 +522,49 @@ class externallib extends external_api {
      * @return \core_external\external_description
      */
     public static function get_courseview_returns() {
+        $coursestruct = course_summary_exporter::get_read_structure();
+        $coursestruct->keys['boostunion'] = new external_single_structure(
+            [
+                'showcourseimage'    => new external_value(PARAM_BOOL, ''),
+                'courseimage'        => new external_value(PARAM_RAW, ''),
+                'showcoursecontacts' => new external_value(PARAM_BOOL, ''),
+                'hascontacts'        => new external_value(PARAM_BOOL, ''),
+                'contacts'           => new external_multiple_structure(
+                    new external_single_structure([
+                        'id'                 => new external_value(PARAM_INT, ''),
+                        'contactname'        => new external_value(PARAM_TEXT, ''),
+                        'userpicture'        => new external_value(PARAM_RAW, ''),
+                        'canviewuserdetails' => new external_value(PARAM_BOOL, ''),
+                    ])
+                ),
+                'showcoursecategory'   => new external_value(PARAM_BOOL, ''),
+                'coursecategory'       => new external_value(PARAM_RAW, ''),
+                'showshortname'        => new external_value(PARAM_BOOL, ''),
+                'showcourseprogress'   => new external_value(PARAM_BOOL, ''),
+                'progressstyleasbar'   => new external_value(PARAM_BOOL, ''),
+                'progress'             => new external_value(PARAM_INT, ''),
+                'hasprogress'          => new external_value(PARAM_BOOL, ''),
+                'showcourseenrolicons' => new external_value(PARAM_BOOL, ''),
+                'hasenrolicons'        => new external_value(PARAM_BOOL, ''),
+                'enrolmenticons'       => new external_multiple_structure(
+                    new external_value(PARAM_RAW, '')
+                ),
+                'showcoursefields'     => new external_value(PARAM_BOOL, ''),
+                'hascustomfields'      => new external_value(PARAM_BOOL, ''),
+                'customfields'         => new external_value(PARAM_RAW, ''),
+                'showcoursegoto'       => new external_value(PARAM_BOOL, ''),
+                'showcoursepopup'      => new external_value(PARAM_BOOL, ''),
+                'hassummary'           => new external_value(PARAM_BOOL, ''),
+                'showdetailsbar'       => new external_value(PARAM_BOOL, ''),
+                'showbuttons'          => new external_value(PARAM_BOOL, ''),
+                'showsidebar'          => new external_value(PARAM_BOOL, ''),
+            ],
+            'Boost Union specific course data',
+            VALUE_OPTIONAL
+        );
         return new external_single_structure(
             [
-                'courses' => new external_multiple_structure(course_summary_exporter::get_read_structure(), 'Course'),
+                'courses'    => new external_multiple_structure($coursestruct, 'Course'),
                 'nextoffset' => new external_value(PARAM_INT, 'Offset for the next request'),
             ]
         );
@@ -659,10 +704,21 @@ class externallib extends external_api {
             $sql .= " AND (c.startdate < $timestamp AND (c.enddate > $timestamp OR c.enddate = 0 )) ";
         }
 
-        $idsunfiltered = $DB->get_records_sql($sql, $allparams, $offset, $limit);
-        $idsunfiltered = array_keys($idsunfiltered);
+        // Exclude all courses that have self::VISIBILITY_CUSTOMFIELD_SHORTNAME set to 0.
+        // All courses without the field set will be visible by default.
+        $allparams['visibility_cf_shortname'] = self::VISIBILITY_CUSTOMFIELD_SHORTNAME;
+        $allparams['visibility_cf_value'] = '1';
+        $sql .= " AND NOT EXISTS (
+            SELECT 1
+            FROM {customfield_data} cd
+            JOIN {customfield_field} cf ON cf.id = cd.fieldid
+            WHERE cf.shortname = :visibility_cf_shortname
+            AND cd.contextid = ctx.id
+            AND cd.value != :visibility_cf_value
+        ) ";
 
         if ($contextids) {
+            $idsunfiltered = array_keys($DB->get_records_sql($sql, $allparams, $offset, $limit));
             [$insql, $inparams] = $DB->get_in_or_equal($userscourses);
             $contextids = array_keys($DB->get_records_select(
                 'context',
@@ -671,11 +727,19 @@ class externallib extends external_api {
                 'id',
                 'id'
             ));
-            $idsfiltered = array_intersect($idsunfiltered, $contextids);
-        } else {
-            $idsfiltered = array_intersect($idsunfiltered, $userscourses);
+            return array_intersect($idsunfiltered, $contextids);
         }
-        return $idsfiltered;
+
+        // Incorporate $userscourses filter into SQL so DB-level pagination
+        // operates on the already-visible set, avoiding short pages from post-query intersection.
+        if (empty($userscourses)) {
+            return [];
+        }
+        [$usersql, $userparams] = $DB->get_in_or_equal($userscourses, SQL_PARAMS_NAMED, 'uc');
+        $allparams = array_merge($allparams, $userparams);
+        $sql .= " AND c.id $usersql ";
+
+        return array_keys($DB->get_records_sql($sql, $allparams, $offset, $limit));
     }
 
     /**
@@ -683,26 +747,125 @@ class externallib extends external_api {
      *
      * @param array $courses Array of courses
      * @param int $offset Offset value
+     * @param string $style Rendering style ('default' or 'boostunion')
      * @return array
      */
-    protected static function get_courses_rendered(array $courses, int $offset): array {
+    protected static function get_courses_rendered(array $courses, int $offset, string $style = 'default'): array {
         global $PAGE;
 
         $renderer = $PAGE->get_renderer('core');
-        $formattedcourses = array_map(function ($course) use ($renderer) {
-            if ($course == null) {
-                return;
-            }
-            \context_helper::preload_from_record($course);
-            $context = \context_course::instance($course->id);
-            $exporter = new course_summary_exporter($course, ['context' => $context]);
-            return $exporter->export($renderer);
-        }, $courses);
+
+        // Prepare boost union config values if desired.
+        $buconfig = null;
+        $canviewuserdetails = false;
+        if ($style === 'boostunion' && class_exists('\\theme_boost_union\\util\\course')) {
+            $buconfig = new \stdClass();
+            $buconfig->showcourseimage      = get_config('theme_boost_union', 'courselistinghowimage') == 'yes';
+            $buconfig->showcoursecontacts   = get_config('theme_boost_union', 'courselistingshowcontacts') == 'yes';
+            $buconfig->showshortname        = get_config('theme_boost_union', 'courselistinghowshortname') == 'yes';
+            $buconfig->showcoursecategory   = get_config('theme_boost_union', 'courselistinghowcategory') == 'yes';
+            $buconfig->showcoursegoto       = get_config('theme_boost_union', 'courselistinghowgoto') == 'yes';
+            $buconfig->showcoursepopup      = get_config('theme_boost_union', 'courselistinghowpopup') == 'yes';
+            $buconfig->showbuttons          = $buconfig->showcoursegoto || $buconfig->showcoursepopup;
+            $buconfig->showcoursefields     = get_config('theme_boost_union', 'courselistingshowfields') == 'yes';
+            $buconfig->showcourseenrolicons = get_config('theme_boost_union', 'courselistinghowenrolicons') == 'yes';
+            $buconfig->showcourseprogress   = get_config('theme_boost_union', 'courselistinghowprogress') == 'yes';
+            $buconfig->progressstyleasbar   = get_config('theme_boost_union', 'courselistingprogressstyle') === 'bar';
+            $canviewuserdetails = (
+                has_capability('moodle/user:viewdetails', \context_system::instance()) &&
+                isloggedin() &&
+                !isguestuser()
+            );
+        }
+
+        $formattedcourses = array_map(
+            function ($course) use ($renderer, $buconfig, $canviewuserdetails) {
+                if ($course == null) {
+                    return;
+                }
+                \context_helper::preload_from_record($course);
+                $context = \context_course::instance($course->id);
+                $exporter = new course_summary_exporter($course, ['context' => $context]);
+                $coursedata = $exporter->export($renderer);
+
+                // Gather everything for boost union template context if selected.
+                if ($buconfig !== null) {
+                    $courseelement = new \core_course_list_element($course);
+                    $courseutil = new \theme_boost_union\util\course($courseelement);
+
+                    $boostunion = clone $buconfig;
+
+                    // Course image.
+                    $boostunion->courseimage = $courseutil->get_courseimage();
+
+                    // Course contacts (only when relevant).
+                    $rawcontacts = ($boostunion->showcoursecontacts || $boostunion->showcoursepopup)
+                            ? $courseutil->get_course_contacts()
+                            : [];
+                    $boostunion->contacts = array_values(array_map(function ($contact) use ($canviewuserdetails) {
+                        return [
+                            'id'                 => (int) $contact['id'],
+                            'contactname'        => $contact['contactname'],
+                            'userpicture'        => $contact['userpicture'],
+                            'canviewuserdetails' => $canviewuserdetails,
+                        ];
+                    }, $rawcontacts));
+                    $boostunion->hascontacts = !empty($boostunion->contacts);
+
+                    // Course category.
+                    $boostunion->coursecategory = $boostunion->showcoursecategory
+                            ? $courseutil->get_category()
+                            : '';
+
+                    // Summary flag (summary text is already in the exporter output).
+                    $boostunion->hassummary = !empty($coursedata->summary);
+
+                    // Custom fields (only when relevant).
+                    $customfields = ($boostunion->showcoursefields || $boostunion->showcoursepopup)
+                            ? $courseutil->get_custom_fields('listing')
+                            : '';
+                    $boostunion->customfields = $customfields;
+                    $boostunion->hascustomfields = !empty($customfields);
+
+                    // Enrolment icons (only when enabled).
+                    if ($boostunion->showcourseenrolicons) {
+                        $icons = $courseutil->get_enrolment_icons();
+                        $boostunion->enrolmenticons = array_values(array_map(function ($icon) use ($renderer) {
+                            return $renderer->render($icon);
+                        }, $icons));
+                    } else {
+                        $boostunion->enrolmenticons = [];
+                    }
+                    $boostunion->hasenrolicons = !empty($boostunion->enrolmenticons);
+
+                    // Progress (only when enabled).
+                    if ($boostunion->showcourseprogress) {
+                        $progress = $courseutil->get_progress(0);
+                        $boostunion->progress = (int) $progress;
+                        $boostunion->hasprogress = ($progress !== null);
+                    } else {
+                        $boostunion->progress = 0;
+                        $boostunion->hasprogress = false;
+                    }
+
+                    // Derived display flags.
+                    $boostunion->showdetailsbar = ($boostunion->showcourseenrolicons && $boostunion->hasenrolicons)
+                            || ($boostunion->showcourseprogress && $boostunion->hasprogress);
+                    $boostunion->showsidebar = $boostunion->showbuttons || $boostunion->showcoursefields;
+
+                    $coursedata->boostunion = $boostunion;
+                }
+
+                return $coursedata;
+            },
+            $courses
+        );
 
         $formattedcourses = array_filter($formattedcourses, function ($course) {
             if ($course != null) {
                 return $course;
             }
+            return false;
         });
 
         $result = [
@@ -1007,8 +1170,11 @@ class externallib extends external_api {
     public static function map_customfield_info($customfield) {
         $configdata = json_decode($customfield->configdata);
         if ((int) $configdata->visibility === 2) {
-            return (object) ['id' => $customfield->id, 'name' => self::select_translation($customfield->name),
-                'description' => $customfield->description];
+            return (object) [
+                'id' => $customfield->id,
+                'name' => format_text($customfield->name, FORMAT_HTML),
+                'description' => $customfield->description,
+            ];
         }
         return null;
     }
@@ -1025,18 +1191,6 @@ class externallib extends external_api {
         }
         require_login();
         return self::get_customfield_fields(true);
-    }
-
-    /**
-     * Select translation
-     *
-     * @param string $text Text to translate
-     * @return string
-     */
-    public static function select_translation(string $text): string {
-        $idx = explode('_', current_language())[0] === 'de' ? 0 : 1;
-        $translations = explode(';', $text);
-        return (isset($translations[$idx]) ? $translations[$idx] : $translations[0]);
     }
 
     // INFO: Search filtering is handled in frontend.

@@ -109,26 +109,22 @@ const registerSelector = root => {
         CustomEvents.events.activate,
         SELECTORS.DISPLAY_OPTION,
         (e, data) => {
-            const option = $(e.target);
+            const option = $(e.target).closest(SELECTORS.DISPLAY_OPTION);
 
             if (option.hasClass('active')) {
                 return;
             }
 
-            // eslint-disable-next-line no-unused-vars
-            const filter = option.attr('data-display-option');
-            // eslint-disable-next-line no-unused-vars
-            const pref = option.attr('data-pref');
-
             root.find(SELECTORS.courseView.region).attr('data-display', option.attr('data-value'));
-            const elediaButtons = document.getElementsByClassName(SELECTORS.courseView.elediaButton);
-            elediaButtons.forEach(e => {
-                if (e.classList.contains('d-none')) {
-                    e.classList.remove('d-none');
-                } else {
-                    e.classList.add('d-none');
-                }
+
+            root[0].querySelectorAll('.' + SELECTORS.courseView.elediaButton).forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-pressed', 'false');
             });
+            option[0].classList.add('active');
+            option[0].setAttribute('aria-pressed', 'true');
+            option[0].blur(); // Dismiss bootstrap tooltip after clicking.
+
             View.reset(root);
             data.originalEvent.preventDefault();
         }

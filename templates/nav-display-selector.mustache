@@ -21,27 +21,47 @@
 
     Example context (json):
     {
-        "cards": true,
-        "list": false,
-        "summary": false
+        "layouts": [
+            {
+                "id": "cards",
+                "name": "Cards",
+                "icon": "fa-th-large",
+                "active": true,
+                "arialabel": "Cards view"
+            },
+            {
+                "id": "list",
+                "name": "List",
+                "icon": "fa-list",
+                "active": false,
+                "arialabel": "List view"
+            },
+            {
+                "id": "summary",
+                "name": "Summary",
+                "icon": "fa-align-justify",
+                "active": false,
+                "arialabel": "Summary view"
+            }
+        ]
     }
 }}
-    <!--<button id="displaydropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"-->
-    <!--aria-label="{{#str}} aria:displaydropdown, block_eledia_coursesearch {{/str}}">-->
-        <!--<span data-active-item-text>-->
-            <!--{{#card}}{{#str}} card, block_eledia_coursesearch {{/str}}{{/card}}-->
-            <!--{{#list}}{{#str}} list, block_eledia_coursesearch {{/str}}{{/list}}-->
-            <!--{{#summary}}{{#str}} summary, block_eledia_coursesearch {{/str}}{{/summary}}-->
-        <!--</span>-->
-    <!--</button>-->
-    {{! <ul class="dropdown-menu" role="menu" data-show-active-item data-skip-active-class="true" aria-labelledby="displaydropdown"> }}
+<div class="btn-group ms-auto ml-auto ms-2 ml-2" role="group">
     {{#layouts}}
-	{{! <li> }}
-				<button class="btn btn-primary ms-auto me-2 eledia-courseseach-viewbtn {{#active}}d-none{{/active}}" data-display-option="display" data-value="{{id}}" data-pref="{{id}}" aria-label="{{arialabel}}" role="menuitem" {{#active}}aria-current="false"{{/active}}>
-                <!--<a class="dropdown-item" href="#" data-display-option="display" data-value="{{id}}" data-pref="{{id}}" aria-label="{{arialabel}}" role="menuitem" {{#active}}aria-current="false"{{/active}}>-->
-                    {{name}}
-                <!--</a>-->
-		</button>
-		{{! </li> }}
+        <button
+            class="btn btn-outline-primary eledia-courseseach-viewbtn {{#active}}active{{/active}}"
+            data-display-option="display"
+            data-value="{{id}}"
+            data-pref="{{id}}"
+            title="{{name}}"
+            data-title="{{name}}"
+            data-bs-title="{{name}}"
+            data-toggle="tooltip"
+            data-bs-toggle="tooltip"
+            aria-label="{{arialabel}}"
+            aria-pressed="{{#active}}true{{/active}}{{^active}}false{{/active}}"
+        >
+            <i class="fa {{icon}}" aria-hidden="true"></i>
+        </button>
     {{/layouts}}
-	{{! </ul> }}
+</div>

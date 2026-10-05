@@ -36,42 +36,59 @@
     }
 }}
 <ul class="dropdown-menu dropdown-tags tagsprevent" role="menu" data-show-active-item data-skip-active-class="true" data-active-item-text>
-    <li class="dropdown-divider" role="presentation">
-        <span class="filler">&nbsp;</span>
-    </li>
     {{^tagsselections}}
-    <li>
-        <a class="dropdown-item tagsprevent category-no" href="#" data-tags-id="{{id}}"
-           role="menuitem" >
-            {{#str}} notagsselected, block_eledia_coursesearch {{/str}}
-        </a>
-    </li>
+        <li>
+            <a
+                class="dropdown-item tagsprevent category-no text-muted pe-none"
+                href="#"
+                data-tags-id="{{id}}"
+                role="menuitem"
+            >
+                <small>
+                    {{#str}} notagsselected, block_eledia_coursesearch {{/str}}
+                </small>
+            </a>
+        </li>
     {{/tagsselections}}
     {{#tagsselections}}
-    <li>
-        <a class="dropdown-item tagsprevent tags-selected" href="#" data-tags-id="{{id}}"
-           role="menuitem" >
-            {{name}}
-        </a>
-    </li>
+        <li>
+            <a
+                class="dropdown-item tagsprevent tags-selected"
+                href="#"
+                data-tags-id="{{id}}"
+                role="menuitem"
+            >
+                {{name}}
+            </a>
+        </li>
     {{/tagsselections}}
     <li class="dropdown-divider" role="presentation">
         <span class="filler">&nbsp;</span>
     </li>
     {{^tags}}
-    <li>
-        <a class="dropdown-item tagsprevent category-no" href="#" data-tags-id="{{id}}"
-           role="menuitem" >
-            {{#str}} notagsavailable, block_eledia_coursesearch {{/str}}
-        </a>
-    </li>
+        <li>
+            <a
+                class="dropdown-item tagsprevent category-no text-muted pe-none"
+                href="#"
+                data-tags-id="{{id}}"
+                role="menuitem"
+            >
+                <small>
+                    {{#str}} notagsavailable, block_eledia_coursesearch {{/str}}
+                </small>
+            </a>
+        </li>
     {{/tags}}
     {{#tags}}
-    <li>
-        <a class="dropdown-item tagsprevent tags-selectable" href="#" data-tags-id="{{id}}"
-           role="menuitem" >
-            {{name}}
-        </a>
-    </li>
+        <li>
+            <a
+                class="dropdown-item tagsprevent tags-selectable"
+                href="#"
+                data-tags-id="{{id}}"
+                role="menuitem"
+            >
+                {{name}}
+            </a>
+        </li>
     {{/tags}}
 </ul>

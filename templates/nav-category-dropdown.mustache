@@ -36,42 +36,59 @@
     }
 }}
 <ul class="dropdown-menu dropdown-categories catprevent" role="menu" data-show-active-item data-skip-active-class="true" data-active-item-text>
-    <li class="dropdown-divider" role="presentation">
-        <span class="filler">&nbsp;</span>
-    </li>
     {{^catselections}}
-    <li>
-        <a class="dropdown-item catprevent category-no" href="#" data-cat-id="{{id}}"
-           role="menuitem" >
-            {{#str}} nocatselected, block_eledia_coursesearch {{/str}}
-        </a>
-    </li>
+        <li>
+            <a
+                class="dropdown-item catprevent category-no text-muted pe-none"
+                href="#"
+                data-cat-id="{{id}}"
+                role="menuitem"
+            >
+                <small>
+                    {{#str}} nocatselected, block_eledia_coursesearch {{/str}}
+                </small>
+            </a>
+        </li>
     {{/catselections}}
     {{#catselections}}
-    <li>
-        <a class="dropdown-item catprevent category-selected" href="#" data-cat-id="{{id}}"
-           role="menuitem" >
-            {{name}}
-        </a>
-    </li>
+        <li>
+            <a
+                class="dropdown-item catprevent category-selected"
+                href="#"
+                data-cat-id="{{id}}"
+                role="menuitem"
+            >
+                {{name}}
+            </a>
+        </li>
     {{/catselections}}
     <li class="dropdown-divider" role="presentation">
         <span class="filler">&nbsp;</span>
     </li>
     {{^categories}}
-    <li>
-        <a class="dropdown-item catprevent category-no" href="#" data-cat-id="{{id}}"
-           role="menuitem" >
-            {{#str}} nocatavailable, block_eledia_coursesearch {{/str}}
-        </a>
-    </li>
+        <li>
+            <a
+                class="dropdown-item catprevent category-no text-muted pe-none"
+                href="#"
+                data-cat-id="{{id}}"
+                role="menuitem"
+            >
+                <small>
+                    {{#str}} nocatavailable, block_eledia_coursesearch {{/str}}
+                </small>
+            </a>
+        </li>
     {{/categories}}
     {{#categories}}
-    <li>
-        <a class="dropdown-item catprevent category-selectable" href="#" data-cat-id="{{id}}"
-           role="menuitem" >
-            {{name}}
-        </a>
-    </li>
+        <li>
+            <a
+                class="dropdown-item catprevent category-selectable"
+                href="#"
+                data-cat-id="{{id}}"
+                role="menuitem"
+            >
+                {{name}}
+            </a>
+        </li>
     {{/categories}}
 </ul>

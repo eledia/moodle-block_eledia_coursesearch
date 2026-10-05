@@ -22,13 +22,36 @@
     Example context (json):
     {}
 }}
-<div class="mb-3 me-1 flex-grow-1">
-    {{< core/search_input_auto }}
-        {{$label}}{{#str}}
-            searchcourses, block_eledia_coursesearch
-        {{/str}}{{/label}}
-        {{$placeholder}}{{#str}}
-            search, core
-        {{/str}}{{/placeholder}}
-    {{/ core/search_input_auto }}
+<div class="mb-2 flex-grow-1">
+    <div id="searchform-auto-{{uniqid}}" class="d-flex flex-wrap align-items-center simplesearchform">
+        <div class="input-group searchbar w-100" {{$searchrole}}role="search" aria-labelledby="searchinput-label-{{uniqid}}"{{/searchrole}}>
+            <span class="input-group-text bg-white">
+                <i class="fas fa-search"></i>
+            </span>
+            <label for="searchinput-{{uniqid}}" id="searchinput-label-{{uniqid}}">
+                <span class="sr-only">{{#str}} searchcourses, block_eledia_coursesearch {{/str}}</span>
+            </label>
+            <input
+               type="text"
+               data-region="input"
+               data-action="search"
+               id="searchinput-{{uniqid}}"
+               class="form-control withclear rounded-end rounded-right"
+               style="border-bottom-left-radius: 0; border-top-left-radius: 0;"
+               placeholder="{{$placeholder}}{{#str}} searchcourses, block_eledia_coursesearch {{/str}}{{/placeholder}}"
+               name="search"
+               value="{{$value}}{{/value}}"
+               autocomplete="off"
+               {{$additionalattributes}}{{/additionalattributes}}
+            >
+            <button
+                class="btn btn-clear d-none"
+                data-action="clearsearch"
+                type="button"
+            >
+               {{#pix}} e/cancel, core {{/pix}}
+                <span class="sr-only">{{#str}} clearsearch, core {{/str}}</span>
+            </button>
+        </div>
+    </div>
 </div>

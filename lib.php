@@ -76,6 +76,7 @@ define('BLOCK_ELEDIACOURSESEARCH_DISPLAY_CATEGORIES_OFF', 'off');
 define('BLOCK_ELEDIACOURSESEARCH_OPTIONS_OFF', 'off');
 define('BLOCK_ELEDIACOURSESEARCH_OPTIONS_TOP', 'top');
 define('BLOCK_ELEDIACOURSESEARCH_OPTIONS_BOTTOM', 'bottom');
+define('BLOCK_ELEDIACOURSESEARCH_OPTIONS_INLINE', 'inline');
 
 /**
  * Get the current user preferences that are available

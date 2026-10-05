@@ -15,9 +15,9 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_eledia_coursesearch/nav-category-dropdown
+    @template block_eledia_coursesearch/nav-customfield-dropdown
 
-    This template renders grouping dropdown.
+    This template renders custom field dropdown.
 
     Example context (json):
     {
@@ -41,50 +41,70 @@
 }}
 <ul class="dropdown-menu dropdown-customfields-{{customfieldid}} dropdown-menu-customfields customprevent" role="menu" data-show-active-item data-skip-active-class="true" data-active-item-text>
 	{{#description}}
-    <li class="dropdown-description">
-			<div>{{#pix}}i/info, core{{/pix}}</div><div>{{{description}}}</div>
-    </li>
+        <li class="dropdown-description">
+                <div>{{#pix}}i/info, core{{/pix}}</div><div>{{{description}}}</div>
+        </li>
+        <li class="dropdown-divider" role="presentation">
+            <span class="filler">&nbsp;</span>
+        </li>
 	{{/description}}
-    <li class="dropdown-divider" role="presentation">
-        <span class="filler">&nbsp;</span>
-    </li>
     {{^customselections}}
-    <li>
-        <a class="dropdown-item customprevent customfield-no" href="#" data-customfieldid="{{customfieldid}}"
-           role="menuitem" >
-            {{#str}} nocustomfieldsselected, block_eledia_coursesearch {{/str}}
-        </a>
-    </li>
+        <li>
+            <a
+                class="dropdown-item customprevent customfield-no text-muted pe-none"
+                href="#"
+                data-customfieldid="{{customfieldid}}"
+                role="menuitem"
+            >
+                <small>
+                    {{#str}} nocustomfieldsselected, block_eledia_coursesearch {{/str}}
+                </small>
+            </a>
+        </li>
     {{/customselections}}
     {{#customselections}}
-    <li>
-        <a class="dropdown-item customprevent customfield-selected" href="#" data-customfieldid="{{customfieldid}}"
-		   data-selectvalue="{{value}}"
-		   data-selectname="{{name}}"
-           role="menuitem" >
-            {{name}}
-        </a>
-    </li>
+        <li>
+            <a
+                class="dropdown-item customprevent customfield-selected"
+                href="#"
+                data-customfieldid="{{customfieldid}}"
+                data-selectvalue="{{value}}"
+                data-selectname="{{name}}"
+                role="menuitem"
+            >
+                {{name}}
+            </a>
+        </li>
     {{/customselections}}
     <li class="dropdown-divider" role="presentation">
         <span class="filler">&nbsp;</span>
     </li>
     {{^customvalues}}
-    <li>
-        <a class="dropdown-item customprevent customfield-no" href="#" data-customfieldid="{{customfieldid}}"
-           role="menuitem" >
-            {{#str}} nocustomfieldsavailable, block_eledia_coursesearch {{/str}}
-        </a>
-    </li>
+        <li>
+            <a
+                class="dropdown-item customprevent customfield-no text-muted pe-none"
+                href="#"
+                data-customfieldid="{{customfieldid}}"
+                role="menuitem"
+            >
+                <small>
+                    {{#str}} nocustomfieldsavailable, block_eledia_coursesearch {{/str}}
+                </small>
+            </a>
+        </li>
     {{/customvalues}}
     {{#customvalues}}
-    <li>
-        <a class="dropdown-item customprevent customfield-selectable" href="#" data-customfieldid="{{customfieldid}}"
-		   data-selectvalue="{{value}}"
-		   data-selectname="{{name}}"
-           role="menuitem" >
-            {{name}}
-        </a>
-    </li>
+        <li>
+            <a
+                class="dropdown-item customprevent customfield-selectable"
+                href="#"
+                data-customfieldid="{{customfieldid}}"
+                data-selectvalue="{{value}}"
+                data-selectname="{{name}}"
+                role="menuitem"
+            >
+                {{name}}
+            </a>
+        </li>
     {{/customvalues}}
 </ul>

@@ -57,3 +57,12 @@ If there is a course description, you can expand it in list view.
 At the bottom, there are buttons to step through the results if there are too many to display on one page.
 
 <img src="../assets/userview_bottom_en.png" alt="Bottom of results page" width="50%">
+
+
+## Excluding courses from the search results
+
+You can exclude courses from the search results by creating a custom course field with the type "Checkbox" and the
+shortname `block_eledia_coursesearch_visible`.
+
+Any course that has possesses this custom course field and has it set to "No" / unchecked, will be excluded from the
+search results regardless of any other search criteria.

@@ -450,21 +450,4 @@ final class externallib_test extends \advanced_testcase {
         $this->assertIsArray($result);
         $this->assertContains($field->get('id'), $result);
     }
-
-    /**
-     * Test select_translation helper
-     *
-     * @covers \block_eledia_coursesearch\externallib::select_translation
-     */
-    public function test_select_translation(): void {
-        $text = 'German;English';
-        $result = externallib::select_translation($text);
-
-        $this->assertIsString($result);
-        $this->assertContains($result, ['German', 'English']);
-
-        $singletext = 'Single Text';
-        $result = externallib::select_translation($singletext);
-        $this->assertEquals('Single Text', $result);
-    }
 }

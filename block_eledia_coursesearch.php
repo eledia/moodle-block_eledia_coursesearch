@@ -51,12 +51,6 @@ class block_eledia_coursesearch extends block_base {
         $group = get_user_preferences('block_eledia_coursesearch_user_grouping_preference');
         $sort = get_user_preferences('block_eledia_coursesearch_user_sort_preference');
         $view = get_user_preferences('block_eledia_coursesearch_user_view_preference');
-        $device = $this->page->devicetypeinuse;
-        if ($device === 'mobile') {
-            $view = 'card';
-        } else {
-            $view = 'summary';
-        }
         $paging = get_user_preferences('block_eledia_coursesearch_user_paging_preference');
         $customfieldvalue = get_user_preferences('block_eledia_coursesearch_user_grouping_customfieldvalue_preference');
 
@@ -76,7 +70,10 @@ class block_eledia_coursesearch extends block_base {
      * @return array
      */
     public function applicable_formats() {
-        return ['my' => true];
+        return [
+            'my' => true,
+            'site-index' => true,
+        ];
     }
 
     /**

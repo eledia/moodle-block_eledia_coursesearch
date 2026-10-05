@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 use block_eledia_coursesearch\externallib;
 use core_competency\url;
 use core_contentbank\output\customfields;
+use core_requirejs;
 use renderable;
 use renderer_base;
 use templatable;
@@ -345,6 +346,13 @@ class main implements renderable, templatable {
         $layout->active = $this->view == $layoutname ? true : false;
         $layout->arialabel = get_string('aria:' . $layoutname, 'block_eledia_coursesearch');
 
+        $icons = [
+            BLOCK_ELEDIACOURSESEARCH_VIEW_CARD => 'fa-th-large',
+            BLOCK_ELEDIACOURSESEARCH_VIEW_LIST => 'fa-list',
+            BLOCK_ELEDIACOURSESEARCH_VIEW_SUMMARY => 'fa-align-left',
+        ];
+        $layout->icon = $icons[$layoutname] ?? 'fa-th-large';
+
         return $layout;
     }
 
@@ -429,7 +437,7 @@ class main implements renderable, templatable {
      *
      */
     public function export_for_template(renderer_base $output) {
-        global $CFG, $USER;
+        global $CFG, $PAGE;
 
         $nocoursesurl = $output->image_url('courses', 'block_eledia_coursesearch')->out();
 
@@ -491,6 +499,27 @@ class main implements renderable, templatable {
         }
         $optionsposition = get_config('block_eledia_coursesearch', 'options_position');
 
+        $courselistingstyle = get_config('block_eledia_coursesearch', 'courselistingstyle') ?: 'default';
+        $pageisboostunion = $PAGE->theme->name === 'boost_union' || in_array('boost_union', $PAGE->theme->parents ?? []);
+        if ($courselistingstyle === 'boostunion' && !$pageisboostunion) {
+            $courselistingstyle = 'default';
+        }
+        if ($courselistingstyle === 'boostunion' && get_config('theme_boost_union', 'courselistinghowpopup') == 'yes') {
+            if (get_config('theme_boost_union', 'courselistingpresentation') != 'nochange') {
+                // If theme_boost_union uses its own course listing style it alrady initializes the details modals itself.
+                // The renderer also ensures that this happens at most once per page. We therefore initialize the renderer
+                // manually to ensure that we always have exactly one modal handler.
+                $PAGE->get_renderer('core', 'course');
+            } else if (!empty(core_requirejs::find_one_amd_module('theme_boost_union', 'coursedetailsmodal.js'))) {
+                // For theme_boost_union >= 2025100605.
+                // This must still work if the site admin chooses to use the "Designer's nightmare" course listing style.
+                $PAGE->requires->js_call_amd('theme_boost_union/coursedetailsmodal', 'init');
+            } else {
+                // For theme_boost_union < 2025100605.
+                // This must still work if the site admin chooses to use the "Designer's nightmare" course listing style.
+                $PAGE->requires->js_call_amd('theme_boost_union/courselistingdetailsmodal', 'init');
+            }
+        }
         $defaultvariables = [
             'totalcoursecount' => count($userscourses),
             'nocoursesimg' => $nocoursesurl,
@@ -520,6 +549,7 @@ class main implements renderable, templatable {
             'customfieldvalues' => $customfieldvalues,
             'selectedcustomfield' => $selectedcustomfield,
             'showsortbyshortname' => $CFG->courselistshortnames,
+            'courselistingstyle' => $courselistingstyle,
         ];
         if ($optionsposition) {
             $defaultvariables['options_' . $optionsposition] = true;

@@ -57,3 +57,12 @@ Wenn es eine Kursbeschreibung gibt, können Sie diese in der Listenansicht erwei
 Am unteren Rand befinden sich Schaltflächen zum Blättern durch die Ergebnisse, falls zu viele vorhanden sind, um auf einer Seite angezeigt zu werden.
 
 <img src="../assets/userview_bottom_de.png" alt="Unterer Bereich der Ergebnisseite" width="50%">
+
+
+## Ausschluss von Kursen aus den Suchergebnissen
+
+Kurse können von den Suchergebnissen ausgeschlossen werden, indem Sie ein benutzerdefiniertes Kursfeld mit dem Typ
+**"Checkbox"** und dem Kurznamen `block_eledia_coursesearch_visible` erstellen.
+
+Jeder Kurs, der dieses benutzerdefinierte Kursfeld besitzt und es auf **"Nein"** / **nicht angekreuzt** gesetzt ist,
+wird von den Suchergebnissen ausgeschlossen. Dieser Ausschluss funktioniert unabhängig aller anderer Filterkriterien.

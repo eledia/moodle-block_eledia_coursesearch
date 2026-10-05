@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026012900;         // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2026090100;         // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2024100100;         // Requires Moodle 4.5.
 $plugin->component = 'block_eledia_coursesearch'; // Full name of the plugin (used for diagnostics).
-$plugin->release   = 'v1.0';             // Human-readable release name.
+$plugin->release   = 'v2.0';             // Human-readable release name.
 $plugin->maturity  = MATURITY_STABLE;    // Code maturity level.

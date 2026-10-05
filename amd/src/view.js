@@ -40,7 +40,9 @@ import {setUserPreference} from 'core_user/repository';
 
 const TEMPLATES = {
     COURSES_CARDS: 'block_eledia_coursesearch/view-cards',
+    COURSES_CARDS_BOOSTUNION: 'block_eledia_coursesearch/view-cards-boostunion',
     COURSES_LIST: 'block_eledia_coursesearch/view-list',
+    COURSES_LIST_BOOSTUNION: 'block_eledia_coursesearch/view-list-boostunion',
     COURSES_SUMMARY: 'block_eledia_coursesearch/view-summary',
     NOCOURSES: 'core_course/no-courses'
 };
@@ -66,6 +68,8 @@ let lastPage = 0;
 let lastLimit = 0;
 
 let namespace = null;
+
+let courseListingStyle = 'default';
 
 let selectedCategories = [];
 let selectableCategories = [];
@@ -140,25 +144,13 @@ const DEFAULT_PAGED_CONTENT_CONFIG = {
  *
  * @param {object} filters The filters for this view.
  * @param {int} limit The number of courses to show.
- * @param {object} searchParams The params.
  * @return {promise} Resolved with an array of courses.
  */
-const getMyCourses = (filters, limit, searchParams) => {
-    const params = {
-        offset: courseOffset,
-        limit: limit,
-        classification: filters.grouping,
-        sort: filters.sort,
-        customfieldname: filters.customfieldname,
-        customfieldvalue: filters.customfieldvalue,
-    };
+const getMyCourses = (filters, limit) => {
     if (filters.display === 'summary') {
-        params.requiredfields = Repository.SUMMARY_REQUIRED_FIELDS;
         summaryDisplayLoaded = true;
-    } else {
-        params.requiredfields = Repository.CARDLIST_REQUIRED_FIELDS;
     }
-    return Repository.getEnrolledCoursesByTimeline(searchParams);
+    return Repository.getEnrolledCoursesByTimeline(getParams(limit));
 };
 
 /**
@@ -166,27 +158,15 @@ const getMyCourses = (filters, limit, searchParams) => {
  *
  * @param {object} filters The filters for this view.
  * @param {int} limit The number of courses to show.
- * @param {string} searchValue What does the user want to search within their courses.
  * @return {promise} Resolved with an array of courses.
  */
-const getSearchMyCourses = (filters, limit, searchValue) => {
-    const params = {
-        offset: courseOffset,
-        limit: limit,
-        classification: 'search',
-        sort: filters.sort,
-        customfieldname: filters.customfieldname,
-        customfieldvalue: filters.customfieldvalue,
-        searchvalue: searchValue,
-    };
+const getSearchMyCourses = (filters, limit) => {
     if (filters.display === 'summary') {
-        params.requiredfields = Repository.SUMMARY_REQUIRED_FIELDS;
         summaryDisplayLoaded = true;
     } else {
-        params.requiredfields = Repository.CARDLIST_REQUIRED_FIELDS;
         summaryDisplayLoaded = false;
     }
-    return Repository.getEnrolledCoursesByTimeline(searchValue);
+    return Repository.getEnrolledCoursesByTimeline(getParams(limit));
 };
 
 /**
@@ -269,6 +249,10 @@ const getParams = (limit = 0) => {
                 key: 'selectedTags',
                 tags: selectedTags,
             },
+            {
+                key: 'style',
+                value: courseListingStyle,
+            },
         ],
         addsubcategories: true,
     };
@@ -295,6 +279,77 @@ const getCustomFields = () => {
         return customValues;
     }).filter(Boolean);
     return customFields;
+};
+
+/**
+ * Updates the input field for a category selector based on the current selection.
+ *
+ * @return {Promise} Resolved once the input field has been re-rendered.
+ */
+const updateCategoryInputDisplay = () => {
+    const page = document.querySelector(SELECTORS.region.selectBlock);
+    const container = page.querySelector(SELECTORS.cat.input);
+    if (!container || !container.dataset.optionsInline) {
+        return Promise.resolve();
+    }
+    const items = selectedCategories.map((cat, idx) => (
+        {name: cat.name, type: 'category', index: idx, cindex: 0}
+    ));
+    return Templates.renderForPromise('block_eledia_coursesearch/nav-input-pill-items', {
+        placeholder: container.dataset.placeholder,
+        items: items,
+        hasitems: items.length > 0
+    }).then(({html, js}) => {
+        return Templates.replaceNodeContents(container, html, js);
+    }).catch(error => displayException(error));
+};
+
+/**
+ * Updates the input field for a tags selector based on the current selection.
+ *
+ * @return {Promise} Resolved once the input field has been re-rendered.
+ */
+const updateTagsInputDisplay = () => {
+    const page = document.querySelector(SELECTORS.region.selectBlock);
+    const container = page.querySelector(SELECTORS.tags.input);
+    if (!container || !container.dataset.optionsInline) {
+        return Promise.resolve();
+    }
+    const items = selectedTags.map((tag, idx) => (
+        {name: tag.name, type: 'tag', index: idx, cindex: 0}
+    ));
+    return Templates.renderForPromise('block_eledia_coursesearch/nav-input-pill-items', {
+        placeholder: container.dataset.placeholder,
+        items: items,
+        hasitems: items.length > 0
+    }).then(({html, js}) => {
+        return Templates.replaceNodeContents(container, html, js);
+    }).catch(error => displayException(error));
+};
+
+/**
+ * Updates the input field for a custom field selector based on the current selection.
+ *
+ * @param {Number} customfieldId ID of the custom field input element to re-render
+ * @return {Promise} Resolved once the input field has been re-rendered.
+ */
+const updateCustomfieldInputDisplay = (customfieldId) => {
+    const page = document.querySelector(SELECTORS.region.selectBlock);
+    const container = page.querySelector(SELECTORS.customfields.searchfield + customfieldId);
+    if (!container || !container.dataset.optionsInline) {
+        return Promise.resolve();
+    }
+    const selections = selectedCustomfields[customfieldId] || [];
+    const items = selections.map((item, idx) => (
+        {name: item.name, type: 'customfield', index: customfieldId, cindex: idx}
+    ));
+    return Templates.renderForPromise('block_eledia_coursesearch/nav-input-pill-items', {
+        placeholder: container.dataset.placeholder,
+        items: items,
+        hasitems: items.length > 0
+    }).then(({html, js}) => {
+        return Templates.replaceNodeContents(container, html, js);
+    }).catch(error => displayException(error));
 };
 
 /**
@@ -639,14 +694,15 @@ const noCoursesRender = root => {
 const renderCourses = (root, coursesData) => {
 
     const filters = getFilterValues(root);
+    const useBoostUnion = courseListingStyle === 'boostunion';
 
     let currentTemplate = '';
     if (filters.display === 'card') {
-        currentTemplate = TEMPLATES.COURSES_CARDS;
+        currentTemplate = useBoostUnion ? TEMPLATES.COURSES_CARDS_BOOSTUNION : TEMPLATES.COURSES_CARDS;
     } else if (filters.display === 'list') {
-        currentTemplate = TEMPLATES.COURSES_LIST;
+        currentTemplate = useBoostUnion ? TEMPLATES.COURSES_LIST_BOOSTUNION : TEMPLATES.COURSES_LIST;
     } else {
-        currentTemplate = TEMPLATES.COURSES_SUMMARY;
+        currentTemplate = useBoostUnion ? TEMPLATES.COURSES_LIST_BOOSTUNION : TEMPLATES.COURSES_SUMMARY;
     }
 
     if (!coursesData) {
@@ -656,15 +712,19 @@ const renderCourses = (root, coursesData) => {
         if (Array.isArray(coursesData.courses) === false) {
             coursesData.courses = Object.values(coursesData.courses);
         }
-        // Whether the course category should be displayed in the course item.
         coursesData.courses = coursesData.courses.map(course => {
-            course.showcoursecategory = filters.displaycategories === 'on';
+            if (useBoostUnion && course.boostunion) {
+                // Flatten boost_union fields to top level so boost_union templates can access them directly.
+                Object.assign(course, course.boostunion);
+                delete course.boostunion;
+            }
+            if (!useBoostUnion) {
+                course.showcoursecategory = filters.displaycategories === 'on';
+            }
             return course;
         });
         if (coursesData.courses.length) {
-            return Templates.render(currentTemplate, {
-                courses: coursesData.courses,
-            });
+            return Templates.render(currentTemplate, {courses: coursesData.courses});
         } else {
             return noCoursesRender(root);
         }
@@ -881,11 +941,10 @@ const resetGlobals = () => {
  */
 const standardFunctionalityCurry = () => {
     resetGlobals();
-    return (filters, currentPage, pageData, actions, root, promises, limit, searchParams) => {
+    return (filters, currentPage, pageData, actions, root, promises, limit) => {
         const pagePromise = getMyCourses(
             filters,
-            limit,
-            searchParams
+            limit
         ).then(coursesData => {
             pageBuilder(coursesData, currentPage, pageData, actions);
             return renderCourses(root, loadedPages[currentPage]);
@@ -902,11 +961,10 @@ const standardFunctionalityCurry = () => {
  */
 const searchFunctionalityCurry = () => {
     resetGlobals();
-    return (filters, currentPage, pageData, actions, root, promises, limit, inputValue) => {
+    return (filters, currentPage, pageData, actions, root, promises, limit) => {
         const searchingPromise = getSearchMyCourses(
             filters,
-            limit,
-            inputValue
+            limit
         ).then(coursesData => {
             const searchTerm = document.querySelector('.block-eledia_coursesearch [data-action="search"]').value;
             if (searchTerm.trim() !== '') {
@@ -930,7 +988,7 @@ const searchFunctionalityCurry = () => {
 };
 
 /**
- * Initialize the categoy searching functionality so we can call it when required.
+ * Initialize the category searching functionality so we can call it when required.
  *
  * @return {function(Object): void}
  */
@@ -1203,6 +1261,14 @@ const registerEventListeners = (root, page) => {
     const customfieldSelectable = SELECTORS.customfields.selectableItem;
     const customfieldSelected = SELECTORS.customfields.selectedItem;
     const groupingFilter = page.querySelectorAll(SELECTORS.FILTER_GROUPING);
+    const resetSearchLink = page.querySelector(SELECTORS.ACTION_RESET_SEARCH);
+
+    if (resetSearchLink) {
+        resetSearchLink.addEventListener('click', e => {
+            e.preventDefault();
+            resetSearch(root);
+        });
+    }
 
     clearIcon.addEventListener('click', () => {
         input.value = '';
@@ -1271,14 +1337,17 @@ const registerEventListeners = (root, page) => {
     // renderCustomfields()
     customInputs.forEach(i => {
         i.addEventListener('click', (e) => {
-            currentCustomField = e.target.dataset.customfieldid;
-            const currentSearchterm = e.target.value.toLowerCase();
+            // Prevent dropdown opening when clearing a selection pill.
+            if (e.target.closest('.pill-input-cancelbtn')) {
+                return;
+            }
+            currentCustomField = i.dataset.customfieldid;
             initializeCustomfieldSearchContent(
                 SELECTORS.customfields.dropdownDiv + currentCustomField,
                 SELECTORS.customfields.dropdown + currentCustomField,
                 customfieldSearchFunctionality(),
                 page,
-                currentSearchterm);
+                '');
         });
         i.addEventListener('input', debounce((e) => {
             currentCustomField = e.target.dataset.customfieldid;
@@ -1310,7 +1379,11 @@ const registerEventListeners = (root, page) => {
     });
 
     // Initialize category search dropdown on first click.
-    catinput.addEventListener('click', () => {
+    catinput.addEventListener('click', (e) => {
+        // Prevent dropdown opening when clearing a selection pill.
+        if (e.target.closest('.pill-input-cancelbtn')) {
+            return;
+        }
         initializeCategorySearchContent(
             SELECTORS.cat.dropdownDiv,
             SELECTORS.cat.dropdown,
@@ -1342,7 +1415,11 @@ const registerEventListeners = (root, page) => {
     }, 1000));
 
     // Initialize tags search dropdown on first click.
-    tagsinput.addEventListener('click', () => {
+    tagsinput.addEventListener('click', (e) => {
+        // Prevent dropdown opening when clearing a selection pill.
+        if (e.target.closest('.pill-input-cancelbtn')) {
+            return;
+        }
         initializeTagsSearchContent(
             SELECTORS.tags.dropdownDiv,
             SELECTORS.tags.dropdown,
@@ -1423,27 +1500,6 @@ const registerEventListeners = (root, page) => {
         }
     });
 
-    document.body.addEventListener('click', (e) => {
-        const expandLink = e.target;
-        if (expandLink.classList.contains('eledia-expandsummary')) {
-            e.preventDefault();
-            const summary = e.target.previousElementSibling;
-            expandLink.classList.add('d-none');
-            summary.classList.remove('summary-fadeout');
-        }
-    });
-
-    document.body.addEventListener('click', (e) => {
-        const collapseLink = e.target;
-        if (collapseLink.classList.contains('eledia-collapsesummary')) {
-            e.preventDefault();
-            const summary = e.target.parentElement;
-            const expandLink = summary.nextElementSibling;
-            expandLink.classList.remove('d-none');
-            summary.classList.add('summary-fadeout');
-        }
-    });
-
     groupingFilter.forEach(filter => {
         const filterType = filter.dataset.value;
         filter.addEventListener('click', () => {
@@ -1493,6 +1549,62 @@ export const clearCustomfieldSearch = (clearCustomfieldIcons) => {
  */
 export const clearCustomfieldSingleIconSearch = icon => {
     icon.classList.add('d-none');
+};
+
+/**
+ * Reset the freetext search and all filters (categories, tags, custom fields, grouping) back
+ * to their default state and refetch the course list.
+ *
+ * @param {Object} root The eledia_coursesearch block container element.
+ */
+const resetSearch = root => {
+    const page = document.querySelector(SELECTORS.region.selectBlock);
+
+    // Freetext search.
+    const input = page.querySelector(SELECTORS.region.searchInput);
+    const clearIcon = page.querySelector(SELECTORS.region.clearIcon);
+    input.value = '';
+    searchTerm = '';
+    clearIcon.classList.add('d-none');
+
+    // Categories.
+    catSearchTerm = '';
+    selectedCategories = [];
+    const clearCatIcon = page.querySelector(SELECTORS.cat.clearIcon);
+    clearCatIcon.classList.add('d-none');
+    updateCategoryInputDisplay();
+
+    // Tags.
+    tagsSearchTerm = '';
+    selectedTags = [];
+    const clearTagsIcon = page.querySelector(SELECTORS.tags.clearIcon);
+    clearTagsIcon.classList.add('d-none');
+    updateTagsInputDisplay();
+
+    // Custom course fields (covers both the visible row and the collapsed section).
+    page.querySelectorAll(SELECTORS.customfields.input).forEach(fieldInput => {
+        const customfieldId = fieldInput.dataset.customfieldid;
+        if (selectedCustomfields[customfieldId]) {
+            selectedCustomfields[customfieldId] = [];
+        }
+        updateCustomfieldInputDisplay(customfieldId);
+    });
+    page.querySelectorAll(SELECTORS.customfields.clearIcon).forEach(icon => {
+        icon.classList.add('d-none');
+    });
+
+    // Refresh the "selected option" pill row so it reflects the now-empty selections.
+    renderSelectOptions();
+
+    // Grouping: reuse the "All" menu item's own click handlers (registered above and in
+    // view_nav.js) so the dropdown label, aria-current state, data-grouping attribute and
+    // courseInProgress all stay in sync, and the final course refetch happens exactly once.
+    const groupingAllItem = page.querySelector(SELECTORS.FILTER_GROUPING + '[data-value="all"]');
+    if (groupingAllItem) {
+        groupingAllItem.click();
+    } else {
+        init(root);
+    }
 };
 
 /**
@@ -1571,6 +1683,7 @@ const manageCategorydropdownItems = (e, selected, selectable, dropdownDiv, dropd
         const categoryIndex = selectedCategories.findIndex(value => value.id == categoryId);
         selectableCategories.push(selectedCategories.splice(categoryIndex, 1)[0]);
     }
+    updateCategoryInputDisplay();
     renderSelectOptions();
     return Templates.renderForPromise(template, {
         categories: selectableCategories,
@@ -1605,6 +1718,7 @@ const manageTagsdropdownItems = (e, selected, selectable, dropdownDiv, dropdown,
         const tagsIndex = selectedTags.findIndex(value => value.id == tagsId);
         selectableTags.push(selectedTags.splice(tagsIndex, 1)[0]);
     }
+    updateTagsInputDisplay();
     renderSelectOptions();
     return Templates.renderForPromise(template, {
         tags: selectableTags,
@@ -1648,7 +1762,6 @@ const manageCustomfielddropdownCollapse = () => {
 const manageCustomfielddropdownItems = (e, selected, selectable, dropdownDiv, dropdown, promiseFunction, page) => {
     // Const template = 'block_eledia_coursesearch/nav-customfield-dropdown'.
     const customfieldValue = e.target.dataset.selectvalue;
-    const customfieldName = e.target.dataset.selectname;
     const customfieldId = e.target.dataset.customfieldid;
     if (e.target.classList.contains(selectable)) {
         const customfieldIndex = filteredCustomfields[customfieldId].findIndex(item => item.value == customfieldValue);
@@ -1663,14 +1776,12 @@ const manageCustomfielddropdownItems = (e, selected, selectable, dropdownDiv, dr
         const customfieldIndex = selectedCustomfields[customfieldId].findIndex(item => item.value == customfieldValue);
         const interchangedValue = selectedCustomfields[customfieldId].splice(customfieldIndex, 1)[0];
         // Customfields[customfieldId].push(interchangedValue);
-        const searchField = page.querySelector(".customsearch-" + customfieldId);
-        if (searchField.value === '' || customfieldName.toLowerCase().includes(searchField.value.trim().toLowerCase())) {
-            filteredCustomfields[customfieldId].push(interchangedValue);
-        }
+        filteredCustomfields[customfieldId].push(interchangedValue);
         filteredCustomfields[customfieldId].sort((a, b) => {
             return ('' + a.name).localeCompare(b.name);
         });
     }
+    updateCustomfieldInputDisplay(customfieldId);
     renderSelectOptions();
     return renderCustomfields(dropdownDiv,
         dropdown,
@@ -1689,6 +1800,9 @@ export const init = root => {
     loadedPages = [];
     lastPage = 0;
     courseOffset = 0;
+
+    const courseRegion = root.find(SELECTORS.courseView.region);
+    courseListingStyle = courseRegion.attr('data-courselistingstyle') || 'default';
 
     if (!root.attr('data-init')) {
         const page = document.querySelector(SELECTORS.region.selectBlock);
@@ -1714,7 +1828,8 @@ export const reset = root => {
         const filters = getFilterValues(root);
         // If the display mode is changed to 'summary' but the summary display has not been loaded yet,
         // we need to re-fetch the courses to include the course summary text.
-        if (filters.display === 'summary' && !summaryDisplayLoaded) {
+        // In boost_union mode all views share the same data so no re-fetch is needed.
+        if (filters.display === 'summary' && !summaryDisplayLoaded && courseListingStyle !== 'boostunion') {
             const page = document.querySelector(SELECTORS.region.selectBlock);
             const input = page.querySelector(SELECTORS.region.searchInput);
             if (input.value !== '') {
@@ -1782,6 +1897,7 @@ function renderSelectOptions() {
  * @param {string} type The type of the option (category, tag, customfield).
  * @param {number} index The index of the option in its array.
  * @param {number} cindex The customfield subindex (only for customfields).
+ * @return {Promise} Resolved once the respective input field has been re-rendered.
  */
 function deleteSelectOption(type, index, cindex) {
     switch (type) {
@@ -1810,12 +1926,24 @@ function deleteSelectOption(type, index, cindex) {
         default:
             throw new Error('Invalid type "' + type + '" for deleteSelectOption');
     }
+
+    // Update respective input type display.
+    let displayUpdated = Promise.resolve();
+    if (type === 'category') {
+        displayUpdated = updateCategoryInputDisplay();
+    } else if (type === 'tag') {
+        displayUpdated = updateTagsInputDisplay();
+    } else if (type === 'customfield') {
+        displayUpdated = updateCustomfieldInputDisplay(index);
+    }
     renderSelectOptions();
     // Fetch and render courses again.
     const page = document.querySelector(SELECTORS.region.selectBlock);
     const root = $(page);
     const input = page.querySelector(SELECTORS.region.searchInput);
     initializePagedContent(root, searchFunctionalityCurry(), input.value.trim(), getParams());
+
+    return displayUpdated;
 }
 
 /**
@@ -1829,5 +1957,22 @@ document.body.addEventListener('click', (e) => {
         const index = parseInt(cancelBtn.dataset.index);
         const cindex = parseInt(cancelBtn.dataset.cindex);
         deleteSelectOption(type, index, cindex);
+    }
+});
+
+/**
+ * Event listener for deleting selected option item pills.
+ */
+document.body.addEventListener('click', (e) => {
+    const pillBtn = e.target.closest('.pill-input-cancelbtn');
+    if (pillBtn) {
+        e.preventDefault();
+        // Keep the focus on the pills filter input.
+        const filterInput = pillBtn.closest('[data-region="input"]');
+        deleteSelectOption(
+            pillBtn.dataset.type,
+            parseInt(pillBtn.dataset.index),
+            parseInt(pillBtn.dataset.cindex)
+        ).then(() => filterInput?.focus()).catch(Notification.exception);
     }
 });

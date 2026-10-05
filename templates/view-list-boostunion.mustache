@@ -1,0 +1,50 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_eledia_coursesearch/view-list-boostunion
+
+    Wraps theme_boost_union/courselistinglist for the list and summary views.
+    Iterates over courses and delegates each to the single-course boost_union template.
+    Used for both the 'list' and 'summary' display modes in boost_union style.
+
+    Example context (json):
+    {
+        "courses": [
+            {
+                "id": 2,
+                "fullname": "My Course",
+                "viewurl": "https://moodlesite/course/view.php?id=2",
+                "visible": true,
+                "showcourseimage": true,
+                "courseimage": "https://moodlesite/pluginfile/123/course/overviewfiles/img.jpg",
+                "showcoursecategory": true,
+                "coursecategory": "Category 1",
+                "showcourseprogress": true,
+                "hasprogress": true,
+                "progress": 42,
+                "progressstyleasbar": false,
+                "showbuttons": true,
+                "showcoursegoto": true
+            }
+        ]
+    }
+}}
+<div class="theme_boost_union-courselisting theme_boost_union-courselisting-list">
+    {{#courses}}
+        {{> theme_boost_union/courselistinglist}}
+    {{/courses}}
+</div>

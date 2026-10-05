@@ -29,18 +29,18 @@
         ]
     }
 }}
-<div class="dropdown tagssearch mb-3 col-md-3">
-    <div class="mb-1 me-1 flex-grow-1 tagsprevent">
+<div class="dropdown tagssearch col-md-3">
+    <div class="mb-1 me-0 mr-0 flex-grow-1 tagsprevent">
         {{< block_eledia_coursesearch/search-input-auto-tags }}
             {{$label}}{{#str}}
-                searchtags, block_eledia_coursesearch
+                tags, block_eledia_coursesearch
             {{/str}}{{/label}}
             {{$placeholder}}{{#str}}
-                searchtags, block_eledia_coursesearch
+                tags, block_eledia_coursesearch
             {{/str}}{{/placeholder}}
         {{/ block_eledia_coursesearch/search-input-auto-tags }}
     </div>
-    <div class="tags-droprown-container">
+    <div class="tags-dropdown-container">
         {{> block_eledia_coursesearch/nav-tags-dropdown }}
     </div>
 </div>

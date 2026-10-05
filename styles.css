@@ -21,102 +21,142 @@
     background-size: cover;
 }
 
-[data-action="catsearch"]::after {
-    /*content: "";*/
-    content: "aft";
-    margin-right: 0;
-    margin-left: 4px;
-    font-size: 9px;
-    width: 9px;
-    border: 0;
-    font-family: "Font Awesome 6 Free";
-    display: inline-block;
-    -webkit-font-smoothing: antialiased;
-    font-weight: 900;
-    box-sizing: border-box;
-}
-
-.block_eledia-coursesearch input::after {
-    /*content: "";*/
-    /*TODO: Make visible.*/
-    /*content: "aft";*/
-    margin-right: 0;
-    margin-left: 4px;
-    font-size: 9px;
-    width: 9px;
-    border: 0;
-    font-family: "Font Awesome 6 Free";
-    display: inline-block;
-    -webkit-font-smoothing: antialiased;
-    font-weight: 900;
-    box-sizing: border-box;
-}
-
-.customfield-count {
+.block_eledia_coursesearch .customfield-count {
     float: right;
 }
 
-.summary-fadeout .eledia-collapsesummary {
-    display: none;
-}
-
-.summary-inner {
-    overflow: hidden;
-    max-height: 50px;
-    transition: max-height .5s linear;
-}
-.summary:not(.summary-fadeout) .summary-inner {
-    max-height: 100%;
-    overflow: auto;
-}
-
-.dropdown-description {
+.block_eledia_coursesearch .dropdown-description {
     /*padding: .25rem 1.5rem;*/
     display: flex;
     padding: .25rem .25rem;
     color: darkgray;
 }
-.dropdown-description div {
+.block_eledia_coursesearch .dropdown-description div {
     line-height: 1;
 }
 
-.dropdown-description div p {
+.block_eledia_coursesearch .dropdown-description div p {
     margin-bottom: .5rem;
 }
 
-.block_eledia-coursesearch div[data-region="paging-control-limit-container"] {
-    display: none;
+.block_eledia_coursesearch .dropdown-toggle::after {
+    color: var(--bs-body-color, #212529);
 }
 
-/* Change search fields into dropdowns. */
-.block_eledia_coursesearch .customfieldsearch .input-group,
-.block_eledia_coursesearch .customfields-collapse .input-group {
-    position: relative;
+/* Bootstrap 4 compatibility shims */
+.block_eledia_coursesearch .gap-1 {
+    gap: .25rem;
 }
-.block_eledia_coursesearch .customfieldsearch .input-group > span,
-.block_eledia_coursesearch .customfields-collapse .input-group > span {
-    position: relative;
-    display: block;
-    width: 100%;
+
+.block_eledia_coursesearch .g-1 {
+    margin-top: -.25rem;
+    margin-right: -.125rem;
+    margin-left: -.125rem;
 }
-.block_eledia_coursesearch .customfieldsearch .input-group > span > .form-control[readonly],
-.block_eledia_coursesearch .customfields-collapse .input-group > span > .form-control[readonly] {
-    background-color: #fff;
-    cursor: pointer;
-    padding-right: 30px;
+.block_eledia_coursesearch .g-1 > * {
+    padding-right: .125rem;
+    padding-left: .125rem;
+    margin-top: .25rem;
 }
-.block_eledia_coursesearch .customfieldsearch .input-group > span::after,
-.block_eledia_coursesearch .customfields-collapse .input-group > span::after {
-    content: "";
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 6px solid #6c757d;
+.block_eledia_coursesearch .g-2 {
+    margin-top: -.5rem;
+    margin-right: -.25rem;
+    margin-left: -.25rem;
+}
+.block_eledia_coursesearch .g-2 > * {
+    padding-right: .25rem;
+    padding-left: .25rem;
+    margin-top: .5rem;
+}
+
+.block_eledia_coursesearch .pe-none {
     pointer-events: none;
 }
 
+.block_eledia_coursesearch .pill-input-cancelbtn {
+    max-width: 100%;
+    padding: .1em .2em;
+    font-size: .75em;
+}
+
+/* Bootstrap compatibility overrides require matching core !important declarations. */
+/* stylelint-disable declaration-no-important */
+.block_eledia_coursesearch .input-group-text {
+    border-right: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+/* Change search fields into dropdowns */
+.block_eledia_coursesearch [data-action="catsearch"],
+.block_eledia_coursesearch [data-action="tagssearch"],
+.block_eledia_coursesearch [data-action="customsearch"] {
+    cursor: pointer;
+    position: relative;
+    padding-right: 1.6rem !important;
+    transition: box-shadow .15s ease-in-out;
+    /* Bootstrap 4 compatibility: .form-control has a fixed height in BS4 (BS5 removed it) */
+    height: auto !important;
+    min-height: calc(1.5em + .75rem + 2px);
+}
+
+/* Anchor filter dropdowns directly below input. BS4 sets top:100%, which positions the menu below the column... */
+.block_eledia_coursesearch .dropdown-menu-customfields,
+.block_eledia_coursesearch .dropdown-categories,
+.block_eledia_coursesearch .dropdown-tags {
+    top: auto;
+}
+
+/* Unified inset shadow hover for all filter inputs and the grouping dropdown */
+.block_eledia_coursesearch [data-action="catsearch"]:hover,
+.block_eledia_coursesearch [data-action="tagssearch"]:hover,
+.block_eledia_coursesearch [data-action="customsearch"]:hover,
+.block_eledia_coursesearch [data-action="search"]:hover,
+.block_eledia_coursesearch button#groupingdropdown:hover {
+    box-shadow: inset 0 0 4px 1px rgba(0, 0, 0, 0.32);
+}
+
+.block_eledia_coursesearch [data-action="search"] {
+    transition: box-shadow .15s ease-in-out;
+}
+
+/* Override btn-outline-secondary background/color change on hover and active for grouping dropdown */
+.block_eledia_coursesearch button#groupingdropdown {
+    --bs-btn-border-color: var(--bs-gray-500, #8f959e);
+    --bs-btn-hover-bg: transparent;
+    --bs-btn-hover-color: var(--bs-btn-color, #6a737b);
+    --bs-btn-hover-border-color: var(--bs-gray-500, #8f959e);
+    --bs-btn-active-bg: transparent;
+    --bs-btn-active-color: var(--bs-btn-color, #6a737b);
+    --bs-btn-active-border-color: var(--bs-gray-500, #8f959e);
+    color: var(--bs-secondary-color, #6c757d) !important;
+    border-color: var(--bs-gray-500, #8f959e) !important;
+    transition: box-shadow .15s ease-in-out;
+}
+
+.block_eledia_coursesearch button#groupingdropdown:hover,
+.block_eledia_coursesearch button#groupingdropdown:focus,
+.block_eledia_coursesearch button#groupingdropdown:active,
+.block_eledia_coursesearch button#groupingdropdown.show {
+    background-color: transparent !important;
+    color: var(--bs-secondary-color, #6c757d) !important;
+    border-color: var(--bs-gray-500, #8f959e) !important;
+}
+/* stylelint-enable declaration-no-important */
+
+.block_eledia_coursesearch .dropdown-toggle[data-action="catsearch"]:after,
+.block_eledia_coursesearch .dropdown-toggle[data-action="tagssearch"]:after,
+.block_eledia_coursesearch .dropdown-toggle[data-action="customsearch"]:after {
+    position: absolute;
+    right: 0.5rem;
+}
+
+/* Bootstrap card view */
+.block_eledia_coursesearch .theme_boost_union-courselisting-card .card {
+    height: 100%;
+}
+
+.block_eledia_coursesearch .theme_boost_union-courselisting-card .card-footer .btn {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+}
