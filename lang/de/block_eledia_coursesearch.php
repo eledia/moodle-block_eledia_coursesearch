@@ -98,6 +98,7 @@ $string['privacy:metadata:overviewsortpreference'] = 'Sortierpräferenz für den
 $string['privacy:metadata:overviewviewpreference'] = 'Anzeigepräferenz für den Kursübersichtsblock.';
 $string['privacy:request:preference:set'] = 'Der Wert der Einstellung \'{$a->name}\' war \'{$a->value}\'';
 $string['removeallitems'] = 'Alle entfernen';
+$string['removefilter'] = 'Filter entfernen: {$a}';
 $string['removefromfavourites'] = 'Stern für diesen Kurs entfernen';
 $string['resetsearch'] = 'Suche zurücksetzen';
 $string['searchcategories'] = "Kategorien suchen";

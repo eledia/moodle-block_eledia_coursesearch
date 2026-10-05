@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Make selected filter pills keyboard selectable and provide aria labels
 - Fix duplicate course details modals when using boost union theme on the site home in listing view and clicking on a details button on page >= 3
 - Declare missing boost union fields in get_courseview() external function
 

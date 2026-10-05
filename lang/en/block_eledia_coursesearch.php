@@ -98,6 +98,7 @@ $string['privacy:metadata:overviewsortpreference'] = 'The Course overview block 
 $string['privacy:metadata:overviewviewpreference'] = 'The Course overview block view preference.';
 $string['privacy:request:preference:set'] = 'The value of the setting \'{$a->name}\' was \'{$a->value}\'';
 $string['removeallitems'] = 'Remove all';
+$string['removefilter'] = 'Remove filter: {$a}';
 $string['removefromfavourites'] = 'Unstar this course';
 $string['resetsearch'] = 'Reset search';
 $string['searchcategories'] = "Search categories";

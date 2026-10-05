@@ -1958,10 +1958,13 @@ document.body.addEventListener('click', (e) => {
     const pillBtn = e.target.closest('.pill-input-cancelbtn');
     if (pillBtn) {
         e.preventDefault();
+        // Keep the focus on the pills filter input.
+        const filterInput = pillBtn.closest('[data-region="input"]');
         deleteSelectOption(
             pillBtn.dataset.type,
             parseInt(pillBtn.dataset.index),
             parseInt(pillBtn.dataset.cindex)
         );
+        filterInput?.focus();
     }
 });

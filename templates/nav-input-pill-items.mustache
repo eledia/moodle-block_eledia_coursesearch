@@ -42,9 +42,11 @@
 {{/hasitems}}
 
 {{#items}}
-    <a
+    <button
+        type="button"
         class="btn btn-primary rounded-pill d-inline-flex align-items-center gap-1 pill-input-cancelbtn"
-        aria-label="{{#str}} remove, core {{/str}}" data-type="{{type}}"
+        aria-label="{{#str}} removefilter, block_eledia_coursesearch, {{name}} {{/str}}"
+        data-type="{{type}}"
         data-index="{{index}}"
         data-cindex="{{cindex}}"
     >
@@ -52,5 +54,5 @@
         <span class="flex-shrink-0" aria-hidden="true">
             {{#pix}} e/cancel, core {{/pix}}
         </span>
-    </a>
+    </button>
 {{/items}}
