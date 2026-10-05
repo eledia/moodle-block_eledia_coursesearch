@@ -21,25 +21,25 @@
     background-size: cover;
 }
 
-.customfield-count {
+.block_eledia_coursesearch .customfield-count {
     float: right;
 }
 
-.dropdown-description {
+.block_eledia_coursesearch .dropdown-description {
     /*padding: .25rem 1.5rem;*/
     display: flex;
     padding: .25rem .25rem;
     color: darkgray;
 }
-.dropdown-description div {
+.block_eledia_coursesearch .dropdown-description div {
     line-height: 1;
 }
 
-.dropdown-description div p {
+.block_eledia_coursesearch .dropdown-description div p {
     margin-bottom: .5rem;
 }
 
-.dropdown-toggle::after {
+.block_eledia_coursesearch .dropdown-toggle::after {
     color: var(--bs-body-color, #212529);
 }
 
