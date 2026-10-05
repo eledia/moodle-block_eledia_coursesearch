@@ -300,7 +300,7 @@ const updateCategoryInputDisplay = () => {
         items: items,
         hasitems: items.length > 0
     }).then(({html, js}) => {
-        Templates.replaceNodeContents(container, html, js);
+        return Templates.replaceNodeContents(container, html, js);
     }).catch(error => displayException(error));
 };
 
@@ -323,7 +323,7 @@ const updateTagsInputDisplay = () => {
         items: items,
         hasitems: items.length > 0
     }).then(({html, js}) => {
-        Templates.replaceNodeContents(container, html, js);
+        return Templates.replaceNodeContents(container, html, js);
     }).catch(error => displayException(error));
 };
 
@@ -348,7 +348,7 @@ const updateCustomfieldInputDisplay = (customfieldId) => {
         items: items,
         hasitems: items.length > 0
     }).then(({html, js}) => {
-        Templates.replaceNodeContents(container, html, js);
+        return Templates.replaceNodeContents(container, html, js);
     }).catch(error => displayException(error));
 };
 
@@ -1973,6 +1973,6 @@ document.body.addEventListener('click', (e) => {
             pillBtn.dataset.type,
             parseInt(pillBtn.dataset.index),
             parseInt(pillBtn.dataset.cindex)
-        ).then(() => filterInput?.focus());
+        ).then(() => filterInput?.focus()).catch(Notification.exception);
     }
 });

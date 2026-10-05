@@ -79,6 +79,8 @@
     font-size: .75em;
 }
 
+/* Bootstrap compatibility overrides require matching core !important declarations. */
+/* stylelint-disable declaration-no-important */
 .block_eledia_coursesearch .input-group-text {
     border-right: 0 !important;
     border-bottom-right-radius: 0 !important;
@@ -140,6 +142,7 @@
     color: var(--bs-secondary-color, #6c757d) !important;
     border-color: var(--bs-gray-500, #8f959e) !important;
 }
+/* stylelint-enable declaration-no-important */
 
 .block_eledia_coursesearch .dropdown-toggle[data-action="catsearch"]:after,
 .block_eledia_coursesearch .dropdown-toggle[data-action="tagssearch"]:after,
