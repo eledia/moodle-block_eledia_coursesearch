@@ -39,7 +39,7 @@ if ($ADMIN->fulltree) {
     $courselistingstyleoptions = [
         'default' => get_string('courselistingstyle_default', 'block_eledia_coursesearch'),
     ];
-    if (get_config('core', 'theme') === 'boost_union') {
+    if (core_component::get_component_directory('theme_boost_union') !== null) {
         $courselistingstyleoptions['boostunion'] = get_string('courselistingstyle_boostunion', 'block_eledia_coursesearch');
     }
     $settings->add(new admin_setting_configselect(

@@ -500,7 +500,8 @@ class main implements renderable, templatable {
         $optionsposition = get_config('block_eledia_coursesearch', 'options_position');
 
         $courselistingstyle = get_config('block_eledia_coursesearch', 'courselistingstyle') ?: 'default';
-        if ($courselistingstyle === 'boostunion' && get_config('core', 'theme') !== 'boost_union') {
+        $pageisboostunion = $PAGE->theme->name === 'boost_union' || in_array('boost_union', $PAGE->theme->parents ?? []);
+        if ($courselistingstyle === 'boostunion' && !$pageisboostunion) {
             $courselistingstyle = 'default';
         }
         if ($courselistingstyle === 'boostunion' && get_config('theme_boost_union', 'courselistinghowpopup') == 'yes') {
