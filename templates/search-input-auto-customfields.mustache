@@ -38,9 +38,6 @@
 }}
 <div id="searchform-auto-customfields-{{uniqid}}" class="d-flex flex-wrap align-items-center simplesearchform">
     <div class="input-group searchbar w-100" role="search">
-        <label for="searchinput-customfields-{{uniqid}}">
-            <span class="sr-only">{{$label}}{{#str}} search, core {{/str}}{{/label}}</span>
-        </label>
         <div
            data-region="input"
            data-action="customsearch"
@@ -50,6 +47,7 @@
            class="form-control dropdown-toggle withclear rounded customprevent customsearch-{{id}} d-flex flex-wrap align-items-center gap-1"
            tabindex="0"
            role="button"
+           aria-label="{{$label}}{{#str}} search, core {{/str}}{{/label}}"
            {{#options_inline}}data-options-inline="1"{{/options_inline}}
         >
             <div class="text-muted customfield-placeholder">{{name}}</div>
