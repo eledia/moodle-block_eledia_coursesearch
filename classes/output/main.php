@@ -503,12 +503,19 @@ class main implements renderable, templatable {
         if ($courselistingstyle === 'boostunion' && get_config('core', 'theme') !== 'boost_union') {
             $courselistingstyle = 'default';
         }
-        if ($courselistingstyle === 'boostunion') {
-            if (!empty(core_requirejs::find_one_amd_module('theme_boost_union', 'coursedetailsmodal.js'))) {
+        if ($courselistingstyle === 'boostunion' && get_config('theme_boost_union', 'courselistinghowpopup') == 'yes') {
+            if (get_config('theme_boost_union', 'courselistingpresentation') != 'nochange') {
+                // If theme_boost_union uses its own course listing style it alrady initializes the details modals itself.
+                // The renderer also ensures that this happens at most once per page. We therefore initialize the renderer
+                // manually to ensure that we always have exactly one modal handler.
+                $PAGE->get_renderer('core', 'course');
+            } else if (!empty(core_requirejs::find_one_amd_module('theme_boost_union', 'coursedetailsmodal.js'))) {
                 // For theme_boost_union >= 2025100605.
+                // This must still work if the site admin chooses to use the "Designer's nightmare" course listing style.
                 $PAGE->requires->js_call_amd('theme_boost_union/coursedetailsmodal', 'init');
             } else {
                 // For theme_boost_union < 2025100605.
+                // This must still work if the site admin chooses to use the "Designer's nightmare" course listing style.
                 $PAGE->requires->js_call_amd('theme_boost_union/courselistingdetailsmodal', 'init');
             }
         }
