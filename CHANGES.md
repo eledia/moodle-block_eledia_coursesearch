@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-10-05
+
 - Allow the block to be added to the site home. Public catalogue deployments
   require Moodle automatic guest login.
 - Make selected filter pills keyboard selectable and provide aria labels
@@ -14,7 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix positioning of drop-down filter selectors on Moodle 4.5
 - Fix duplicate course details modals when using boost union theme on the site home in listing view and clicking on a details button on page >= 3
 - Declare missing boost union fields in get_courseview() external function
-
 
 ## [2.0] - 2026-09-01
 
