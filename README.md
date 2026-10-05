@@ -11,6 +11,8 @@ An advanced course search and filtering block for Moodle that provides powerful 
 * **Progress Tracking**: Integrated course progress display
 * **Favorites Management**: Mark and filter favorite courses
 * **Responsive Design**: Fully responsive and mobile-friendly
+* **Boost Union Integration**: Optional Boost Union course cards, lists, and details dialogs
+* **Public Catalogue**: Can be placed on the site home using Moodle's automatic guest login
 * **Accessibility**: WCAG 2.1 AA compliant
 * **Multi-language**: English and German support included
 * **Privacy API**: Full GDPR compliance
@@ -52,6 +54,21 @@ Then visit your Moodle site's notification page to complete the installation.
 5. Turn editing off
 6. Click *Reset Dashboard for all users* to make it available to everyone
 
+### Adding the Block to the Site Home
+
+The block can also provide a public course catalogue on the site home. Public
+access uses a Moodle guest session; it is not sessionless anonymous access.
+
+1. Ensure that Moodle's guest account exists and that the guest role has the
+   intended `moodle/category:viewcourselist` permissions.
+2. Enable *Auto-login guests* under *Site administration* > *Users* >
+   *Permissions* > *User policies*.
+3. Open the site home, turn editing on, and add *eLeDia Course Search*.
+
+The automatic guest-login setting applies to the whole Moodle site. Without
+it, an anonymous visitor may be redirected to the login page when the block
+finds at least one catalogue-visible course.
+
 ### Custom Fields Configuration
 
 For custom fields to appear as filter options:
@@ -59,6 +76,9 @@ For custom fields to appear as filter options:
 1. Go to *Site administration* > *Courses* > *Course custom fields*
 2. Create or edit a custom field
 3. Set *Visible to* to **Everyone** in the field settings
+
+Use Moodle's built-in multilang filter if custom-field names or descriptions
+need translations.
 
 ## Documentation
 
@@ -93,4 +113,3 @@ This program is free software: you can redistribute it and/or modify it under th
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
-

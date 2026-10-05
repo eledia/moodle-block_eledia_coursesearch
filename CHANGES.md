@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Allow the block to be added to the site home. Public catalogue deployments
+  require Moodle automatic guest login.
 - Make selected filter pills keyboard selectable and provide aria labels
 - Honor context-specific site theme overrides and adapt block display style automatically
 - Fix positioning of drop-down filter selectors on Moodle 4.5
@@ -95,5 +97,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Derived from Moodle core myoverview block
 - Approximately 50% new code, including complete search backend
 - No database tables required (uses core Moodle tables)
-- Recommended for Dashboard placement
+- Supports Dashboard placement; site-home placement was added in version 2.0
 - Custom fields must be set to "Visible to everyone" to appear in filters

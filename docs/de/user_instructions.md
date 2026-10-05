@@ -20,7 +20,7 @@ Das Plugin besteht aus zwei Hauptbereichen:
 
 ## Suchbereich
 
-<img src="../assets/userview_top_de.png" alt="Suchbereich und Ergebnisansicht" width="50%">
+<img src="../assets/userview_boost_filters_de.png" alt="Filter der Kurssuche im Boost-Theme" width="70%">
 
 ### Verwendung der durchsuchbaren Auswahlfelder
 
@@ -38,9 +38,13 @@ Das Plugin besteht aus zwei Hauptbereichen:
 
 Je nach Anzahl der verfügbaren Suchfelder kann es eine Schaltfläche **Suche erweitern** geben, um zusätzliche Felder einzublenden.  
   
-Wenn vom Administrator aktiviert, gibt es eine Anzeige aller ausgewählten Filter. Diese können hier auch abgewählt werden.  
+Wenn vom Administrator aktiviert, werden ausgewählte Filter als entfernbare
+Elemente innerhalb der Filterfelder oder in einem eigenen Bereich oberhalb
+beziehungsweise unterhalb der Suchfelder angezeigt. Die Elemente sind über die
+Tastatur erreichbar und können mit <kbd>Eingabe</kbd> oder <kbd>Leertaste</kbd>
+entfernt werden. Mit **Alle Filter zurücksetzen** setzen Sie die gesamte Suche
+zurück.
 
-<img src="../assets/ausgewaehlte_optionen.png" alt="Suchbereich und Ergebnisansicht" width="50%">
 ### Volltextsuche
 
 Die Volltextsuche wendet den Suchbegriff auf den Kursnamen und die Kursbeschreibung an.  
@@ -50,13 +54,27 @@ Es kann eine Seite mit der Meldung **„Keine Ergebnisse“** angezeigt werden.
 
 Dieser Bereich enthält die Suchergebnisse entweder in Listenform oder in Kachelform, die die gefundenen Kurse anzeigen.  
 
-Wenn es eine Kursbeschreibung gibt, können Sie diese in der Listenansicht erweitern.
+Die Kachelansicht zeigt jeden Kurs mit seinem Bild und den wichtigsten Informationen:
 
-<img src="../assets/userview_expanddescription_de.png" alt="Beschreibung erweitern" width="50%">
+<img src="../assets/userview_boost_cards_de.png" alt="Kurskacheln im Boost-Theme" width="70%">
 
-Am unteren Rand befinden sich Schaltflächen zum Blättern durch die Ergebnisse, falls zu viele vorhanden sind, um auf einer Seite angezeigt zu werden.
+In der Listenansicht wird die vorhandene Kursbeschreibung direkt angezeigt:
 
-<img src="../assets/userview_bottom_de.png" alt="Unterer Bereich der Ergebnisseite" width="50%">
+<img src="../assets/userview_boost_list_de.png" alt="Kursliste mit Beschreibungen im Boost-Theme" width="70%">
+
+Am unteren Rand befinden sich Schaltflächen zum Blättern durch die Ergebnisse,
+falls mehr Kurse vorhanden sind, als auf einer Seite angezeigt werden.
+
+### Darstellung mit Boost Union
+
+Wenn die Administration den Kursdarstellungsstil Boost Union aktiviert, folgen
+Kacheln und Listen den Kurslisteneinstellungen des Themes. Abhängig von der
+Theme-Konfiguration können Kursbilder, Kursbereiche, Fortschritt,
+Einschreibungsinformationen und ein Dialog **Details** angezeigt werden.
+
+<img src="../assets/userview_boost_union_cards_de.png" alt="Kurskacheln in der Boost-Union-Darstellung" width="70%">
+
+<img src="../assets/userview_boost_union_details_de.png" alt="Kursdetails-Dialog in Boost Union" width="70%">
 
 
 ## Ausschluss von Kursen aus den Suchergebnissen
